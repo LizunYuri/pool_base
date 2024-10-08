@@ -1,0 +1,24 @@
+[
+    {
+        "id": 1,
+        "name": "Фильтр KP400, шпул. навивки, d.400мм, 6м³/ч, верх.подкл. 1½\", без вентиля",
+        "url": "https://pearlpool.ru/filtrovalnoe-oborudovanie/shpulnoj-navivki/seriya-kp-s-verkh-ventilem/filtry-seriya-kp-kp400",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 26679.99,
+        "date": "2024-10-07",
+        "status": "not_found"
+    },
+    {
+        "id": 2,
+        "name": "Фильтр KP450, шпул. навивки, d.450мм, 8м³/ч, верх.подкл. 1½\", без вентиля",
+        "url": "https://pearlpool.ru/filtrovalnoe-oborudovanie/shpulnoj-navivki/seriya-kp-s-verkh-ventilem/filtry-seriya-kp-kp450",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 31463.99,
+        "date": "2024-10-07",
+        "status": "not_found"
+    }
+]

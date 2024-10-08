@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "name": "Насос Emaux SS075T (220В, 12.2 м3/ч, 0.75HP)",
+        "url": "https://aquapolis.ru/nasos-emaux-ss075t-220v-12-2-m3-ch-0-75hp.html",
+        "supplier_id": 2,
+        "supplier_name": "Акваполис",
+        "supplier_url": "https://aquapolis.ru/nasosy.html",
+        "price": 42076.0,
+        "date": "2024-10-08",
+        "status": "found"
+    },
+    {
+        "id": 2,
+        "name": "Насос Emaux SS020T (220В, 4 м3/ч, 0.2HP)",
+        "url": "https://aquapolis.ru/nasos-emaux-ss020t-220v-4-m3-ch-0-2hp.html",
+        "supplier_id": 2,
+        "supplier_name": "Акваполис",
+        "supplier_url": "https://aquapolis.ru/nasosy.html",
+        "price": 32950.0,
+        "date": "2024-10-08",
+        "status": "found"
+    },
+    {
+        "id": 3,
+        "name": "Насос Emaux SS033T (220В, 7 м3/ч, 0.33HP)",
+        "url": "https://aquapolis.ru/nasos-emaux-ss033t-220v-7-m3-ch-0-33hp.html",
+        "supplier_id": 2,
+        "supplier_name": "Акваполис",
+        "supplier_url": "https://aquapolis.ru/nasosy.html",
+        "price": 32950.0,
+        "date": "2024-10-08",
+        "status": "found"
+    }
+]
