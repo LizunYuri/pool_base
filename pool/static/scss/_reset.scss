@@ -1,0 +1,29 @@
+*{
+    padding: 0;
+    margin: 0;
+    position: relative;
+    box-sizing: border-box;
+    
+}
+
+a{
+    border: none;
+    text-decoration: none;
+    color: var(--color-white);
+}
+
+ol,
+ul,
+li{
+    list-style: none;
+}
+
+button, input, select, option{
+    border: none;
+    outline: none;
+    background: transparent;
+}
+p, a, li{
+    margin: 0;
+    padding: 0;
+}

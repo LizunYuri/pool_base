@@ -3,6 +3,7 @@ from clients.models import ClientModel
 from django.utils import timezone
 
 
+
 class CalulateRectangleModel(models.Model):
     CHOICES_WATER_TIME = [
             (6.0, '6 часов'),
@@ -64,8 +65,11 @@ class CalulateRectangleModel(models.Model):
                                null=True, blank=True, editable=False)
     filter_area = models.FloatField(verbose_name='Рекомендованная площадь фильтра', 
                                null=True, blank=True, editable=False)
-    
-    
+    finished_materials = models.CharField(max_length=200,
+                                          verbose_name='Материал',
+                                          help_text='Финишная отделка',
+                                          blank=True, 
+                                          editable=False)
     def save(self, *args, **kwargs):
 
         self.length = round(self.length, 2)
