@@ -1,0 +1,28 @@
+{% extends "components/base.html" %}
+{% load static %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+    <section class="panel" id="panel">
+        <div class="container panel-container">
+            <aside class="panel-aside">
+                <div class="panel-aside-bird">
+                    <img src="{% static 'img/bird.png' %}" alt="bird">
+                </div>
+                <h2></h2>
+                <a class="panel-aside-card" href="{% url 'accountant_panel' %}">
+                    <i class="fa-solid fa-calculator"></i>
+                    <div class="text">
+                        <h6>Расчетник</h6>
+                        <p>расчет строительства бассейна</p>
+                    </div>
+                </a>
+            </aside>
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

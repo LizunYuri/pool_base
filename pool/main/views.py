@@ -7,6 +7,12 @@ from supplier.models import SupplierModel
 from catalogs.models import FilterModel, PumpsModel
 
 
+def panel(request):
+    return render(request, 'pages/panel.html')
+
+def accountant_panel(request):
+    return render(request, 'pages/accountant_panel.html')
+
 log_messages = []
 
 def export_data(request, model):

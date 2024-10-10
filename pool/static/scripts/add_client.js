@@ -12,7 +12,7 @@ const openModalFunction = () => {
     })
 
     closeModal.addEventListener('click', () => {
-        addClientModal.style = 'none'
+        addClientModal.style.display = 'none'
     })
 
     window.addEventListener('click', (event) => {

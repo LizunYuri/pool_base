@@ -1,25 +1,19 @@
-{% extends "components/base.html" %}
-{% load static %}
-{% block title %}
-    Расчет типового прямоугольного бассейна
-{% endblock%}
-{% block style %}
-    <link rel="stylesheet" href="{% static 'css/create_style.css' %}">
-{% endblock %}
-    
-{% block content %}
 
 
-    <section class="create-form">
-        <div class="container create-container">
-            <h1 class="title-h1">Расчет типового прямоугольного скиммерного бассейна</h1>
-            <form method="POST">
+    <section class="calculate">
+        <div class="calculate-panel">
+            <h1>Прямоугольный скиммерный бассейн</h1>
+            <div class="calculate-panel-body">
+            </div>
+        </div>
+        <div class="calculate-body">
+            <form class="create-form" method="POST">
                 {% csrf_token %}
-                <div class="client">
-                    <div class="decor"></div>
-                    <div class="client-name">
-                        <h2 class="title-h2">Информация о Заказчике</h2>
-                        <div class="client-name-choice">
+                    <div class="create-form-btn">
+                        <button id="openAddClientModal" class="accent-btn" type="button" data-toggle="modal" data-target="#clientModal">Добавить Заказчика</button>
+                    </div>
+                    <div class="create-form-body">
+                        <div class="client">
                             <div class="client-name-choice-content">
                                 <label class="client-name-placeholder"  for='{{ form.client.id_for_label }}'>
                                     {{ form.client.label }}
@@ -32,16 +26,10 @@
                                 </label>
                                     {{ form.client }}
                             </div>
-                            <div class="client-name-choice-content">
-                                <button id="openAddClientModal" class="client-name-btn" type="button" data-toggle="modal" data-target="#clientModal">Новый Заказчик</button>
-                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="pool-form-body">
-                    <div class="pool-form-input">
-                        <h2 class="title-h2">Информация о размере</h2>
-                        <div class="content">
+                        <div class="form-content">
+                            <h2 class="title-h2">Размер</h2>
+                            <div class="form-content-top">
                                 <div class="add-client-form-body-note">
                                     <label class="client-name-placeholder"  for='{{ form.length.id_for_label }}'>
                                         {{ form.length.label }}
@@ -66,41 +54,37 @@
                                     </label>
                                     {{ form.width }}
                                 </div>
-                        </div>
-                        <div class="content">
-                            <div class="add-client-form-body-note">
-                                <label class="client-name-placeholder"  for='{{ form.depth_from.id_for_label }}'>
-                                    {{ form.depth_from.label }}
-                                    <div class="question">?</div>
-                                    <div class="help-text">
-                                        <p>
-                                            {{ form.depth_from.help_text}}
-                                        </p>
-                                    </div>
-                                </label>
-                                {{ form.depth_from }}
                             </div>
-                            <div class="add-client-form-body-note">
-                                <label class="client-name-placeholder"  for='{{ form.depth_to.id_for_label }}'>
-                                    {{ form.depth_to.label }}
-                                    <span class="question">?</span>
-                                    <div class="help-text">
-                                        <p>
-                                            {{ form.depth_to.help_text}}
-                                        </p>
-                                    </div>
-                                </label>
-                                {{ form.depth_to }}
+                            <div class="form-content-top">
+                                <div class="add-client-form-body-note">
+                                    <label class="client-name-placeholder"  for='{{ form.depth_from.id_for_label }}'>
+                                        {{ form.depth_from.label }}
+                                        <div class="question">?</div>
+                                        <div class="help-text">
+                                            <p>
+                                                {{ form.depth_from.help_text}}
+                                            </p>
+                                        </div>
+                                    </label>
+                                    {{ form.depth_from }}
+                                </div>
+                                <div class="add-client-form-body-note">
+                                    <label class="client-name-placeholder"  for='{{ form.depth_to.id_for_label }}'>
+                                        {{ form.depth_to.label }}
+                                        <span class="question">?</span>
+                                        <div class="help-text">
+                                            <p>
+                                                {{ form.depth_to.help_text}}
+                                            </p>
+                                        </div>
+                                    </label>
+                                    {{ form.depth_to }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="decor"></div>
-                </div>
-                <div class="pool-form-body">
-                    <div class="decor"></div>
-                    <div class="pool-form-input">
-                        <h2 class="title-h2">Фильтрация</h2>
-                        <div class="content">
+                        <div class="form-content">
+                            <h2 class="title-h2">Фильтрация</h2>
+                            <div class="form-content-top">
                                 <div class="add-client-form-body-note">
                                     <label class="client-name-placeholder"  for='{{ form.water_exchange_time.id_for_label }}'>
                                         {{ form.water_exchange_time.label }}
@@ -125,50 +109,33 @@
                                     </label>
                                     {{ form.filtration_speed }}
                                 </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="pool-form-body">
-                    <div class="pool-form-input">
-                        <h2 class="title-h2">Материал отделки чаши</h2>
-                        <div class="content">
-                            <div class="add-client-radio">
-                                <div class="type">
-                                    <label class="client-name-btn">
+                        <div class="form-content">
+                            <h2 class="title-h2">Материал отделки чаши</h2>
+                            <div class="form-content-top">
+                                <div class="form-content-top-radio">
+                                    <label class="custom-radio">
                                         <input type="radio" name="material_type" value="poly" checked>
-                                        Полипропилен
+                                        <span class="radio-mark"> Полипропилен</span>
                                     </label>
-                                    <label class="client-name-btn">
+                                    <label class="custom-radio">
                                         <input type="radio" name="material_type" value="pvh">
-                                        Пленка ПВХ
+                                        <span class="radio-mark"> Пленка ПВХ</span>
                                     </label>
                                 </div>
                             </div>
-                            <!-- <div class="add-client-form-body-note">
-
-                                                               
-                            </div>
-                            <div class="add-client-form-body-note"> -->
-                                <!-- <select id="materials-dropdown" name="finished_materials">
+                            <div class="form-content-top">
+                                <select class="custom-select" id="materials-dropdown" name="finished_materials">
                                     <option value="">Выберите материал</option>
-                                </select>  -->
-                            <!-- </div> -->
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="decor"></div>
-                </div>
-                <div class="content">
-                    <div class="add-client-form-body-note">
-                        <button class="client-name-btn" type="submit">Сохранить</button>
-                    </div>
-                </div>
             </form>
         </div>
     </section>
 
-    <aside class="panel">
-        23
-    </aside>
 
     <div class="add-client" id="addClientModal">
         <div class="add-client-body">
@@ -250,50 +217,4 @@
                 
             </form>
         </div>
-    </div>    
-
-{% endblock %}
-
-{% block script %}
-    <script src="{% static 'scripts/add_client.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        const materialTypeRadios = document.querySelectorAll('input[name="material_type"]');
-        const materialsDropdown = document.getElementById('materials-dropdown');
-
-        // Функция для обновления списка материалов
-        function updateMaterialsDropdown(materialType) {
-            // Отправляем AJAX запрос на сервер для получения материалов
-            fetch(`/calculation/get-materials/?type=${materialType}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Очищаем текущие опции
-                    materialsDropdown.innerHTML = '<option value="">Выберите материал</option>';
-                    
-                    // Добавляем новые опции в выпадающий список
-                    data.materials.forEach(material => {
-                        let option = document.createElement('option');
-                        option.value = material.id;
-                        option.text = material.name;
-                        materialsDropdown.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-
-        // Слушаем изменения в радио-кнопках
-        materialTypeRadios.forEach(radio => {
-            radio.addEventListener('change', function () {
-                updateMaterialsDropdown(this.value);
-            });
-        });
-
-        // Инициализируем с дефолтным значением
-        updateMaterialsDropdown(document.querySelector('input[name="material_type"]:checked').value);
-    });
-
-    </script>
-{% endblock %}
-    
+    </div>
