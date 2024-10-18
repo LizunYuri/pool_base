@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "name": "Полипропилен 5мм",
+        "url": null,
+        "supplier_id": 4,
+        "supplier_name": "Полимерсервис",
+        "supplier_url": "",
+        "price": 0.0,
+        "date": "2024-10-16",
+        "status": "not_found"
+    },
+    {
+        "id": 2,
+        "name": "Полипропилен 8мм",
+        "url": null,
+        "supplier_id": 4,
+        "supplier_name": "Полимерсервис",
+        "supplier_url": "",
+        "price": 0.0,
+        "date": "2024-10-16",
+        "status": "not_found"
+    },
+    {
+        "id": 3,
+        "name": "Пленка ПВХ 1,65х25,00м \"Haogenplast\", Blue, синий",
+        "url": "https://pearlpool.ru/otdelochnie-materiali/otdelochnye-materialy-plenka-pvkh-plenka-pvkh-haogenplast/plenka-haogenplast-unicolor/plenka-pvkh-1-65kh25-00m-haogenplast-blue-sinij-8283",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 2621.5,
+        "date": "2024-10-16",
+        "status": "found"
+    },
+    {
+        "id": 4,
+        "name": "Пленка ПВХ 1,65х25,00м \"Haogenplast\", Galit NG Blue/Blue Sparks , мрамор",
+        "url": "https://pearlpool.ru/otdelochnie-materiali/otdelochnye-materialy-plenka-pvkh-plenka-pvkh-haogenplast/plenka-haogenplast-print/plenka-pvh-1-65h25-00m--haogenplast---galit-ng-blue-blue-sparks---mramor",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 3445.4,
+        "date": "2024-10-16",
+        "status": "found"
+    },
+    {
+        "id": 5,
+        "name": "Пленка ПВХ 2,05х25,00м \"Alkorplan-2000\", \"Adriatic Blue\", синий",
+        "url": "https://pearlpool.ru/otdelochnie-materiali/plenka-pvh--renolit-/alkorplan-2000/plenka-pvkh-2-5kh25-m-alkorplan-2-adriatic-blue-sinij-352162-7",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 4050.64,
+        "date": "2024-10-16",
+        "status": "found"
+    }
+]

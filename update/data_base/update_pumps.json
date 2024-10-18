@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "name": "Насос STP50, с префильтром, 6 м³/час, 220В",
+        "url": "https://pearlpool.ru/nasosy-dlya-bassejnov/nasosi-s-prefiltrom/nasosy-pool-king-serii-stp/nasosy-stp50",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 24832.0,
+        "date": "2024-10-16",
+        "status": "found"
+    },
+    {
+        "id": 2,
+        "name": "Насос STP75, с префильтром, 8 м³/час, 220В",
+        "url": "https://pearlpool.ru/nasosy-dlya-bassejnov/nasosi-s-prefiltrom/nasosy-pool-king-serii-stp/nasosy-stp75",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 27548.0,
+        "date": "2024-10-16",
+        "status": "found"
+    },
+    {
+        "id": 3,
+        "name": "Насос STP100, с префильтром, 10 м³/час, 220В",
+        "url": "https://pearlpool.ru/nasosy-dlya-bassejnov/nasosi-s-prefiltrom/nasosy-pool-king-serii-stp/nasosy-stp100",
+        "supplier_id": 1,
+        "supplier_name": "Жемчужина",
+        "supplier_url": "https://pearlpool.ru/home/",
+        "price": 29003.0,
+        "date": "2024-10-16",
+        "status": "found"
+    },
+    {
+        "id": 4,
+        "name": "Насос Aquaviva LX STP50M (220В, 6.5 м3/ч, 0.5HP)",
+        "url": "https://aquapolis.ru/nasos-aquaviva-vws50m-odnofaznyj-s-prefiltrom-vws50m.html",
+        "supplier_id": 2,
+        "supplier_name": "Акваполис",
+        "supplier_url": "https://aquapolis.ru/",
+        "price": 21382.0,
+        "date": "2024-10-16",
+        "status": "found"
+    },
+    {
+        "id": 5,
+        "name": "Насос Aquaviva LX STP75M (220В, 8 м3/ч, 0.75HP)",
+        "url": "https://aquapolis.ru/nasos-aquaviva-vws75m-odnofaznyj-s-prefiltrom-vws75m.html",
+        "supplier_id": 2,
+        "supplier_name": "Акваполис",
+        "supplier_url": "https://aquapolis.ru/",
+        "price": 25029.0,
+        "date": "2024-10-16",
+        "status": "found"
+    }
+]

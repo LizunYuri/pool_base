@@ -1,5 +1,6 @@
 <!-- templates/rectangle_detail.html -->
 <h1>Детали бассейна</h1>
+<p>Клиент: {{ rectangle.date }}</p>
 <p>Клиент: {{ rectangle.client }}</p>
 <p>Длина: {{ rectangle.length }} м</p>
 <p>Ширина: {{ rectangle.width }} м</p>
@@ -9,4 +10,8 @@
 <p>площадь зеркала воды: {{ rectangle.area }} м</p>
 <p>мощность насоса: {{ rectangle.pump_power }} м</p>
 <p>площадь фильтрации: {{ rectangle.filter_area }} м</p>
-<p>Материал отделки: {{ rectangle.finished_materials}} м</p>
+<p>Материал отделки: {{ rectangle.finished_materials}}</p>
+<p>Материал Закладных: {{ rectangle.zaclad_material}}</p>
+<p> цвет освещения: {{ rectangle.ligthing}}</p>
+<p>количество ламп: {{ rectangle.ligth_quantity}}</p>
+<p>количество ламп: {{ rectangle.heating}}</p>

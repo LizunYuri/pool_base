@@ -16,8 +16,6 @@ class CalulateRectangleModel(models.Model):
             (30, '30 м/ч'),
             (20, '20 м/ч'),
             (10, '10 м/ч'),
-            # (1.0, '1 час'),
-            # (0.5, '30 минут'),
         ]
     date = models.DateField(default=timezone.now,
                             verbose_name='Дата',
@@ -27,9 +25,8 @@ class CalulateRectangleModel(models.Model):
                             editable=False)
     client = models.ForeignKey(ClientModel, 
                                verbose_name='Клиент',
-                               help_text='Не обязательно к заполнению',
-                               on_delete=models.CASCADE,
-                               blank=True)
+                               help_text='Обязательно к заполнению',
+                               on_delete=models.CASCADE,)
     length = models.FloatField(verbose_name='Длинна бассейна',
                                help_text='По внутрянке',
                                )
@@ -68,8 +65,29 @@ class CalulateRectangleModel(models.Model):
     finished_materials = models.CharField(max_length=200,
                                           verbose_name='Материал',
                                           help_text='Финишная отделка',
+                                          editable=False)
+    zaclad_material = models.CharField(max_length=200,
+                                          verbose_name='Материал закладнных',
+                                          help_text='Финишная отделка',
                                           blank=True, 
                                           editable=False)
+    heating = models.CharField(max_length=200,
+                                          verbose_name='Подогрев',
+                                          help_text='Подогрев воды в бассейне',
+                                          blank=True,
+                                          null=True, 
+                                          editable=False)
+    ligthing = models.CharField(max_length=200,
+                                          verbose_name='Освещение',
+                                          help_text='Подводное освещение',
+                                          blank=True, 
+                                          editable=False)
+    ligth_quantity = models.IntegerField(verbose_name='Количество ламп',
+                                          help_text='Количество ламп',
+                                          blank=True, 
+                                          null=True,
+                                          editable=False)
+    
     def save(self, *args, **kwargs):
 
         self.length = round(self.length, 2)

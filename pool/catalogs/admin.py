@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, LightingModel, DisinfectionModel, HeatingModel
+from .models import FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, LightingModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
 
 
 @admin.register(FilterModel)
@@ -31,15 +31,28 @@ class LightingModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'date', 'supplier')
     list_filter = ('name', 'price', 'date', 'supplier')
     search_fields = ('name', 'price', 'date', 'supplier')
-
-@admin.register(DisinfectionModel)
-class DisinfectionModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'date', 'supplier')
-    list_filter = ('name', 'price', 'date', 'supplier')
-    search_fields = ('name', 'price', 'date', 'supplier')
-    
+ 
 @admin.register(HeatingModel)
 class HeatingModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'date', 'supplier')
     list_filter = ('name', 'price', 'date', 'supplier')
     search_fields = ('name', 'price', 'date', 'supplier')
+
+@admin.register(SetDesinfectionModelRX)
+class SetDesinfectionModelRXAdmin(admin.ModelAdmin):
+    list_display = ('name', 'supplier')
+    list_filter = ('name',  'supplier')
+    search_fields = ('name', 'supplier')
+
+@admin.register(SetDesinfectionModelCL)
+class SetDesinfectionModelCLAdmin(admin.ModelAdmin):
+    list_display = ('name', 'supplier')
+    list_filter = ('name', 'supplier')
+    search_fields = ('name', 'supplier')
+
+
+@admin.register(HydrolysisModel)
+class HydrolysisModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'supplier')
+    list_filter = ('name', 'date', 'supplier')
+    search_fields = ('name', 'supplier')

@@ -164,7 +164,7 @@ class BaseUpdateSpider(scrapy.Spider):
 
         for message in self.messages:
             try:
-                response = requests.post(f'{base_url}logistic/', json=message)
+                response = requests.post(f'{base_url}update/logistic/', json=message)
                 if response.status_code == 200:
                     self.log("Сообщение успешно отправлено на /logistic.")
                 else:
@@ -191,7 +191,7 @@ class BaseUpdateSpider(scrapy.Spider):
         """Сохраняет данные о товарах и отправляет их на сервер."""
         self.log(f"Сохраняем {len(self.products)} товаров в файл.")
 
-        response = requests.post(f'{base_url}{self.endpoint}/', json=self.products)
+        response = requests.post(f'{base_url}update/{self.endpoint}/', json=self.products)
 
         if response.status_code == 200:
             self.log("Данные успешно обновлены в базе данных.")
@@ -212,7 +212,7 @@ class UpdateFilters(BaseUpdateSpider):
     """Класс для обновления фильтров."""
 
     name = 'update_filters'
-    start_urls = [f'{base_url}export-filters/']
+    start_urls = [f'{base_url}update/export-filters/']
 
     def __init__(self, *args, **kwargs):
         super(UpdateFilters, self).__init__('update_filters', *args, **kwargs)
@@ -222,7 +222,16 @@ class UpdatePumps(BaseUpdateSpider):
     """Класс для обновления насосов."""
 
     name = 'update_pumps'
-    start_urls = [f'{base_url}export-pumps/']
+    start_urls = [f'{base_url}update/export-pumps/']
 
     def __init__(self, *args, **kwargs):
         super(UpdatePumps, self).__init__('update_pumps', *args, **kwargs)
+
+
+class UpdateFinished(BaseUpdateSpider):
+
+    name = 'update_finished'
+    start_urls = [f'{base_url}update/export-finished/']
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateFinished, self).__init__('update_finished', *args, **kwargs)

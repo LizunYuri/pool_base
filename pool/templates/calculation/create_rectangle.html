@@ -1,73 +1,81 @@
+{% extends 'components/base.html' %}
+{% load static %}
 
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/create_style.css' %}">
+{% endblock %}
+
+{% block content %}
 
     <section class="calculate">
         <div class="calculate-panel">
             <h1>Прямоугольный скиммерный бассейн</h1>
+            <div class="create-form-btn">
+                <button id="openAddClientModal" class="accent-btn" type="button" data-toggle="modal" data-target="#clientModal">Добавить Заказчика</button>
+            </div>
             <div class="calculate-panel-body">
             </div>
         </div>
         <div class="calculate-body">
-            <form class="create-form" method="POST">
+            <form id='rectangle-form' class="create-form" method="POST">
                 {% csrf_token %}
-                    <div class="create-form-btn">
-                        <button id="openAddClientModal" class="accent-btn" type="button" data-toggle="modal" data-target="#clientModal">Добавить Заказчика</button>
-                    </div>
-                    <div class="create-form-body">
-                        <div class="client">
-                            <div class="client-name-choice-content">
-                                <label class="client-name-placeholder"  for='{{ form.client.id_for_label }}'>
-                                    {{ form.client.label }}
-                                    <div class="question">?</div>
-                                    <div class="help-text">
-                                        <p>
-                                            {{ form.client.help_text }}
-                                        </p>
-                                    </div>
-                                </label>
-                                    {{ form.client }}
-                            </div>
+                <div class="step" id="step-1">
+                    <div class="client">
+                        <div class="client-name-choice-content">
+                            <label class="client-name-placeholder"  for='{{ form.client.id_for_label }}'>
+                                {{ form.client.label }}
+                                <div class="question">?</div>
+                                <div class="help-text">
+                                    <p>
+                                        {{ form.client.help_text }}
+                                    </p>
+                                </div>
+                            </label>
+                            {{ form.client }}
                         </div>
-                        <div class="form-content">
-                            <h2 class="title-h2">Размер</h2>
-                            <div class="form-content-top">
-                                <div class="add-client-form-body-note">
-                                    <label class="client-name-placeholder"  for='{{ form.length.id_for_label }}'>
-                                        {{ form.length.label }}
-                                        <div class="question">?</div>
+                    </div>
+                    <div class="form-content">
+                        <h2 class="title-h2">Размер</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder"  for='{{ form.length.id_for_label }}'>
+                                    {{ form.length.label }}
+                                    <div class="question">?</div>
                                         <div class="help-text">
                                             <p>
                                                 {{ form.length.help_text}}
                                             </p>
                                         </div>
-                                    </label>
+                                </label>
                                     {{ form.length }}
-                                </div>
-                                <div class="add-client-form-body-note">
-                                    <label class="client-name-placeholder"  for='{{ form.width.id_for_label }}'>
-                                        {{ form.width.label }}
-                                        <span class="question">?</span>
-                                        <div class="help-text">
-                                            <p>
-                                                {{ form.width.help_text}}
-                                            </p>
-                                        </div>
-                                    </label>
-                                    {{ form.width }}
-                                </div>
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder"  for='{{ form.width.id_for_label }}'>
+                                    {{ form.width.label }}
+                                    <span class="question">?</span>
+                                    <div class="help-text">
+                                        <p>
+                                            {{ form.width.help_text}}
+                                        </p>
+                                    </div>
+                                </label>
+                                {{ form.width }}
+                            </div>
                             </div>
                             <div class="form-content-top">
                                 <div class="add-client-form-body-note">
                                     <label class="client-name-placeholder"  for='{{ form.depth_from.id_for_label }}'>
-                                        {{ form.depth_from.label }}
-                                        <div class="question">?</div>
-                                        <div class="help-text">
-                                            <p>
-                                                {{ form.depth_from.help_text}}
-                                            </p>
-                                        </div>
-                                    </label>
-                                    {{ form.depth_from }}
-                                </div>
+                                    {{ form.depth_from.label }}
+                                    <div class="question">?</div>
+                                    <div class="help-text">
+                                        <p>
+                                            {{ form.depth_from.help_text}}
+                                        </p>
+                                    </div>
+                                </label>
+                                {{ form.depth_from }}
+                            </div>
                                 <div class="add-client-form-body-note">
                                     <label class="client-name-placeholder"  for='{{ form.depth_to.id_for_label }}'>
                                         {{ form.depth_to.label }}
@@ -82,60 +90,260 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-content">
-                            <h2 class="title-h2">Фильтрация</h2>
-                            <div class="form-content-top">
-                                <div class="add-client-form-body-note">
-                                    <label class="client-name-placeholder"  for='{{ form.water_exchange_time.id_for_label }}'>
-                                        {{ form.water_exchange_time.label }}
+                    <div class="form-content">
+                        <h2 class="title-h2">Фильтрация</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder"  for='{{ form.water_exchange_time.id_for_label }}'>
+                                    {{ form.water_exchange_time.label }}
+                                    <div class="question">?</div>
+                                    <div class="help-text">
+                                        <p>
+                                            {{ form.water_exchange_time.help_text}}
+                                        </p>
+                                    </div>
+                                </label>
+                                {{ form.water_exchange_time }}
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder"  for='{{ form.filtration_speed.id_for_label }}'>
+                                    {{ form.filtration_speed.label }}
+                                    <span class="question">?</span>
+                                    <div class="help-text">
+                                        <p>
+                                            {{ form.filtration_speed.help_text}}
+                                        </p>
+                                    </div>
+                                </label>
+                                {{ form.filtration_speed }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <button class="blue-btn" type="button" disabled>Назад</button>
+                                <button class="blue-btn" type="button" onclick="nextStep(2)">Далее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step" id="step-2" style="display:none;">
+                    <div class="form-content">
+                        <h2 class="title-h2">Материал отделки чаши</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder custom-radio">
+                                   <input type="radio" name="material_type" value="poly" checked>
+                                    <span class="radio-mark width250"> Полипропилен</span>
+                                </label> 
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="material_type" value="pvh">
+                                    <span class="radio-mark width250"> Пленка ПВХ</span>
+                                </label>
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <div class="form-content-top">
+                                    <select class="custom-select" id="materials-dropdown" name="finished_materials">
+                                        <option value="">Выберите материал</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="form-content">
+                        <h2 class="title-h2">Материал изготовления закладных</h2>
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <label class="custom-radio">
+                                    <input type="radio" name="zaclad_material" value="abs" checked>
+                                    <span class="radio-mark">ABS пластик</span>
+                                </label>
+                                <label class="custom-radio">
+                                    <input type="radio" name="zaclad_material" value="aisi">
+                                    <span class="radio-mark">AISI-316 нержавеющая сталь</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <button class="blue-btn" type="button" onclick="prevStep(1)">Назад</button>
+                                <button class="blue-btn" type="button" onclick="nextStep(3)">Далее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step" id="step-3" style="display:none;">
+                    <div class="form-content">
+                        <h2 class="title-h2">Подводное освещение</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="ligthing" value="white" checked>
+                                    <span class="radio-mark width250">Белый свет</span>
+                                    <div class="question">?</div>
+                                    <div class="help-text">
+                                        <p>
+                                            Классический белый свет подводного освещения. При расчете выходит дешевле за счет отсутствия блока управления освещения.
+                                        </p>
+                                    </div>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="ligthing" value="rgb">
+                                    <span class="radio-mark width250">RGB свет</span>
+                                    <div class="question">?</div>
+                                    <div class="help-text">
+                                        <p>
+                                            Цвета и режимы управляются с помощью блока управления с пультом дистанционного управления.
+                                        </p>
+                                    </div>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="ligthing" value="none">
+                                    <span class="radio-mark width250">Без освещения</span>
+                                    <div class="question">?</div>
+                                    <div class="help-text">
+                                        <p>
+                                            Не рекомендуется. Так как в темное время суток бассейн будет большим серым пятном.
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <div class="client-name-choice-content">
+                                    <label class="client-name-placeholder"  for='ligth_quantity'>
+                                        Колличество светильников
                                         <div class="question">?</div>
                                         <div class="help-text">
                                             <p>
-                                                {{ form.water_exchange_time.help_text}}
+                                                Рекомендуется не меньше 1 светильника на 4 метра по длинной стенке
                                             </p>
                                         </div>
                                     </label>
-                                    {{ form.water_exchange_time }}
-                                </div>
-                                <div class="add-client-form-body-note">
-                                    <label class="client-name-placeholder"  for='{{ form.filtration_speed.id_for_label }}'>
-                                        {{ form.filtration_speed.label }}
-                                        <span class="question">?</span>
-                                        <div class="help-text">
-                                            <p>
-                                                {{ form.filtration_speed.help_text}}
-                                            </p>
-                                        </div>
-                                    </label>
-                                    {{ form.filtration_speed }}
+                                    <input class="client-name-note" type="number" name="ligth_quantity" id="ligth_quantity">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-content">
-                            <h2 class="title-h2">Материал отделки чаши</h2>
-                            <div class="form-content-top">
-                                <div class="form-content-top-radio">
-                                    <label class="custom-radio">
-                                        <input type="radio" name="material_type" value="poly" checked>
-                                        <span class="radio-mark"> Полипропилен</span>
-                                    </label>
-                                    <label class="custom-radio">
-                                        <input type="radio" name="material_type" value="pvh">
-                                        <span class="radio-mark"> Пленка ПВХ</span>
-                                    </label>
-                                </div>
+                    </div>
+                    <div class="form-content">
+                        <h2 class="title-h2">Подогрев воды</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="heating" value="electro">
+                                    <span class="radio-mark width250">Электронагреватель</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="heating" value="warm" checked>
+                                    <span class="radio-mark width250">Теплообменник</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="heating" value="pump">
+                                    <span class="radio-mark width250">Тепловой насос</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="heating" value="">
+                                    <span class="radio-mark width250">Без подогрева</span>
+                                </label>
                             </div>
-                            <div class="form-content-top">
-                                <select class="custom-select" id="materials-dropdown" name="finished_materials">
-                                    <option value="">Выберите материал</option>
+                            <div class="add-client-form-body-note">
+                                <select class="custom-select" id="heatings-dropdown" name="heating">
+                                    <option value="">Выберите оборудование</option>
                                 </select>
                             </div>
                         </div>
                     </div>
+                    <div class="form-content">
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <button class="blue-btn" type="button" onclick="prevStep(2)">Назад</button>
+                                <button class="blue-btn" type="button" onclick="nextStep(4)">Далее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step" id="step-4" style="display:none;">
+                    <div class="form-content">
+                        <h2 class="title-h2">Дезинфекция</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="desinfection" value="rx" checked>
+                                    <span class="radio-mark width250">Станция дозирования Rx/PH</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="desinfection" value="cl">
+                                    <span class="radio-mark width250">Станция дозирования Rx/PH/Cl</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="desinfection" value="h2o">
+                                    <span class="radio-mark width250">Гидролизная установка</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="desinfection" value="">
+                                    <span class="radio-mark width250">Ручная дезинфекция</span>
+                                </label>
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <select class="custom-select" id="desinfection-dropdown" name="desinfection">
+                                    <option value="">Выберите оборудование</option>
+                                </select>
+                                <input type="hidden" id="modelNameInput" name="model_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content">
+                        <h2 class="title-h2">Дополнительное оборудование</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <div class="width250">
+                                    <input class="checkbox-input" type="checkbox" id="pit" name="pit">
+                                    <label for="pit" class="custom-checkbox width250">
+                                        <span class="radio-mark width250">Приямок для оборудования</span>
+                                    </label>
+                                </div>
+                                <div  class="width250">
+                                    <input class="checkbox-input" type="checkbox" id="cover" name="cover">
+                                    <label for="cover" class="custom-checkbox width250">
+                                        <span class="radio-mark width250">Плавающее покрывало</span>
+                                    </label>
+                                </div>   
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <div  class="width250">
+                                    <input class="checkbox-input" type="checkbox" id="winding" name="winding">
+                                    <label for="winding" class="custom-checkbox width250">
+                                        <span class="radio-mark width250">Сматывющее устройство</span>
+                                    </label>
+                                </div>   
+                                <div  class="width250">
+                                    <input class="checkbox-input" type="checkbox" id="cleaner" name="cleaner">
+                                    <label for="cleaner" class="custom-checkbox width250">
+                                        <span class="radio-mark width250">Подводный пылесос</span>
+                                    </label>
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <button class="blue-btn" type="button" onclick="prevStep(3)">Назад</button>
+                                <button class="blue-btn" type="button" onclick="nextStep(5)">Далее</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content-top">
+                        <div class="add-client-form-body-note">
+                            <button class="blue-btn" type="submit">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </section>
-
 
     <div class="add-client" id="addClientModal">
         <div class="add-client-body">
@@ -211,10 +419,107 @@
                     </div>
                 </div>
                 <div class="add-client-form-body">
-                    <button type="submit" name="create_client" class="client-name-btn">Добавить</button>
-                    <button type="reset" class="client-name-btn">Очистить</button>
+                    <button type="submit" name="create_client" class="client-name-btn blue-btn">Добавить</button>
+                    <button type="reset" class="client-name-btn blue-btn">Очистить</button>
                 </div>
                 
             </form>
         </div>
     </div>
+
+    <div class="error-modal" id="error-modal">
+        <div class="body">
+            <span class="close-btn-error">&times;</span>
+            <p>Проверьте правильность заполнения формы</p>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'scripts/create_method.js' %}"></script>
+    <script>
+
+        
+
+        const steps = document.querySelectorAll('.step')
+        const errorModal = document.querySelector('.error-modal')
+        const closeModalError = document.querySelector('.close-btn-error')
+
+        // const validateStep = (step) => {
+        //     let isValid = true;
+
+        //     const currentStep = document.getElementById('step-' + step);
+
+        //     if (!currentStep) {
+        //         console.error("Шаг не найден: step-" + step);
+        //         return false;
+        //     }
+
+        //     currentStep.querySelectorAll('input, select').forEach(input => {
+        //         // Добавляем обработчик события input и change для сброса фона
+        //         input.addEventListener('input', () => {
+        //             input.style.background = ''; // Убираем фон при вводе данных
+        //         });
+
+        //         input.addEventListener('change', () => {
+        //             input.style.background = ''; // Убираем фон при выборе опции
+        //         });
+
+        //         // Проверка на заполненность
+        //         if (input.required) {
+        //             if (input.tagName === 'SELECT') {
+        //                 // Проверяем, является ли выбранное значение пустым
+        //                 if (!input.value || input.value === '') {
+        //                     input.style.background = 'rgba(240, 128, 128, .4)'; // Подсветка некорректных полей
+        //                     isValid = false;
+        //                 }
+        //             } else {
+        //                 // Проверяем для input
+        //                 if (!input.value) {
+        //                     input.style.background = 'rgba(240, 128, 128, .4)'; // Подсветка некорректных полей
+        //                     isValid = false;
+        //                 }
+        //             }
+        //         }
+        //     });
+
+        //     return isValid;
+        // }
+
+
+
+        const nextStep = (step) => {
+            // if (!validateStep(step - 1)){
+            //     errorModal.style.display = 'flex';
+            //     return
+            // }
+            // else {
+            //     steps.forEach((e) => {
+            //     e.style.display = 'none'
+            // })
+            // document.getElementById('step-' + step).style.display = 'flex'
+
+            // }
+            steps.forEach((e) => {
+                e.style.display = 'none'
+            })
+            document.getElementById('step-' + step).style.display = 'flex'
+            
+        }
+
+
+        closeModalError.addEventListener('click', () => {
+            console.log('Закрытие модального окна');
+            errorModal.style.display = 'none';
+        });
+
+        const prevStep = (step) => {
+            steps.forEach((e) => {
+                e.style.display = 'none'
+            })
+            document.getElementById('step-' + step).style.display = 'flex'
+        }
+
+    </script>
+{% endblock %}

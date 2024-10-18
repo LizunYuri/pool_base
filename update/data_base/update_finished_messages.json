@@ -1,0 +1,32 @@
+[
+    {
+        "product_id": 1,
+        "product_name": "Полипропилен 5мм",
+        "message": "product_url отсутствует, цена не обновлена.",
+        "timestamp": "2024-10-16T12:11:53.205821"
+    },
+    {
+        "product_id": 2,
+        "product_name": "Полипропилен 8мм",
+        "message": "product_url отсутствует, цена не обновлена.",
+        "timestamp": "2024-10-16T12:11:53.206817"
+    },
+    {
+        "product_id": 3,
+        "product_name": "Пленка ПВХ 1,65х25,00м \"Haogenplast\", Blue, синий",
+        "message": "Цена обновлена на 2621.5.",
+        "timestamp": "2024-10-16T12:11:54.155338"
+    },
+    {
+        "product_id": 5,
+        "product_name": "Пленка ПВХ 2,05х25,00м \"Alkorplan-2000\", \"Adriatic Blue\", синий",
+        "message": "Цена обновлена на 4050.64.",
+        "timestamp": "2024-10-16T12:11:54.169329"
+    },
+    {
+        "product_id": 4,
+        "product_name": "Пленка ПВХ 1,65х25,00м \"Haogenplast\", Galit NG Blue/Blue Sparks , мрамор",
+        "message": "Цена обновлена на 3445.4.",
+        "timestamp": "2024-10-16T12:11:54.190318"
+    }
+]
