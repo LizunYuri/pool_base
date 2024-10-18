@@ -1,5 +1,6 @@
 from django.db import models
 from clients.models import ClientModel
+from catalogs.models import ExportModel, DiggingModel
 from django.utils import timezone
 
 
@@ -53,7 +54,6 @@ class CalulateRectangleModel(models.Model):
                             verbose_name='Скорость фильтрации',
                             help_text='Чем ниже скорость тем качественнее очистка воды',
                             )
-
     volume = models.FloatField(verbose_name='Объем бассейна', 
                                null=True, blank=True, editable=False)
     area = models.FloatField(verbose_name='Площадь зеркала воды', 
@@ -87,7 +87,48 @@ class CalulateRectangleModel(models.Model):
                                           blank=True, 
                                           null=True,
                                           editable=False)
-    
+    desinfection = models.CharField(max_length=200,
+                                          verbose_name='Дезинфекция',
+                                          help_text='Дозирующее оборудование',
+                                          blank=True, 
+                                          editable=False)
+    pit  = models.BooleanField(default=False,
+                               verbose_name='Приямок',
+                                help_text='Полипропиленовый приямок',
+                                blank=True, 
+                                editable=False)
+    cover  = models.BooleanField(default=False,
+                               verbose_name='Покрывало',
+                                help_text='Плавающее покрывало',
+                                blank=True, 
+                                editable=False)
+    winding  = models.BooleanField(default=False,
+                               verbose_name='Сматывающее устройство',
+                                help_text='Сматывающее устройство',
+                                blank=True, 
+                                editable=False)
+    cleaner  = models.BooleanField(default=False,
+                               verbose_name='Пылесос',
+                                help_text='Подводный пылесос',
+                                blank=True, 
+                                editable=False)
+    digging = models.ForeignKey(DiggingModel,
+                                verbose_name='Разработка котлована',
+                                help_text='Выбрать из имеющегося',
+                                on_delete=models.CASCADE)
+    export = models.ForeignKey(ExportModel,
+                               verbose_name='Вывоз грунта',
+                               help_text='Выбрать из имеющегося',
+                               on_delete=models.CASCADE)
+    concrete = models.IntegerField(verbose_name='Бетонные работы',
+                                   editable=False,
+                                   default=1)
+    entrance = models.CharField(max_length=200,
+                                verbose_name='Входная группа',
+                                help_text='Заполняется из выбранного пользователем',
+                                editable=False,
+                                blank=True)
+
     def save(self, *args, **kwargs):
 
         self.length = round(self.length, 2)

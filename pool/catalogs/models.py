@@ -605,8 +605,14 @@ class SetDesinfectionModelRX(models.Model):
     image = models.ImageField(upload_to='catalog/disinfection/',
                               verbose_name='Фото товара',
                               help_text='Красивое фото используется для коммерческого предложения')
-        
+    model_name = models.CharField(max_length=100, 
+                                  blank=True,
+                                  editable=False)
+    
     def save(self, *args, **kwargs):
+        if not self.model_name:
+            self.model_name = self.__class__.__name__  # Получаем название модели
+        super().save(*args, **kwargs)
 
         self.ph_liquid_price = round(self.ph_liquid_price, 2)
         self.rx_liquid_price = round(self.rx_liquid_price, 2)
@@ -726,8 +732,14 @@ class SetDesinfectionModelCL(models.Model):
     image = models.ImageField(upload_to='catalog/disinfection/',
                               verbose_name='Фото товара',
                               help_text='Красивое фото используется для коммерческого предложения')
-        
+    model_name = models.CharField(max_length=100, 
+                                  blank=True,
+                                  editable=False)
+    
     def save(self, *args, **kwargs):
+        if not self.model_name:
+            self.model_name = self.__class__.__name__  # Получаем название модели
+        super().save(*args, **kwargs)
 
         self.ph_liquid_price = round(self.ph_liquid_price, 2)
         self.rx_liquid_price = round(self.rx_liquid_price, 2)
@@ -816,8 +828,14 @@ class HydrolysisModel(models.Model):
     image = models.ImageField(upload_to='catalog/disinfection/',
                               verbose_name='Фото товара',
                               help_text='Красивое фото используется для коммерческого предложения')
-        
+    model_name = models.CharField(max_length=100, 
+                                  blank=True,
+                                  editable=False)
+    
     def save(self, *args, **kwargs):
+        if not self.model_name:
+            self.model_name = self.__class__.__name__  # Получаем название модели
+        super().save(*args, **kwargs)
 
         self.ph_liquid_price = round(self.ph_liquid_price, 2)
         self.price = round(self.price, 2)
@@ -841,3 +859,210 @@ class HydrolysisModel(models.Model):
     class Meta:
         verbose_name = 'Гидролизная установка'
         verbose_name_plural = 'Гидролизная установка'
+
+
+class DiggingModel(models.Model):
+    name = models.CharField(max_length=200,
+                            verbose_name='Название',
+                            help_text='Указать как будет в коммерческом предложении')
+    calculation = models.BooleanField(verbose_name='Участвует в расчете',
+                                      help_text='По умолчанию в расчете участвует. Ели подразумевается отсутствие работ то должно быть неактивным',
+                                      default=True)
+    price =  models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за .м3')
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Копка'
+        verbose_name_plural = 'Разработка котлована'
+
+
+class ExportModel(models.Model):
+    name = models.CharField(max_length=200,
+                            verbose_name='Название',
+                            help_text='Будет прописано в коммерческом предложении')
+    calculation = models.BooleanField(verbose_name='Участвует в расчете',
+                                      help_text='По умолчанию в расчете участвует. Ели подразумевается отсутствие работ то должно быть неактивным',
+                                      default=True)
+    price =  models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за .м3')
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Вывоз грунта'
+        verbose_name_plural = 'Вывоз грунта'
+
+
+class ConcreteModel(models.Model):
+    name = models.CharField(max_length=200,
+                            verbose_name='Название',
+                            help_text='Будет указано в коммерческом предложении')
+    calculation = models.BooleanField(verbose_name='Участвует в расчете',
+                                      help_text='По умолчанию в расчете участвует. Ели подразумевается отсутствие работ то должно быть неактивным',
+                                      default=True)
+    price =  models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за .м3')
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Бетон'
+        verbose_name_plural = 'Бетон от завода'
+
+
+class FittingsModel(models.Model):
+    name = models.CharField(max_length=200,
+                            verbose_name='Название',
+                            help_text='Будет указано в коммерческом предложении')
+    price =  models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за м.')
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Арматура'
+        verbose_name_plural = 'Металлопрокат'
+
+
+class JobsConcretteModel(models.Model):
+    CHOICES = [
+            ('poly', 'Полипропилен'),
+            ('pvh', 'Пленка ПВХ')
+        ]
+    
+    name = models.CharField(max_length=200,
+                            verbose_name='Название',
+                            help_text='Будет указано в коммерческом предложении')
+    calculation = models.BooleanField(verbose_name='Участвует в расчете',
+                                      help_text='По умолчанию в расчете участвует. Ели подразумевается отсутствие работ то должно быть неактивным',
+                                      default=True)
+    type_pool = models.CharField(
+                            max_length=20,
+                            choices=CHOICES,
+                            default='pvh',
+                            verbose_name='Тип бассейна',
+                            help_text='Пленка ПВХ / Полипропилен',
+                            blank=True,
+                            null=True)
+    price =  models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за .м3')
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Работы'
+        verbose_name_plural = 'Работы по бетонированию'
+
+
+class EntranceModel(models.Model):
+    CHOICES = [
+            ('steps', 'Ступени'),
+            ('ladder', 'Лестница')
+        ]
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 on_delete=models.CASCADE,
+                                 blank=True,
+                                 default=0)
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='Если позиция покупная то используется номенклатура. Иначе заполнить по внетреннему названию',
+                            )
+    article = models.CharField(max_length=100,
+                            verbose_name='Артикул',
+                            help_text='В точности как в каталоге поставщика',
+                            blank=True,
+                            )
+    type_category = models.CharField(
+                            max_length=20,
+                            choices=CHOICES,
+                            default='steps',
+                            verbose_name='Категория',
+                            )
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за ед.')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    def delete(self, *args, **kwargs):
+        # Удаление файла изображения
+        if self.image and os.path.isfile(self.image.path):
+            os.remove(self.image.path)
+        super().delete(*args, **kwargs)
+
+    def get_image_url(self):
+        if self.image:
+            return self.image.url
+        return None
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Входная группа'
+

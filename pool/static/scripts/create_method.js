@@ -13,28 +13,29 @@ const lightingRadios = document.querySelectorAll('input[name="ligthing"]');
 const lightQuantityInput = document.getElementById('ligth_quantity');
 const desinfectionRadios = document.querySelectorAll('input[name="desinfection"]')
 const desinfecionDropdown = document.getElementById('desinfection-dropdown')
-const modelNameInput = document.getElementById('modelNameInput');
+const entranceRadios = document.querySelectorAll('input[name="entrance"]')
+const entranceDropdown = document.getElementById('entrance-dropdown')
 
 
 
 const initializeModalAndForm = () => {
-    console.log('Инициализация модального окна и формы');
+
 
     if (openModalBtn && addClientModal && closeModal) {
-        console.log('Инициализация модального окна');
+
         openModalBtn.addEventListener('click', () => {
-            console.log('Открытие модального окна');
+
             addClientModal.style.display = 'flex';
         });
 
         closeModal.addEventListener('click', () => {
-            console.log('Закрытие модального окна');
+
             addClientModal.style.display = 'none';
         });
 
         window.addEventListener('click', (event) => {
             if (event.target === addClientModal) {
-                console.log('Закрытие модального окна кликом вне его');
+
                 addClientModal.style.display = 'none';
             }
         });
@@ -45,7 +46,6 @@ const initializeModalAndForm = () => {
     if (clientForm) {
         clientForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            console.log('Отправка формы нового клиента');
 
             const formData = new FormData(clientForm);
 
@@ -56,7 +56,6 @@ const initializeModalAndForm = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Новый клиент добавлен:', data.client);
                     clientForm.reset();
                     // Добавляем нового клиента в выпадающий список
                     const newOption = document.createElement('option');
@@ -86,14 +85,14 @@ const helpTextVisible = () => {
         question.addEventListener('mouseenter', () => {
             const helpText = question.nextElementSibling;
             if (helpText && helpText.classList.contains('help-text')) {
-                console.log('Показ всплывающей подсказки');
+
                 helpText.style.display = 'flex';
              }
         });
         question.addEventListener('mouseleave', () => {
             const helpText = question.nextElementSibling;
             if (helpText && helpText.classList.contains('help-text')) {
-                console.log('Скрытие всплывающей подсказки');
+
                 helpText.style.display = 'none';
             }
         });
@@ -101,15 +100,12 @@ const helpTextVisible = () => {
 }
 
 const initializeHeatingScript = () => {
-    console.log("Инициализация скрипта получения данных о подогреве");
-
     if (!equipmentHeatingsRadios.length || !heatingDropdown) {
         console.warn('Элементы для инициализации Подогрева не найдены');
         return;
     }
 
     const updateHeatingsEquipment = (equipmentHeatings) => {
-        console.log('Обновление списка оборудования:', equipmentHeatings);
 
         // Если выбран "Без подогрева", блокируем dropdown и очищаем его
         if (equipmentHeatings === "") {
@@ -120,7 +116,6 @@ const initializeHeatingScript = () => {
             fetch(`/calculation/get-heating/?heating_type=${equipmentHeatings}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Получены данные об оборудовании', data);
                     heatingDropdown.innerHTML = '<option value="">Выберите Оборудование</option>';
                     data.heatings.forEach((heating) => {
                         let option = document.createElement('option');
@@ -138,7 +133,6 @@ const initializeHeatingScript = () => {
     equipmentHeatingsRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             const selectedValue = event.target.value; // Получаем выбранное значение
-            console.log('Изменен тип подогрева:', selectedValue);
             updateHeatingsEquipment(selectedValue); // Обновляем оборудование в зависимости от выбора
         });
     });
@@ -150,15 +144,12 @@ const initializeHeatingScript = () => {
 }
 
 const initialzeDesinfectionScript = () => {
-    console.log("Инициализация скрипта получения данных о оборудованиии о дезинфекции");
-
     if (!desinfectionRadios.length || !desinfecionDropdown) {
         console.warn('Элементы для инициализации списка с оборудованием не найдены');
         return;
     }
 
     const updateDesinfrctionEquipment = (equipmentDesinfrctions) => {
-        console.log('Обновление списка оборудования:', equipmentDesinfrctions);
 
         // Если выбран "Без подогрева", блокируем dropdown и очищаем его
         if (equipmentDesinfrctions === "") {
@@ -169,13 +160,11 @@ const initialzeDesinfectionScript = () => {
             fetch(`/calculation/get_desinfection/?type_desinfection=${equipmentDesinfrctions}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Получены данные об оборудовании', data);
                     desinfecionDropdown.innerHTML = '<option value="">Выберите Оборудование</option>';
                     data.desinfections.forEach((desinfection) => {
                         let option = document.createElement('option');
-                        option.value = desinfection.id;
+                        option.value = `${desinfection.id}|${desinfection.model}`;
                         option.text = desinfection.name;
-                        option.setAttribute('data-model', data.model_name);
                         desinfecionDropdown.appendChild(option);
                     });
                 })
@@ -187,11 +176,7 @@ const initialzeDesinfectionScript = () => {
 
     desinfectionRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
-            const selectedValue = event.target.value; // Получаем выбранное значение
-            const selectedOption = desinfecionDropdown.options[desinfecionDropdown.selectedIndex];
-            const modelName = selectedOption.getAttribute('data-model');
-            modelNameInput.value = modelName;
-            console.log('Изменен тип подогрева:', selectedValue);
+            const selectedValue = event.target.value;
            updateDesinfrctionEquipment(selectedValue); // Обновляем оборудование в зависимости от выбора
         });
     });
@@ -202,13 +187,7 @@ const initialzeDesinfectionScript = () => {
     }
 }
 
-// const sendDesinfectionDropdwn = () => {
-//     desinfecionDropdown.addEventListener
-// }
-
 const lightingScript = () => {
-    console.log("Инициализация скрипта обработки освещения");
-
     const updateLightQuantityState = () => {
         const selectedLighting = document.querySelector('input[name="ligthing"]:checked').value;
         
@@ -231,19 +210,15 @@ const lightingScript = () => {
 }
 
 const initializeMaterialScript = () => {
-    console.log('Инициализация скрипта для материалов');
-
     if (!materialTypeRadios.length || !materialsDropdown) {
         console.warn('Элементы для инициализации материалов не найдены');
         return;
     }
 
     function updateMaterialsDropdown(materialType) {
-        console.log('Обновление списка материалов для типа:', materialType);
         fetch(`/calculation/get-materials/?type=${materialType}`)
             .then(response => response.json())
             .then(data => {
-                console.log('Получены материалы:', data);
                 materialsDropdown.innerHTML = '<option value="">Выберите материал</option>';
                 data.materials.forEach(material => {
                     let option = document.createElement('option');
@@ -259,7 +234,6 @@ const initializeMaterialScript = () => {
 
         materialTypeRadios.forEach(radio => {
             radio.addEventListener('change', function () {
-                console.log('Изменен тип материала:', this.value);
                 updateMaterialsDropdown(this.value);
             });
         });
@@ -267,6 +241,43 @@ const initializeMaterialScript = () => {
         updateMaterialsDropdown(document.querySelector('input[name="material_type"]:checked').value);
     
 }
+
+const initializeEntranceScript = () => {
+
+    if (!entranceRadios.length || !entranceDropdown) {
+        console.warn('Элементы для инициализации входной группы не найдены');
+        return;
+    }
+
+    function updateEntranceDropdown(entranceType) {
+        fetch(`/calculation/get_entrance/?entrance_type=${entranceType}`)
+            .then(response => response.json())
+            .then(data => {
+                entranceDropdown.innerHTML = '<option value="">Выберите элемент</option>';
+                data.entrances.forEach(entrance => {
+                    let option = document.createElement('option');
+                        option.value = entrance.id;
+                        option.text = entrance.name;
+                        entranceDropdown.appendChild(option);
+                    });
+                })
+            .catch(error => {
+                console.error('Ошибка при получении входной группы:', error);
+            });
+        }
+
+        entranceRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                updateEntranceDropdown(this.value);
+            });
+        });
+
+        updateEntranceDropdown(document.querySelector('input[name="entrance"]:checked').value);
+    
+}
+
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM полностью загружен');
@@ -276,4 +287,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeMaterialScript()
     lightingScript()
     initialzeDesinfectionScript()
+    initializeEntranceScript()
+    // initializePumpsScript()
 })

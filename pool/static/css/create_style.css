@@ -427,6 +427,11 @@
 }
 
 .checkbox-input:checked + .checkbox-label::before {
-  content: "✔"; /* Галочка перед текстом */
+  content: "✔";
   display: inline-block;
+}
+
+.margin40 {
+  margin-top: 15px;
+  margin-bottom: 20px;
 }

@@ -320,9 +320,6 @@
     }
 }
 
-
-
-
 .checkbox-input:checked + .custom-checkbox {
     @include base-shadow;
     background: $color-bg;
@@ -330,18 +327,11 @@
 }
 
 .checkbox-input:checked + .checkbox-label::before {
-    content: '\2714'; /* Галочка перед текстом */
+    content: '\2714'; 
     display: inline-block;
 }
 
-// .checkbox-input:checked ~ .checkbox-label {
-//     color: #fff; /* цвет текста в label */
-// }
-
-// /* Меняем стили всего блока при выборе чекбокса */
-// .checkbox-input:checked + .custom-checkbox {
-//     @include base-shadow;
-//     background: $color-bg;
-//     color: $color-white;
-// }
-
+.margin40{
+    margin-top: 15px;
+    margin-bottom: 20px;
+}

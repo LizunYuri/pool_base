@@ -42,7 +42,9 @@ class CalulateRectangleForm(forms.ModelForm):
             'depth_from', 
             'depth_to',
             'water_exchange_time', 
-            'filtration_speed'
+            'filtration_speed',
+            'digging',
+            'export'
             ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -66,4 +68,10 @@ class CalulateRectangleForm(forms.ModelForm):
             })
         self.fields['filtration_speed'].widget.attrs.update({
                 'class' : 'client-name-input'
+            })
+        self.fields['digging'].widget.attrs.update({
+                'class' : 'client-name-note'
+            })
+        self.fields['export'].widget.attrs.update({
+                'class' : 'client-name-note'
             })

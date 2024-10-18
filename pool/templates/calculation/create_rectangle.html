@@ -12,16 +12,7 @@
         <div class="calculate-panel">
             <h1>Прямоугольный скиммерный бассейн</h1>
             <div class="create-form-btn">
-                <button id="openAddClientModal" class="accent-btn" type="button" data-toggle="modal" data-target="#clientModal">Добавить Заказчика</button>
-            </div>
-            <div class="calculate-panel-body">
-            </div>
-        </div>
-        <div class="calculate-body">
-            <form id='rectangle-form' class="create-form" method="POST">
-                {% csrf_token %}
-                <div class="step" id="step-1">
-                    <div class="client">
+                <div class=" margin40">
                         <div class="client-name-choice-content">
                             <label class="client-name-placeholder"  for='{{ form.client.id_for_label }}'>
                                 {{ form.client.label }}
@@ -35,10 +26,19 @@
                             {{ form.client }}
                         </div>
                     </div>
+                    <button id="openAddClientModal" class="accent-btn" type="button" data-toggle="modal" data-target="#clientModal">Добавить Заказчика</button>
+            </div>
+            <div class="calculate-panel-body">
+            </div>
+        </div>
+        <div class="calculate-body">
+            <form id='rectangle-form' class="create-form" method="POST">
+                {% csrf_token %}
+                <div class="step" id="step-1">
                     <div class="form-content">
                         <h2 class="title-h2">Размер</h2>
                         <div class="form-content-top">
-                            <div class="add-client-form-body-note">
+                            <div class="add-client-form-body-note ajax-response">
                                 <label class="client-name-placeholder"  for='{{ form.length.id_for_label }}'>
                                     {{ form.length.label }}
                                     <div class="question">?</div>
@@ -50,7 +50,7 @@
                                 </label>
                                     {{ form.length }}
                             </div>
-                            <div class="add-client-form-body-note">
+                            <div class="add-client-form-body-note ajax-response">
                                 <label class="client-name-placeholder"  for='{{ form.width.id_for_label }}'>
                                     {{ form.width.label }}
                                     <span class="question">?</span>
@@ -64,7 +64,7 @@
                             </div>
                             </div>
                             <div class="form-content-top">
-                                <div class="add-client-form-body-note">
+                                <div class="add-client-form-body-note ajax-response">
                                     <label class="client-name-placeholder"  for='{{ form.depth_from.id_for_label }}'>
                                     {{ form.depth_from.label }}
                                     <div class="question">?</div>
@@ -76,7 +76,7 @@
                                 </label>
                                 {{ form.depth_from }}
                             </div>
-                                <div class="add-client-form-body-note">
+                                <div class="add-client-form-body-note ajax-response">
                                     <label class="client-name-placeholder"  for='{{ form.depth_to.id_for_label }}'>
                                         {{ form.depth_to.label }}
                                         <span class="question">?</span>
@@ -93,8 +93,8 @@
                     <div class="form-content">
                         <h2 class="title-h2">Фильтрация</h2>
                         <div class="form-content-top">
-                            <div class="add-client-form-body-note">
-                                <label class="client-name-placeholder"  for='{{ form.water_exchange_time.id_for_label }}'>
+                            <div class="add-client-form-body-note ajax-response">
+                                <label class="client-name-placeholder margin40"  for='{{ form.water_exchange_time.id_for_label }}'>
                                     {{ form.water_exchange_time.label }}
                                     <div class="question">?</div>
                                     <div class="help-text">
@@ -104,9 +104,7 @@
                                     </div>
                                 </label>
                                 {{ form.water_exchange_time }}
-                            </div>
-                            <div class="add-client-form-body-note">
-                                <label class="client-name-placeholder"  for='{{ form.filtration_speed.id_for_label }}'>
+                                <label class="client-name-placeholder margin40"  for='{{ form.filtration_speed.id_for_label }}'>
                                     {{ form.filtration_speed.label }}
                                     <span class="question">?</span>
                                     <div class="help-text">
@@ -116,6 +114,14 @@
                                     </div>
                                 </label>
                                 {{ form.filtration_speed }}
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <select class="custom-select margin40" id="pumps-dropdown" name="pumps_materials">
+                                    <option value="">Выберите Насос</option>
+                                </select>
+                                <select class="custom-select margin40" id="filters-dropdown" name="filters_materials">
+                                    <option value="">Выберите Фильтр</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -290,7 +296,6 @@
                                 <select class="custom-select" id="desinfection-dropdown" name="desinfection">
                                     <option value="">Выберите оборудование</option>
                                 </select>
-                                <input type="hidden" id="modelNameInput" name="model_name">
                             </div>
                         </div>
                     </div>
@@ -299,13 +304,13 @@
                         <div class="form-content-top">
                             <div class="add-client-form-body-note">
                                 <div class="width250">
-                                    <input class="checkbox-input" type="checkbox" id="pit" name="pit">
+                                    <input class="checkbox-input" type="checkbox" id="pit" name="pit" value='true'>
                                     <label for="pit" class="custom-checkbox width250">
                                         <span class="radio-mark width250">Приямок для оборудования</span>
                                     </label>
                                 </div>
                                 <div  class="width250">
-                                    <input class="checkbox-input" type="checkbox" id="cover" name="cover">
+                                    <input class="checkbox-input" type="checkbox" id="cover" name="cover" value='true'>
                                     <label for="cover" class="custom-checkbox width250">
                                         <span class="radio-mark width250">Плавающее покрывало</span>
                                     </label>
@@ -313,13 +318,13 @@
                             </div>
                             <div class="add-client-form-body-note">
                                 <div  class="width250">
-                                    <input class="checkbox-input" type="checkbox" id="winding" name="winding">
+                                    <input class="checkbox-input" type="checkbox" id="winding" name="winding" value='true'>
                                     <label for="winding" class="custom-checkbox width250">
                                         <span class="radio-mark width250">Сматывющее устройство</span>
                                     </label>
                                 </div>   
                                 <div  class="width250">
-                                    <input class="checkbox-input" type="checkbox" id="cleaner" name="cleaner">
+                                    <input class="checkbox-input" type="checkbox" id="cleaner" name="cleaner" value='true'>
                                     <label for="cleaner" class="custom-checkbox width250">
                                         <span class="radio-mark width250">Подводный пылесос</span>
                                     </label>
@@ -335,10 +340,83 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-content-top">
-                        <div class="add-client-form-body-note">
-                            <button class="blue-btn" type="submit">Сохранить</button>
+                </div>
+                <div class="step" id="step-5" style="display:none;">
+                    <div class="form-content">
+                        <h2 class="title-h2">Строительство</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="concrete" value="1" checked>
+                                    <span class="radio-mark width250">Бетонные работы <br>(с материалами)</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="concrete" value="2">
+                                    <span class="radio-mark width250">Работы по бетонированию <br> (без материалов)</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="concrete" value="0">
+                                    <span class="radio-mark width250">Без бетонных работ</span>
+                                </label>
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <div class="client-name-choice-content  margin40">
+                                    <label class="client-name-placeholder"  for='{{ form.digging }}'>
+                                        {{ form.digging.label }}
+                                        <div class="question">?</div>
+                                        <div class="help-text">
+                                            <p>
+                                                {{ form.digging.help_text }}
+                                            </p>
+                                        </div>
+                                    </label>
+                                    {{ form.digging }}
+                                </div>
+                                <div class="client-name-choice-content margin40">
+                                    <label class="client-name-placeholder"  for='{{ form.export }}'>
+                                        {{ form.export.label }}
+                                        <div class="question">?</div>
+                                        <div class="help-text">
+                                            <p>
+                                                {{ form.export.help_text }}
+                                            </p>
+                                        </div>
+                                    </label>
+                                    {{ form.export }}
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="form-content">
+                        <h2 class="title-h2">Входная группа</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="entrance" value="steps" checked>
+                                    <span class="radio-mark width250">Входная группа</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="entrance" value="ladder">
+                                    <span class="radio-mark width250">Лестница нерж.</span>
+                                </label>
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <div class="form-content-top">
+                                    <select class="custom-select" id="entrance-dropdown" name="entrance_materials">
+                                        <option value="">Выберите тип</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <button class="blue-btn" type="button" onclick="prevStep(4)">Назад</button>
+                                <button class="blue-btn" type="submit">Сохранить</button>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </form>
@@ -438,6 +516,72 @@
 
 {% block script %}
     <script src="{% static 'scripts/create_method.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        const userLenght = document.getElementById('user-lenght')
+        const pumpsDropdown = document.getElementById('pumps-dropdown')
+
+        const initializePumpsScript = () => {
+
+            if ( !pumpsDropdown) {
+                pumpsDropdown.innerHTML = '<option value="">Нет оборудования соотвествующего заданным параметрам</option>';
+                console.warn('Элементы для инициализации входной группы не найдены');
+                return;
+            }
+        
+            function updateEntranceDropdown() {
+                fetch(`/calculation/get_filtred_pumps/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        pumpsDropdown.innerHTML = '<option value="">Выберите элемент</option>';
+                        data.pumps.forEach(pumps => {
+                            let option = document.createElement('option');
+                                option.value = pumps.id;
+                                option.text = pumps.name;
+                                pumpsDropdown.appendChild(option);
+                            });
+                        })
+                    .catch(error => {
+                        console.error('Ошибка при перечня насосов', error);
+                    });
+                }
+        
+                updateEntranceDropdown(document.querySelector('input[name="entrance"]:checked').value);
+            
+        }
+
+        $(document).ready(function() {
+            $('.ajax-response input, .ajax-response select').on('input change', function() {
+                let formData = {
+                    length: $('#{{ form.length.id_for_label }}').val(),
+                    width: $('#{{ form.width.id_for_label }}').val(),
+                    depth_from: $('#{{ form.depth_from.id_for_label }}').val(),
+                    depth_to: $('#{{ form.depth_to.id_for_label }}').val(),
+                    water_exchange_time: $('#{{ form.water_exchange_time.id_for_label }}').val(),
+                    filtration_speed: $('#{{ form.filtration_speed.id_for_label }}').val(),
+                    
+                    //    {% comment %} csrfmiddlewaretoken: '{{ csrf_token }}',  для защиты от CSRF {% endcomment %}
+                };
+    
+                $.ajax({
+                    url: "{% url 'accept_size' %}",  
+                    type: "POST",
+                    data: formData,
+                    success: function(response) {
+                        console.log("Данные отправлены успешно:", response);
+                        initializePumpsScript()
+                        
+                    },
+                    error: function(response) {
+                        console.log("Ошибка при отправке данных:", response);
+                    }
+                });
+            });
+        });
+    </script>
+    
+
     <script>
 
         
