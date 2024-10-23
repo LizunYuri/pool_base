@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ConcreteModel, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, LightingModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
+from .models import WorkMaterialModel, FilterElementModel, AdditionalMaterial, ConcreteModel, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, LightingModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
 
 
 @admin.register(FilterModel)
@@ -85,3 +85,22 @@ class EntranceModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'type_category', 'price')
     list_filter = ('name', 'type_category', 'price')
     search_fields = ('name', 'type_category', 'price')
+
+@admin.register(WorkMaterialModel)
+class WorkMaterialModelAdmin(admin.ModelAdmin):
+    list_display = ('name',  'price', 'unit_of_measurement')
+    list_filter = ('name', 'price')
+    search_fields = ('name', 'price')
+
+@admin.register(AdditionalMaterial)
+class AdditionalMaterialAdmin(admin.ModelAdmin):
+    list_display = ('type_material', 'name', 'unit_of_measurement', 'price')
+    list_filter = ('name', 'price')
+    search_fields = ('name', 'price')
+
+
+@admin.register(FilterElementModel)
+class FilterElementModelAdmin(admin.ModelAdmin):
+    list_display = ('name','price')
+    list_filter = ('name', 'price')
+    search_fields = ('name', 'price')

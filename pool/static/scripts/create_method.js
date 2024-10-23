@@ -15,6 +15,8 @@ const desinfectionRadios = document.querySelectorAll('input[name="desinfection"]
 const desinfecionDropdown = document.getElementById('desinfection-dropdown')
 const entranceRadios = document.querySelectorAll('input[name="entrance"]')
 const entranceDropdown = document.getElementById('entrance-dropdown')
+const MaterialZaclad = document.querySelectorAll('input[name=["type_materials"]')
+
 
 
 

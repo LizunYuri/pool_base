@@ -1,25 +1,60 @@
 <!-- templates/rectangle_detail.html -->
 <h1>Детали бассейна</h1>
 <p>Клиент: {{ rectangle.date }}</p>
-<p>Клиент: {{ rectangle.client }}</p>
+<p>Клиент: {{ rectangle.client.phone }}</p>
 <p>Длина: {{ rectangle.length }} м</p>
 <p>Ширина: {{ rectangle.width }} м</p>
 <p>Глубина от: {{ rectangle.depth_from }} м</p>
 <p>Глубина до: {{ rectangle.depth_to }} м</p>
+
+
 <p><strong>Объем бассейна: {{ rectangle.volume }} куб. м</strong></p>
+
+
 <p>площадь зеркала воды: {{ rectangle.area }} м</p>
+
+
 <p>мощность насоса: {{ rectangle.pump_power }} м</p>
+<p>Наименование насоса: {{ rectangle.pump_name }} м</p>
+<p>Резервный насос: {{ rectangle.two_pumps }} м</p>
+
+
 <p>площадь фильтрации: {{ rectangle.filter_area }} м</p>
+<p>Наименование фильтра: {{ rectangle.filter_name}} м</p>
+<p>Замедленная фильтрация: {{ rectangle.two_filters }} м</p>
+
+<p>Скорость фильтрации: {{ rectangle.filtration_speed }} м</p>
+<p>Время водообмена: {{ rectangle.water_exchange_time }} м</p>
+
 <p>Материал отделки: {{ rectangle.finished_materials}}</p>
+<p>колличество материала: {{ rectangle.finished_manetrals_area}}</p>
+<p>Сумма за материалы: {{ rectangle.finished_material_summ}}</p>
+<p>Цена за м2: {{ rectangle.finished_material_price}}</p>
+
+<p>Наименование работы: {{ rectangle.finished_material_work_name }}</p>
+<p>Стоимость работ: {{ rectangle.finished_material_work_price}}</p>
+<p>Сумма за работы {{ rectangle.finished_material_work_summ}}</p>
+
 <p>Материал Закладных: {{ rectangle.zaclad_material}}</p>
+
 <p> цвет освещения: {{ rectangle.ligthing}}</p>
 <p>количество ламп: {{ rectangle.ligth_quantity}}</p>
+
 <p>Подогрев: {{ rectangle.heating}}</p>
+
 <p>Дезинфекция: {{ rectangle.desinfection}}</p>
+
 <p>Приямок: {{ rectangle.pit}}</p>
 <p>Покрывало: {{ rectangle.cover}}</p>
 <p>Сматывающее: {{ rectangle.winding}}</p>
 <p>Подводный пылесос: {{ rectangle.cleaner}}</p>
 <p>Копка котлована: {{ rectangle.digging}}</p>
 <p>Вывоз грунта: {{ rectangle.export}}</p>
-<p>Бетонные работы: {{ rectangle.cconcrete}}</p>
+<p>Бетонные работы: {{ rectangle.concrete}}</p>
+
+<p>Входная группа: {{ rectangle.entrance}}</p>
+<p>Количество скиммеров: {{ rectangle.number_of_skimmers}}</p>
+<p>Колличество форсунок: {{ rectangle.number_of_nozzles}}</p>
+
+
+<p>Фильтрующий элемент: {{ rectangle.filter_element.name}}</p>

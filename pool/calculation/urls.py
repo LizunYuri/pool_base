@@ -11,6 +11,7 @@ urlpatterns = [
     path('get_desinfection/', views.get_desinfection, name='get_desinfection'),
     path('get_entrance/', views.get_entrance, name='get_entrance'),
     path('get_filtred_pumps/', views.get_filtred_pumps, name='get_filtred_pumps'),
+    path('get_filtred_filter/', views.get_filtred_filter, name='get_filtred_filter'),
 
 
     path('accept_size/', views.accept_size, name='accept_size'),

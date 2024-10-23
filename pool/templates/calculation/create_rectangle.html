@@ -13,6 +13,8 @@
             <h1>Прямоугольный скиммерный бассейн</h1>
             <div class="create-form-btn">
                 <div class=" margin40">
+                    <form id='rectangle-form' class="create-form" method="POST">
+                        {% csrf_token %}
                         <div class="client-name-choice-content">
                             <label class="client-name-placeholder"  for='{{ form.client.id_for_label }}'>
                                 {{ form.client.label }}
@@ -32,8 +34,6 @@
             </div>
         </div>
         <div class="calculate-body">
-            <form id='rectangle-form' class="create-form" method="POST">
-                {% csrf_token %}
                 <div class="step" id="step-1">
                     <div class="form-content">
                         <h2 class="title-h2">Размер</h2>
@@ -90,6 +90,62 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-content">
+                            <h2 class="title-h2">Материал отделки чаши</h2>
+                            <div class="form-content-top">
+                                <div class="add-client-form-body-note">
+                                    <label class="client-name-placeholder custom-radio">
+                                       <input type="radio" name="material_type" value="poly" checked>
+                                        <span class="radio-mark width250"> Полипропилен</span>
+                                    </label> 
+                                    <label class="client-name-placeholder custom-radio">
+                                        <input type="radio" name="material_type" value="pvh">
+                                        <span class="radio-mark width250"> Пленка ПВХ</span>
+                                    </label>
+                                </div>
+                                <div class="add-client-form-body-note">
+                                    <div class="form-content-top">
+                                        <select class="custom-select" id="materials-dropdown" name="finished_materials">
+                                            <option value="">Выберите материал</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>                        
+                        </div>
+
+                    <div class="form-content">
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <button class="blue-btn" type="button" disabled>Назад</button>
+                                <button class="blue-btn" type="button" onclick="nextStep(2)">Далее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step" id="step-2" style="display:none;">
+                    <div class="form-content">
+                        <h2 class="title-h2">Материал изготовления закладных</h2>
+                        <div class="form-content-top">
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="zaclad_material" value="abs" checked>
+                                    <span class="radio-mark width250">ABS пластик</span>
+                                </label>
+                                <label class="client-name-placeholder custom-radio">
+                                    <input type="radio" name="zaclad_material" value="aisi">
+                                    <span class="radio-mark width250">AISI-316 нержавеющая сталь</span>
+                                </label>
+                            </div>
+                            <div class="add-client-form-body-note">
+                                <label class="client-name-placeholder"  for='skimmers-value'>
+                                    Скиммер
+                                </label>
+                                <select class="custom-select" id="skimmers-dropdown" name="skimmers-value">
+                                    <option value="">Выберите Скиммер</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-content">
                         <h2 class="title-h2">Фильтрация</h2>
                         <div class="form-content-top">
@@ -114,6 +170,8 @@
                                     </div>
                                 </label>
                                 {{ form.filtration_speed }}
+                                
+                                
                             </div>
                             <div class="add-client-form-body-note">
                                 <select class="custom-select margin40" id="pumps-dropdown" name="pumps_materials">
@@ -122,53 +180,27 @@
                                 <select class="custom-select margin40" id="filters-dropdown" name="filters_materials">
                                     <option value="">Выберите Фильтр</option>
                                 </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-content">
-                        <div class="form-content-top">
-                            <div class="form-content-top-radio">
-                                <button class="blue-btn" type="button" disabled>Назад</button>
-                                <button class="blue-btn" type="button" onclick="nextStep(2)">Далее</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="step" id="step-2" style="display:none;">
-                    <div class="form-content">
-                        <h2 class="title-h2">Материал отделки чаши</h2>
-                        <div class="form-content-top">
-                            <div class="add-client-form-body-note">
-                                <label class="client-name-placeholder custom-radio">
-                                   <input type="radio" name="material_type" value="poly" checked>
-                                    <span class="radio-mark width250"> Полипропилен</span>
-                                </label> 
-                                <label class="client-name-placeholder custom-radio">
-                                    <input type="radio" name="material_type" value="pvh">
-                                    <span class="radio-mark width250"> Пленка ПВХ</span>
-                                </label>
+                                
                             </div>
                             <div class="add-client-form-body-note">
-                                <div class="form-content-top">
-                                    <select class="custom-select" id="materials-dropdown" name="finished_materials">
-                                        <option value="">Выберите материал</option>
-                                    </select>
+                                <div class="width250">
+                                    <input class="checkbox-input" type="checkbox" id="two-pumps" name="two-pumps" value='true'>
+                                    <label for="two-pumps" class="custom-checkbox width250">
+                                        <span class="radio-mark width250">Резервный насос</span>
+                                    </label>
                                 </div>
-                            </div>
-                        </div>                        
-                    </div>
-                    <div class="form-content">
-                        <h2 class="title-h2">Материал изготовления закладных</h2>
-                        <div class="form-content-top">
-                            <div class="form-content-top-radio">
-                                <label class="custom-radio">
-                                    <input type="radio" name="zaclad_material" value="abs" checked>
-                                    <span class="radio-mark">ABS пластик</span>
-                                </label>
-                                <label class="custom-radio">
-                                    <input type="radio" name="zaclad_material" value="aisi">
-                                    <span class="radio-mark">AISI-316 нержавеющая сталь</span>
-                                </label>
+                                <div  class="width250">
+                                    <input class="checkbox-input" type="checkbox" id="two-filters" name="two-filters" value='true'>
+                                    <label for="two-filters" class="custom-checkbox width250">
+                                        <span class="radio-mark width250">Замедленная фильтрация</span>
+                                    </label>
+                                </div> 
+                                <div class="width250">
+                                    <label class="client-name-placeholder margin40"  for='{{ form.filter_element }}'>
+                                        {{ form.filter_element.label }}
+                                    </label>
+                                    {{ form.filter_element }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -521,6 +553,7 @@
     <script>
         const userLenght = document.getElementById('user-lenght')
         const pumpsDropdown = document.getElementById('pumps-dropdown')
+        const filtersDropdown = document.getElementById('filters-dropdown')
 
         const initializePumpsScript = () => {
 
@@ -534,7 +567,7 @@
                 fetch(`/calculation/get_filtred_pumps/`)
                     .then(response => response.json())
                     .then(data => {
-                        pumpsDropdown.innerHTML = '<option value="">Выберите элемент</option>';
+                        pumpsDropdown.innerHTML = '<option value="">Выберите насос</option>';
                         data.pumps.forEach(pumps => {
                             let option = document.createElement('option');
                                 option.value = pumps.id;
@@ -547,8 +580,35 @@
                     });
                 }
         
-                updateEntranceDropdown(document.querySelector('input[name="entrance"]:checked').value);
+                updateEntranceDropdown();
             
+        }
+        const initializeFiltersScript = () => {
+
+            if (!filtersDropdown) {
+                filtersDropdown.innerHTML = '<option value="">Нет оборудования, соответствующего заданным параметрам</option>';
+                console.warn('Элементы для инициализации выпадающего списка не найдены');
+                return;
+            }
+        
+            function updateFiltersDropdown() {
+                fetch(`/calculation/get_filtred_filter/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        filtersDropdown.innerHTML = '<option value="">Выберите фильтр</option>';
+                        data.filters.forEach(filter => {  
+                            let option = document.createElement('option');
+                            option.value = filter.id;  
+                            option.text = filter.name; 
+                            filtersDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при получении списка фильтров', error);
+                    });
+            }
+        
+            updateFiltersDropdown(); // Удалено лишнее значение в вызове функции
         }
 
         $(document).ready(function() {
@@ -571,6 +631,7 @@
                     success: function(response) {
                         console.log("Данные отправлены успешно:", response);
                         initializePumpsScript()
+                        initializeFiltersScript()
                         
                     },
                     error: function(response) {
@@ -634,17 +695,17 @@
 
 
         const nextStep = (step) => {
-            // if (!validateStep(step - 1)){
-            //     errorModal.style.display = 'flex';
-            //     return
-            // }
-            // else {
-            //     steps.forEach((e) => {
-            //     e.style.display = 'none'
-            // })
-            // document.getElementById('step-' + step).style.display = 'flex'
+        //     if (!validateStep(step - 1)){
+        //         errorModal.style.display = 'flex';
+        //          return
+        //      }
+        //      else {
+        //          steps.forEach((e) => {
+        //          e.style.display = 'none'
+        //      })
+        //      document.getElementById('step-' + step).style.display = 'flex'
 
-            // }
+        //      }
             steps.forEach((e) => {
                 e.style.display = 'none'
             })

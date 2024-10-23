@@ -3,6 +3,97 @@ from django.utils import timezone
 from django.db import models
 from supplier.models import SupplierModel
 
+class AdditionalMaterial(models.Model):
+    CHOICE_UNIT_OF_MEASUREMENT = [
+        ('psc', 'шт.'),
+        ('m_ch', 'м/пог'),
+        ('m_2', 'м2'),
+        ('kg', 'кг'),
+        ]
+    CHOICE_TYPE_MATERIAL = [
+        ('corner', 'Угол с напылением ПВХ'),
+        ('textile', 'Геотекстиль'),
+        ('glue', 'Клей для геотекстиля'),
+        ('pvc_glue', 'Жидкий ПВХ')
+        ]
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 on_delete=models.CASCADE,
+                                 blank=True,)
+    name = models.CharField(max_length=200,
+                            verbose_name='Наименование',
+                            help_text='Как в каталоге поставщика',)
+    unit_of_measurement = models.CharField(
+                            max_length=20,
+                            choices=CHOICE_UNIT_OF_MEASUREMENT,
+                            default='psc',
+                            verbose_name='Единица измерения',
+                            blank=True,
+                            null=True)
+    type_material = models.CharField(max_length=20,
+                                     choices=CHOICE_TYPE_MATERIAL,
+                                     verbose_name='Категория',
+                                     help_text='Максимально приближенная')
+    price = models.FloatField(default=0, verbose_name="Цена за единицу")
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Дополнительные материалы для отделки чаши бассейна'
+    
+
+class WorkMaterialModel(models.Model):
+    CHOICE_UNIT_OF_MEASUREMENT = [
+        ('psc', 'шт.'),
+        ('m_ch', 'м/пог'),
+        ('m_2', 'м2'),
+        ('kg', 'кг'),
+        ]
+    name = models.CharField(max_length=255,
+                            verbose_name="Название")
+    unit_of_measurement = models.CharField(
+                            max_length=20,
+                            choices=CHOICE_UNIT_OF_MEASUREMENT,
+                            default='psc',
+                            verbose_name='Единица измерения',
+                            blank=True,
+                            null=True)
+    price = models.FloatField(default=0, verbose_name="Цена за единицу")
+
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Работы по отделке чаши бассейна'
 
 
 class FilterModel(models.Model):
@@ -30,6 +121,10 @@ class FilterModel(models.Model):
                             null=True)
     sand = models.IntegerField(verbose_name='количество фильтрата',
                             help_text='Из каталога поставщика. В кг',
+                            default=0.00,
+                            blank=True,
+                            null=True)
+    valve = models.FloatField(verbose_name='Тип вентиля',
                             default=0.00,
                             blank=True,
                             null=True)
@@ -78,6 +173,51 @@ class FilterModel(models.Model):
     class Meta:
         verbose_name = 'Фильтр'
         verbose_name_plural = 'Фильтровальное оборудование'
+
+
+class FilterElementModel(models.Model):
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 on_delete=models.CASCADE)
+    name = models.CharField(max_length=200,
+                            verbose_name='Наименование',
+                            help_text='Номенклатурное наименование')
+    quantity_per_unit = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='количество в единице')
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    def save(self, *args, **kwargs):
+        
+        self.quantity_per_unit = round(self.quantity_per_unit, 2)
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Фильтрующий элемент'
 
 
 class PumpsModel(models.Model):
@@ -183,6 +323,16 @@ class FinishingMaterialsModel(models.Model):
                             help_text='Пленка ПВХ / Полипропилен',
                             blank=True,
                             null=True)
+    additional_materials = models.ManyToManyField(
+                                        AdditionalMaterial,
+                                        blank=True,
+                                        verbose_name="Дополнительные материалы",
+                                        )
+    works = models.ForeignKey(WorkMaterialModel,
+                              blank=True,
+                              null=True,
+                              verbose_name="Работы",
+                              on_delete=models.CASCADE)
     price = models.FloatField(default=0,
                               null=True,
                               blank=True,
@@ -235,7 +385,7 @@ class ZacladModel(models.Model):
             ('aisi', 'AISI-316 нержавеющий металл')
         ]
     CHOICES_TYPE = [
-            ('scimmer', 'Скиммер'),
+            ('skimmer', 'Скиммер'),
             ('forsunka', 'Возвратная фрсунка'),
             ('sliv', 'Донный слив'),
             ('doliv', 'Долив воды'),
@@ -1066,3 +1216,11 @@ class EntranceModel(models.Model):
         verbose_name = 'Номенклатуру'
         verbose_name_plural = 'Входная группа'
 
+
+# class VacuumCleaner(models.Model):
+#     brush = models.CharField(max_length=255, verbose_name="Щетка", default="Стандартная щетка")
+#     rod = models.CharField(max_length=255, verbose_name="Штанга", default="Стандартная штанга")
+#     hose = models.ForeignKey(Hose, on_delete=models.CASCADE, verbose_name="Шланг", related_name="vacuum_cleaners")
+
+#     def __str__(self):
+#         return f'Пылесос с {self.brush}, {self.rod}, шланг: {self.hose.length} м'
