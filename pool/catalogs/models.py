@@ -97,6 +97,10 @@ class WorkMaterialModel(models.Model):
 
 
 class FilterModel(models.Model):
+    TYPE_CONNECTION_CHOICE = [
+            ('lateral','Боковое подключение'),
+            ('upper','Верхнее подключение'),
+        ]
     supplier = models.ForeignKey(SupplierModel,
                                  verbose_name='Поставщик',
                                  help_text='Выбрать из поставщиков',
@@ -128,6 +132,10 @@ class FilterModel(models.Model):
                             default=0.00,
                             blank=True,
                             null=True)
+    connection_type = models.CharField(verbose_name='Тип подключения',
+                             max_length=20,
+                             choices=TYPE_CONNECTION_CHOICE,
+                            default='upper',)
     price = models.FloatField(default=0,
                               null=True,
                               blank=True,
@@ -173,6 +181,73 @@ class FilterModel(models.Model):
     class Meta:
         verbose_name = 'Фильтр'
         verbose_name_plural = 'Фильтровальное оборудование'
+
+
+class ValveGroupModel(models.Model):
+    TYPE_CHOICE = [
+            ('automatic', 'Автоматический вентиль'),
+            ('manual', 'Ручной вентиль')
+        ]
+    TYPE_CONNECTION_CHOICE = [
+            ('lateral','Боковое подключение'),
+            ('upper','Верхнее подключение'),
+        ]
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 blank=True,
+                                 on_delete=models.CASCADE)
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    article = models.CharField(max_length=100,
+                            verbose_name='Артикул',
+                            blank=True,
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    connection_diameter = models.FloatField(verbose_name='Диаметр подключения',
+                            help_text='',
+                            default=0.00,
+                            null=True)
+    connection_type = models.CharField(verbose_name='Тип вентиля',
+                             max_length=20,
+                             choices=TYPE_CHOICE,
+                            default='manual',)
+    valve = models.CharField(verbose_name='Тип подключения',
+                             max_length=20,
+                             choices=TYPE_CONNECTION_CHOICE,
+                            default='upper',)
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Вентиль'
+        verbose_name_plural = 'Вентильная группа'
 
 
 class FilterElementModel(models.Model):
@@ -386,10 +461,11 @@ class ZacladModel(models.Model):
         ]
     CHOICES_TYPE = [
             ('skimmer', 'Скиммер'),
-            ('forsunka', 'Возвратная фрсунка'),
-            ('sliv', 'Донный слив'),
-            ('doliv', 'Долив воды'),
-            ('polusos', 'Пылесос'),
+            ('nozzle', 'Возвратная фрсунка'),
+            ('bottom_drain', 'Донный слив'),
+            ('adding_water', 'Долив воды автоматический'),
+            ('vacuum_clean_nozzle', 'Дополнительная форсунка для подключения пылесоса'),
+            ('drain_nozzle', 'Форсунка для слива воды'),
         ]
     supplier = models.ForeignKey(SupplierModel,
                                  verbose_name='Поставщик',
@@ -1216,6 +1292,73 @@ class EntranceModel(models.Model):
         verbose_name = 'Номенклатуру'
         verbose_name_plural = 'Входная группа'
 
+
+class UltravioletModel(models.Model):
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 blank=True,
+                                 on_delete=models.CASCADE)
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    article = models.CharField(max_length=100,
+                            verbose_name='Артикул',
+                            blank=True,
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    power = models.FloatField(verbose_name='Мощность',
+                            help_text='Из каталога поставщика. В м3/ч',
+                            default=0.00,
+                            blank=True,
+                            null=True)
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    image = models.ImageField(upload_to='catalog/pumps/',
+                              verbose_name='Фото товара',
+                              blank=True,
+                              help_text='Красивое фото используется для коммерческого предложения')
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.power = round(self.power, 2)
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    def delete(self, *args, **kwargs):
+        # Удаление файла изображения
+        if self.image and os.path.isfile(self.image.path):
+            os.remove(self.image.path)
+        super().delete(*args, **kwargs)
+
+    def get_image_url(self):
+        if self.image:
+            return self.image.url
+        return None
+    
+    class Meta:
+        verbose_name = 'УФ установку'
+        verbose_name_plural = 'УФ установка'    
 
 # class VacuumCleaner(models.Model):
 #     brush = models.CharField(max_length=255, verbose_name="Щетка", default="Стандартная щетка")

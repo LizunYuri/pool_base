@@ -42,7 +42,7 @@
 
 <p>Подогрев: {{ rectangle.heating}}</p>
 
-<p>Дезинфекция: {{ rectangle.desinfection}}</p>
+<p id='desinfection'></p>
 
 <p>Приямок: {{ rectangle.pit}}</p>
 <p>Покрывало: {{ rectangle.cover}}</p>
@@ -58,3 +58,14 @@
 
 
 <p>Фильтрующий элемент: {{ rectangle.filter_element.name}}</p>
+
+<script type="application/json" id="desinfection-data">
+    {{ rectangle.desinfection |safe }}
+</script>
+
+<script>
+    // Получаем данные из тега <script>
+    const desinfectionData = JSON.parse(document.getElementById('desinfection-data').textContent);
+    document.getElementById('desinfection').innerHTML = `<div>${desinfectionData.name}</div>`
+    console.log(desinfectionData);  // Теперь вы можете работать с данными
+</script>

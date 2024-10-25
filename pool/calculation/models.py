@@ -1,6 +1,6 @@
 from django.db import models
 from clients.models import ClientModel
-from catalogs.models import ExportModel, DiggingModel, FilterElementModel
+from catalogs.models import ExportModel, DiggingModel, FilterElementModel, UltravioletModel
 from django.utils import timezone
 
 
@@ -42,7 +42,6 @@ class CalulateRectangleModel(models.Model):
     depth_to = models.FloatField(verbose_name='Глубина до',
                                help_text='В случае прямого дна поствить то же что и в Глубина от',
                                )
-    
     water_exchange_time = models.FloatField(max_length=20,
                                             choices=CHOICES_WATER_TIME,
                                             default=4,
@@ -103,6 +102,34 @@ class CalulateRectangleModel(models.Model):
                                     help_text='Количество фильтров увеличивается вдвое',
                                     default=False
                                     )
+    valve_name = models.CharField(max_length=200,
+                                          verbose_name='Вентильная группа',
+                                          help_text='',
+                                          editable=False,
+                                          blank=True,
+                                          default=''
+                                          )
+    valve_price = models.FloatField(verbose_name='Цена вентиля',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    valve_amount = models.IntegerField(verbose_name='Количество вентилей',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    valve_summ = models.FloatField(verbose_name='Сумма за вентили',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
     filters_quality = models.IntegerField(verbose_name='Количество фильтров',
                                         default=0,
                                         blank=True,
@@ -146,7 +173,6 @@ class CalulateRectangleModel(models.Model):
                                     default=0,
                                     editable=False
                                     )
-
     finished_materials = models.CharField(max_length=200,
                                           verbose_name='Материал',
                                           help_text='Финишная отделка',
@@ -318,6 +344,174 @@ class CalulateRectangleModel(models.Model):
                                                 null=True,
                                                 editable=False
                                                 )
+    skimmers_name = models.CharField(max_length=200,
+                                          verbose_name='Скиммер',
+                                          help_text='Скиммер',
+                                          editable=False,
+                                          blank=True,
+                                          default=''
+                                          )
+    skimmers_price = models.FloatField(verbose_name='Цена скиммера',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    skimmers_amount = models.IntegerField(verbose_name='Количество скиммеров',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    skimmers_summ = models.FloatField(verbose_name='Сумма за скиммеры',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    nozzle_name = models.CharField(max_length=200,
+                                          verbose_name='Форсунка возвратная',
+                                          help_text='Форсунка возвратная',
+                                          editable=False,
+                                          blank=True,
+                                          default=''
+                                          )
+    nozzle_price = models.FloatField(verbose_name='Цена Форсунка возвратная',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    nozzle_amount = models.IntegerField(verbose_name='Количество Форсунка возвратная',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    nozzle_summ = models.FloatField(verbose_name='Сумма за Форсунка возвратная',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    bottom_drain_name = models.CharField(max_length=200,
+                                          verbose_name='Донный слив',
+                                          help_text='Донный слив',
+                                          editable=False,
+                                          blank=True,
+                                          default=''
+                                          )
+    bottom_drain_price = models.FloatField(verbose_name='Цена донного слива',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    bottom_drain_amount = models.IntegerField(verbose_name='Количество донного слива',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    bottom_drain_summ = models.FloatField(verbose_name='Сумма за донный слив',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )    
+    adding_water_name = models.CharField(max_length=200,
+                                          verbose_name='Автоматический долив воды',
+                                          help_text='Донный слив',
+                                          editable=False,
+                                          blank=True,
+                                          default=''
+                                          )
+    adding_water_price = models.FloatField(verbose_name='Цена Автоматический долив воды',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    adding_water_amount = models.IntegerField(verbose_name='Количество Автоматический долив воды',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    adding_water_summ = models.FloatField(verbose_name='Сумма за Автоматический долив воды',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    drain_nozzle_name = models.CharField(max_length=200,
+                                          verbose_name='Сливная форсунка',
+                                          help_text='Донный слив',
+                                          editable=False,
+                                          blank=True,
+                                          default=''
+                                          )
+    drain_nozzle_price = models.FloatField(verbose_name='Цена Сливная форсунка',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    drain_nozzle_amount = models.IntegerField(verbose_name='Количество Сливная форсунка',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    drain_nozzle_summ = models.FloatField(verbose_name='Сумма за Сливная форсунка',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    vacuum_clean_nozzle_name = models.CharField(max_length=200,
+                                          verbose_name='Пылесосная форсунка',
+                                          help_text='Донный слив',
+                                          editable=False,
+                                          blank=True,
+                                          default=''
+                                          )
+    vacuum_clean_nozzle_price = models.FloatField(verbose_name='Цена Пылесосная форсунка',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    vacuum_clean_nozzle_amount = models.IntegerField(verbose_name='Количество Пылесосная форсунка',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
+    vacuum_clean_nozzle_summ = models.FloatField(verbose_name='Сумма за Пылесосная форсунка',
+                                                help_text='',
+                                                blank=True,
+                                                default=0,
+                                                null=True,
+                                                editable=False
+                                                )
     finished_material_pvc_glue_unit_of_measurement = models.CharField(max_length=200,
                                           verbose_name='Работы по пленке отделке',
                                           help_text='Финишная отделка',
@@ -350,12 +544,27 @@ class CalulateRectangleModel(models.Model):
                                 null=True, 
                                 editable=False
                                 )
-    desinfection = models.CharField(max_length=200,
+    desinfection = models.JSONField(max_length=200,
                                     verbose_name='Дезинфекция',
                                     help_text='Дозирующее оборудование',
                                     blank=True, 
                                     editable=False
                                     )   
+    ultraviolet = models.ForeignKey(UltravioletModel,
+                               verbose_name='UV установка',
+                               help_text='Необходимо выбрать максимально приблеженную к мощности насоса',
+                               on_delete=models.CASCADE,
+                               null=True, 
+                               blank=True,
+                               )
+    ultraviolet_price = models.DecimalField(
+                                    max_digits=10, 
+                                    decimal_places=2, 
+                                    editable=False,
+                                    null=True, 
+                                    blank=True,
+                                    verbose_name='Цена UV установки'
+                                )
     pit  = models.BooleanField(default=False,
                                verbose_name='Приямок',
                                 help_text='Полипропиленовый приямок',
@@ -426,7 +635,8 @@ class CalulateRectangleModel(models.Model):
         self.depth_to = round(self.depth_to, 2)
         self.finished_material_price = round(self.finished_material_price , 2)
         self.finished_material_summ = round(self.finished_material_summ , 2)
-
+        if self.ultraviolet: 
+            self.ultraviolet_price = self.ultraviolet.price
 
         super().save(*args, **kwargs)
 

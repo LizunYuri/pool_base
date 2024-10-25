@@ -1,5 +1,6 @@
 from django import forms
 from .models import CalulateRectangleModel
+from catalogs.models import UltravioletModel
 from clients.models import ClientModel
 
 
@@ -31,8 +32,10 @@ class ClientModelForm(forms.ModelForm):
         #         'class' : 'client-name-note'
         #     })
 
-
 class CalulateRectangleForm(forms.ModelForm):
+
+
+    
     class Meta:
         model = CalulateRectangleModel
         fields = [
@@ -45,10 +48,19 @@ class CalulateRectangleForm(forms.ModelForm):
             'filtration_speed',
             'digging',
             'export',
-            'filter_element'
+            'filter_element',
+            'ultraviolet'
             ]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['ultraviolet'].choices = [
+            ('', '--------'),  # Пустая опция
+        ] + [
+            (obj.id, f"цена : {obj.price} руб | {obj.name}") for obj in self.fields['ultraviolet'].queryset
+        ]
+
+        self.fields['ultraviolet'].initial = ''  # Устанавливаем пустое значение по умолчанию
+
         self.fields['client'].widget.attrs.update({
                 'class' : 'client-name-note'
             })
@@ -77,5 +89,8 @@ class CalulateRectangleForm(forms.ModelForm):
                 'class' : 'client-name-note'
             })
         self.fields['filter_element'].widget.attrs.update({
-                'class' : 'client-name-note'
+                'class' : 'client-name-input'
+            })
+        self.fields['ultraviolet'].widget.attrs.update({
+                'class' : 'client-name-input'
             })

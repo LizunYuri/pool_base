@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import WorkMaterialModel, FilterElementModel, AdditionalMaterial, ConcreteModel, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, LightingModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
+from .models import UltravioletModel, ValveGroupModel, WorkMaterialModel, FilterElementModel, AdditionalMaterial, ConcreteModel, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, LightingModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
 
 
 @admin.register(FilterModel)
@@ -7,6 +7,13 @@ class FilterModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'date', 'supplier')
     list_filter = ('name', 'price', 'date', 'supplier')
     search_fields = ('name', 'price', 'date', 'supplier')
+
+@admin.register(ValveGroupModel)
+class ValveGroupModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')
+
 
 @admin.register(PumpsModel)
 class PumpsModelAdmin(admin.ModelAdmin):
@@ -104,3 +111,9 @@ class FilterElementModelAdmin(admin.ModelAdmin):
     list_display = ('name','price')
     list_filter = ('name', 'price')
     search_fields = ('name', 'price')
+
+@admin.register(UltravioletModel)
+class UltravioletModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')

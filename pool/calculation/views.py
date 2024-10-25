@@ -1,8 +1,9 @@
+import json
 from queue import Full
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from catalogs.models import FilterElementModel, ZacladModel, FinishingMaterialsModel, FilterModel, PumpsModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel, EntranceModel
+from catalogs.models import FilterElementModel, ValveGroupModel, ZacladModel, FinishingMaterialsModel, FilterModel, PumpsModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel, EntranceModel
 from clients.models import ClientModel
 from .forms import CalulateRectangleForm, ClientModelForm
 from .models import CalulateRectangleModel
@@ -11,14 +12,220 @@ from django.db.models import Q
 from django.apps import apps
 
 
+@csrf_exempt
+def accept_size(request):
+    if request.method == 'POST':
+
+        def safe_float(value):
+            try:
+                return float(value) if value else 0.0
+            except ValueError:
+                return 0.0
+
+        # Получаем данные из POST-запроса и преобразуем их в float
+        length = safe_float(request.POST.get('length', ''))
+        width = safe_float(request.POST.get('width', ''))
+        depth_from = safe_float(request.POST.get('depth_from', ''))
+        depth_to = safe_float(request.POST.get('depth_to', ''))
+        water_exchange_time = safe_float(request.POST.get('water_exchange_time', ''))
+        filtration_speed = safe_float(request.POST.get('filtration_speed', ''))
+
+
+        # Вычисляем среднюю глубину
+        average_depth = (depth_from + depth_to) / 2
+        
+        # Вычисляем объём, мощность насоса и площадь фильтра
+        volume = length * width * average_depth
+        pump_power = volume / water_exchange_time
+        filtrat_area = pump_power / filtration_speed
+
+
+        # Вычисление площади зеркала воды, колличество скиммеров (взято среднее значение из расчета скиммер на 20м2 зеркала воды) и форсунок
+
+        water_surface_area = (length) * (width)
+        number_of_skimmers = math.ceil(water_surface_area / 20)
+        number_of_nozzles = number_of_skimmers * 2
+        
+        material_area = ((length  * average_depth) *2) + ((width * average_depth) * 2) + ((length + 0.1) * (width + 0.1))
+        material_area_final = math.ceil(material_area + (material_area * 0.20))
+
+        response_data = {
+            'message': 'Данные обработаны успешно',
+            'volume': volume,
+            'length' : length,
+            'width' : width,
+            'depth_from': depth_from,
+            'depth_to' : depth_to,
+            'water_surface_area' : water_surface_area,
+            'number_of_skimmers' : number_of_skimmers,
+            'pump_power' : pump_power,
+            'filtrat_area' : filtrat_area,
+            'material_area_final' : material_area_final,
+        }
+
+        request.session['pump-data'] = {
+                'pump_power' : pump_power,
+                'filtrat_area' : filtrat_area,
+                'water_surface_area' : water_surface_area,
+                'number_of_skimmers' : number_of_skimmers,
+                'pump_power' : pump_power,
+                'material_area_final' : material_area_final,
+                'volume': volume,
+                'number_of_nozzles' : number_of_nozzles,
+            }
+        
+        return JsonResponse(response_data)
+
+    return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
+
+
+@csrf_exempt
+def get_accept_filters(request):
+    if request.method == 'POST':
+
+        def safe_float(value):
+            try:
+                return float(value) if value else 0.0
+            except ValueError:
+                return 0.0
+
+        filters_materials = safe_float(request.POST.get('filters_materials', ''))
+
+
+
+        response_data = {
+            'filters_materials' : filters_materials
+        }
+
+        request.session['filter-valve-data'] = {
+                'filters_materials' : filters_materials,
+                }
+
+        return JsonResponse(response_data)
+
+    return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
+
+
+
 def get_materials(request):
     material_type = request.GET.get('type')
     materials = FinishingMaterialsModel.objects.filter(type_materials=material_type)
     
 
-    materials_list = [{'id': material.id, 'name': material.name} for material in materials]
+    materials_list = [
+            {'id': material.id,
+            'name': material.name,
+            'price' : material.price
+            } for material in materials
+         ]
     
     return JsonResponse({'materials': materials_list})
+
+# Функция для полученя закладных элементов
+def get_zaclad_elements(request, zaclad_type):
+    zaclad_material = request.GET.get('zaclad_material')
+    elements = ZacladModel.objects.filter(type_zaclad=zaclad_type, type_materials=zaclad_material)
+    
+    elements_list = [
+        {
+            'id': element.id,
+            'name': element.name,
+            'price': element.price,
+        } for element in elements
+    ]
+    return JsonResponse({zaclad_type: elements_list})
+
+def get_skimmers(request):
+    return get_zaclad_elements(request, 'skimmer')
+
+def get_nozzle(request):
+    return get_zaclad_elements(request, 'nozzle')
+
+def get_bottom_drain(request):
+    return get_zaclad_elements(request, 'bottom_drain')
+
+def get_adding_water(request):
+    return get_zaclad_elements(request, 'adding_water')
+
+def get_vacuum_clean_nozzle(request):
+    return get_zaclad_elements(request, 'vacuum_clean_nozzle')
+
+def get_drain_nozzle(request):
+    return get_zaclad_elements(request, 'drain_nozzle')
+
+
+def get_filtred_pumps(request):
+    pump_power = request.session.get('pump-data', {}).get('pump_power', 0.0)
+
+    matching_pumps = PumpsModel.objects.filter(power__gte=pump_power).order_by('power')
+
+    first_matching_pump = matching_pumps.first()
+
+    if first_matching_pump:
+        selected_power = first_matching_pump.power
+
+        result_pumps = PumpsModel.objects.filter(
+            Q(power=selected_power) | Q(power=selected_power - 1) | Q(power=selected_power + 1)
+
+            )
+    else: 
+        result_pumps = PumpsModel.objects.none()
+    
+    return JsonResponse({
+        'pumps' : list(result_pumps.values('id', 'power', 'name', 'price'))
+        })
+
+def get_filtred_filter(request):
+    filtrat_area = request.session.get('pump-data', {}).get('filtrat_area', 0.0)
+
+    upper_bound = filtrat_area * 1.5
+    
+
+    matching_filters = FilterModel.objects.filter(
+        filter__gte=filtrat_area,  
+        filter__lte=upper_bound    
+    )
+
+
+    return JsonResponse({
+        'filters' : list(matching_filters.values('id', 'filter', 'name', 'price', 'valve', 'connection_type' ))
+        })
+
+def get_filter_valve(request):
+    filter_id = request.session.get('filter-valve-data', {}).get('filters_materials', 0)
+
+    try:
+        filter_element = FilterModel.objects.get(id=filter_id)
+    except FilterModel.DoesNotExist:
+        return JsonResponse({'error': 'Filter not found'}, status=404)
+
+    filter_connection_diameter = filter_element.valve
+    filter_connection_type = filter_element.connection_type
+
+    # Временные выводы для проверки
+    print("Diameter:", filter_connection_diameter)
+    print("Connection Type:", filter_connection_type)
+
+    valves = ValveGroupModel.objects.filter(
+        connection_diameter=filter_connection_diameter,
+        valve=filter_connection_type
+    )
+
+    print("Filtered Valves Count:", len(valves))  # Сколько записей найдено
+
+    valves_list = [
+        {
+            'id': valve.id,
+            'name': valve.name,
+            'price': valve.price,
+            'valve': valve.get_valve_display(),
+            'connection_type': valve.get_connection_type_display()
+        } for valve in valves
+    ]
+
+    return JsonResponse({'valves': valves_list})
+
+
 
 def get_heating(request):
     heating_type = request.GET.get('heating_type')
@@ -89,122 +296,6 @@ def get_entrance(request):
         ]
     return JsonResponse({'entrances' : entrances_list})
 
-def get_skimmers(request):
-    zaclad_material = request.POST.get('zaclad_material')
-    skimmers = ZacladModel.objects.filter(type_zaclad = 'skimmer', type_materials = zaclad_material)
-    
-    skimmers_list = [
-        {
-            'id' : skimmer.id,
-            'name' : skimmer.name
-            } for skimmer in skimmers
-        ]
-    return JsonResponse({'scimmers' : skimmers_list})
-
-
-@csrf_exempt
-def accept_size(request):
-    if request.method == 'POST':
-
-        def safe_float(value):
-            try:
-                return float(value) if value else 0.0
-            except ValueError:
-                return 0.0
-
-        # Получаем данные из POST-запроса и преобразуем их в float
-        length = safe_float(request.POST.get('length', ''))
-        width = safe_float(request.POST.get('width', ''))
-        depth_from = safe_float(request.POST.get('depth_from', ''))
-        depth_to = safe_float(request.POST.get('depth_to', ''))
-        water_exchange_time = safe_float(request.POST.get('water_exchange_time', ''))
-        filtration_speed = safe_float(request.POST.get('filtration_speed', ''))
-
-
-        # Вычисляем среднюю глубину
-        average_depth = (depth_from + depth_to) / 2
-        
-        # Вычисляем объём, мощность насоса и площадь фильтра
-        volume = length * width * average_depth
-        pump_power = volume / water_exchange_time
-        filtrat_area = pump_power / filtration_speed
-
-
-        # Вычисление площади зеркала воды, колличество скиммеров (взято среднее значение из расчета скиммер на 20м2 зеркала воды) и форсунок
-
-        water_surface_area = (length) * (width)
-        number_of_skimmers = math.ceil(water_surface_area / 20)
-        number_of_nozzles = number_of_skimmers * 2
-        
-        material_area = ((length  * average_depth) *2) + ((width * average_depth) * 2) + ((length + 0.1) * (width + 0.1))
-        material_area_final = math.ceil(material_area + (material_area * 0.20))
-
-        response_data = {
-            'message': 'Данные обработаны успешно',
-            'volume': volume,
-            'length' : length,
-            'width' : width,
-            'depth_from': depth_from,
-            'depth_to' : depth_to,
-            'water_surface_area' : water_surface_area,
-            'number_of_skimmers' : number_of_skimmers,
-            'pump_power' : pump_power,
-            'filtrat_area' : filtrat_area,
-            'material_area_final' : material_area_final
-        }
-
-        request.session['pump-data'] = {
-                'pump_power' : pump_power,
-                'filtrat_area' : filtrat_area,
-                'water_surface_area' : water_surface_area,
-                'number_of_skimmers' : number_of_skimmers,
-                'pump_power' : pump_power,
-                'material_area_final' : material_area_final,
-                'volume': volume,
-                'number_of_nozzles' : number_of_nozzles,
-            }
-        
-        return JsonResponse(response_data)
-
-    return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
-
-
-def get_filtred_pumps(request):
-    pump_power = request.session.get('pump-data', {}).get('pump_power', 0.0)
-
-    matching_pumps = PumpsModel.objects.filter(power__gte=pump_power).order_by('power')
-
-    first_matching_pump = matching_pumps.first()
-
-    if first_matching_pump:
-        selected_power = first_matching_pump.power
-
-        result_pumps = PumpsModel.objects.filter(
-            Q(power=selected_power) | Q(power=selected_power - 1) | Q(power=selected_power + 1)
-
-            )
-    else: 
-        result_pumps = PumpsModel.objects.none()
-    
-    return JsonResponse({
-        'pumps' : list(result_pumps.values('id', 'power', 'name', 'price'))
-        })
-
-
-def get_filtred_filter(request):
-    filtrat_area = request.session.get('pump-data', {}).get('filtrat_area', 0.0)
-
-    upper_bound = filtrat_area * 1.5
-    
-
-    matching_filters = FilterModel.objects.filter(
-        filter__gte=filtrat_area,  
-        filter__lte=upper_bound    
-    )
-
-    return JsonResponse({
-        'filters' : list(matching_filters.values('id', 'filter', 'name', 'price'))
-        })
 
 def create_client(request):
     if request.method == 'POST':
@@ -296,6 +387,14 @@ def create_rectangle(request):
 
             filters_price = filters_materials.price
             filters_summ = filters_price * filters_quality
+
+            valve_id = request.POST.get('valve_group')
+
+            valve = ValveGroupModel.objects.get(id=valve_id)
+            valve_price = valve.price
+            valve_amount = filters_quality
+            valve_summ = valve_price * valve_amount
+
             
             # Получаем объект filter_element напрямую
             filter_element = form.cleaned_data['filter_element']
@@ -402,20 +501,90 @@ def create_rectangle(request):
                 pvc_glue_quantity = 0
             
             zaclad_material = request.POST.get('zaclad_material')
-            # material_factor = 0
 
-            # if zaclad_material == 'abs':
-            #     material_factor = 1
-            # else:
-            #     material_factor = 2
-
+            skimmers_id = request.POST.get('skimmers-value')
+            skimmers = ZacladModel.objects.get(id = skimmers_id)
             number_of_skimmers = request.session.get('pump-data', {}).get('number_of_skimmers', 0)
+            skimmers_price = skimmers.price
+            skimmers_summ = skimmers_price * number_of_skimmers
 
-            # skimmers = ZacladModel.objects.filter(type_zaclad='scimmer')
+            nozzle_id = request.POST.get('nozzles-value')
+            nozzle = ZacladModel.objects.get(id = nozzle_id)
+            number_of_nozzles = request.session.get('pump-data', {}).get('number_of_nozzles', 0)
+            nozzle_price = nozzle.price
+            nozzle_summ = nozzle_price * number_of_nozzles
 
+            bottom_drain_id = request.POST.get('bottom_drain-value')
+            if bottom_drain_id:
+                try:
+                    bottom_drain = ZacladModel.objects.get(id=bottom_drain_id)
+                    bottom_drain_amount = 1
+                    bottom_drain_price = bottom_drain.price
+                    bottom_drain_summ = bottom_drain_price * bottom_drain_amount
+                except ZacladModel.DoesNotExist:
+                    bottom_drain = ''
+                    bottom_drain_amount = 0
+                    bottom_drain_price = 0
+                    bottom_drain_summ = 0
+            else:
+                bottom_drain = ''
+                bottom_drain_amount = 0
+                bottom_drain_price = 0
+                bottom_drain_summ = 0
 
-            
+            adding_water_id = request.POST.get('adding_water-value')
+            if adding_water_id:
+                try:
+                    adding_water = ZacladModel.objects.get(id=adding_water_id)
+                    adding_water_amount = 1
+                    adding_water_price = adding_water.price
+                    adding_water_summ = adding_water_price * adding_water_amount
+                except ZacladModel.DoesNotExist:
+                    adding_water = ''
+                    adding_water_amount = 0
+                    adding_water_price = 0
+                    adding_water_summ = 0
+            else:
+                adding_water = ''
+                adding_water_amount = 0
+                adding_water_price = 0
+                adding_water_summ = 0
 
+            drain_nozzle_id = request.POST.get('drain_nozzle-value')
+            if drain_nozzle_id:
+                try:
+                    drain_nozzle = ZacladModel.objects.get(id=drain_nozzle_id)
+                    drain_nozzle_amount = 1
+                    drain_nozzle_price = drain_nozzle.price
+                    drain_nozzle_summ = drain_nozzle_price * drain_nozzle_amount
+                except ZacladModel.DoesNotExist:
+                    drain_nozzle = ''
+                    drain_nozzle_amount = 0
+                    drain_nozzle_price = 0
+                    drain_nozzle_summ = 0
+            else:
+                drain_nozzle = ''
+                drain_nozzle_amount = 0
+                drain_nozzle_price = 0
+                drain_nozzle_summ = 0
+
+            vacuum_clean_nozzle_id = request.POST.get('vacuum_clean_nozzle-value')
+            if vacuum_clean_nozzle_id:
+                try:
+                    vacuum_clean_nozzle = ZacladModel.objects.get(id=vacuum_clean_nozzle_id)
+                    vacuum_clean_nozzle_amount = 1
+                    vacuum_clean_nozzle_price = vacuum_clean_nozzle.price
+                    vacuum_clean_nozzle_summ = vacuum_clean_nozzle_price * vacuum_clean_nozzle_amount
+                except ZacladModel.DoesNotExist:
+                    vacuum_clean_nozzle = ''
+                    vacuum_clean_nozzle_amount = 0
+                    vacuum_clean_nozzle_price = 0
+                    vacuum_clean_nozzle_summ = 0
+            else:
+                vacuum_clean_nozzle = ''
+                vacuum_clean_nozzle_amount = 0
+                vacuum_clean_nozzle_price = 0
+                vacuum_clean_nozzle_summ = 0
 
 
 
@@ -444,17 +613,63 @@ def create_rectangle(request):
 
                     
                     DesinfectionModel = apps.get_model('catalogs', desinfection_model_name)
-                    desinfection_instance = DesinfectionModel.objects.get(id=desinfection_id)
-                    desinfection_instance_name = desinfection_instance.name
+                    
+                    desinfection_data_json = {}
+
+                    if desinfection_model_name == 'SetDesinfectionModelRX':
+                        DesinfectionModel = apps.get_model('catalogs', desinfection_model_name)
+                        desinfection_instance = DesinfectionModel.objects.get(id=desinfection_id)
+                        desinfection_instance_name = desinfection_instance.name
+                        desinfection_data_json ={
+                            'name' : desinfection_instance.name,
+                            'rx_name' : desinfection_instance.rx_name,
+                            'rx_price' : desinfection_instance.rx_price,
+                            'ph_name' : desinfection_instance.ph_name,
+                            'ph_price' : desinfection_instance.ph_price,
+                            'rx_liquid_name' : desinfection_instance.rx_liquid_name,
+                            'rx_liquid_price' : desinfection_instance.rx_liquid_price,
+                            'ph_liquid_name' : desinfection_instance.ph_liquid_name,
+                            'ph_liquid_price' : desinfection_instance.ph_liquid_price,
+                            'desinfrction_summ' : desinfection_instance.rx_price + desinfection_instance.ph_price + desinfection_instance.rx_liquid_price + desinfection_instance.ph_liquid_price
+                            }
+                    elif desinfection_model_name == 'SetDesinfectionModelCL':
+                        DesinfectionModel = apps.get_model('catalogs', desinfection_model_name)
+                        desinfection_instance = DesinfectionModel.objects.get(id=desinfection_id)
+                        desinfection_instance_name = desinfection_instance.name
+                        desinfection_data_json ={
+                            'name' : desinfection_instance.name,
+                            'price' : desinfection_instance.price,
+                            'rx_liquid_name' : desinfection_instance.rx_liquid_name,
+                            'rx_liquid_price' : desinfection_instance.rx_liquid_price,
+                            'ph_liquid_name' : desinfection_instance.ph_liquid_name,
+                            'ph_liquid_price' : desinfection_instance.ph_liquid_price,
+                            'desinfrction_summ' : desinfection_instance.price + desinfection_instance.rx_liquid_price + desinfection_instance.ph_liquid_price
+                            }
+                    elif desinfection_model_name == 'HydrolysisModel':
+                        DesinfectionModel = apps.get_model('catalogs', desinfection_model_name)
+                        desinfection_instance = DesinfectionModel.objects.get(id=desinfection_id)
+                        desinfection_instance_name = desinfection_instance.name
+                        desinfection_data_json ={
+                            'name' : desinfection_instance.name,
+                            'price' : desinfection_instance.price,
+                            'ph_liquid_name' : desinfection_instance.ph_liquid_name,
+                            'ph_liquid_price' : desinfection_instance.ph_liquid_price,
+                            'desinfrction_summ' : desinfection_instance.price + desinfection_instance.ph_liquid_price
+                            }
+                    if desinfection_data_json:  # Если переменная не пустая
+                        desinfection_json = json.dumps(desinfection_data_json)
+                    else:
+                        desinfection_json = json.dumps({}) 
+
                 else:
                     # Обрабатываем случай, если значение одно (например, когда ничего не выбрано)
                     desinfection_id = desinfection_parts[0] if desinfection_parts[0] else None
-                    desinfection_instance_name = ''  # Или любая другая логика
+                    desinfection_instance_name = '' 
             else:
                 # Обрабатываем случай, если ничего не выбрано
                 desinfection_instance_name = ''
 
-
+            ultraviolet =  form.cleaned_data['ultraviolet']
 
             pit_value = request.POST.get('pit', 'false')
             pit = pit_value == 'true'
@@ -481,7 +696,7 @@ def create_rectangle(request):
             
             water_surface_area = request.session.get('pump-data', {}).get('water_surface_area', 0.0)
             
-            number_of_nozzles = request.session.get('pump-data', {}).get('number_of_nozzles', 0)
+            
             
             volume = request.session.get('pump-data', {}).get('volume', 0.0)
 
@@ -512,6 +727,10 @@ def create_rectangle(request):
                     filter_area = filtrat_area,
                     filter_name = filters_materials,
                     two_filters = two_filters,
+                    valve_name = valve,
+                    valve_price = valve_price,
+                    valve_amount = valve_amount,
+                    valve_summ = valve_summ,
                     filters_quality = filters_quality,
                     filters_price = filters_price,
                     filters_summ = filters_summ,
@@ -548,10 +767,36 @@ def create_rectangle(request):
                     finished_material_pvc_glue_summ = pvc_glue_summ,
                     finished_material_pvc_glue_unit_of_measurement = pvc_glue_unit_of_measurement,
                     zaclad_material = zaclad_material,
+                    skimmers_name = skimmers,
+                    skimmers_price = skimmers_price,
+                    skimmers_amount = number_of_skimmers,
+                    skimmers_summ = skimmers_summ,
+                    nozzle_name = nozzle,
+                    nozzle_price = nozzle_price,
+                    nozzle_amount = number_of_nozzles,
+                    nozzle_summ = nozzle_summ,
+                    bottom_drain_name = bottom_drain,
+                    bottom_drain_price = bottom_drain_price,
+                    bottom_drain_amount = bottom_drain_amount,
+                    bottom_drain_summ = bottom_drain_summ,
+                    adding_water_name = adding_water,
+                    adding_water_price = adding_water_price,
+                    adding_water_amount = adding_water_amount,
+                    adding_water_summ = adding_water_summ,
+                    drain_nozzle_name = drain_nozzle,
+                    drain_nozzle_price = drain_nozzle_price,
+                    drain_nozzle_amount = drain_nozzle_amount,
+                    drain_nozzle_summ = drain_nozzle_summ,
+                    vacuum_clean_nozzle_name = vacuum_clean_nozzle,
+                    vacuum_clean_nozzle_price = vacuum_clean_nozzle_price,
+                    vacuum_clean_nozzle_amount = vacuum_clean_nozzle_amount,
+                    vacuum_clean_nozzle_summ = vacuum_clean_nozzle_summ,
+                    desinfection = desinfection_json,
                     ligthing = ligthing,
                     ligth_quantity = ligth_quantity,
                     heating = heating,
-                    desinfection = desinfection_instance_name,
+                    
+                    ultraviolet = ultraviolet,
                     pit = pit,
                     cover = cover,
                     winding = winding,

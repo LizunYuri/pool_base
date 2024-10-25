@@ -15,8 +15,19 @@ const desinfectionRadios = document.querySelectorAll('input[name="desinfection"]
 const desinfecionDropdown = document.getElementById('desinfection-dropdown')
 const entranceRadios = document.querySelectorAll('input[name="entrance"]')
 const entranceDropdown = document.getElementById('entrance-dropdown')
-const MaterialZaclad = document.querySelectorAll('input[name=["type_materials"]')
-
+const materailZaclad = document.querySelectorAll('input[name="zaclad_material"]')
+const skimmersDropdown = document.getElementById('skimmers-dropdown')
+const skimmersLink = `/calculation/get_skimmers/?zaclad_material=`
+const nozzlesDropdown = document.getElementById('nozzles-dropdown')
+const nozzlesLink = `/calculation/get_nozzle/?zaclad_material=`
+const bottomDrainDropdown = document.getElementById('bottom-drain-dropdown')
+const bottomDrainLink = `/calculation/get_bottom_drain/?zaclad_material=`
+const addingWaterDropdown = document.getElementById('adding_water-dropdown')
+const addingWaterLink = `/calculation/get_adding_water/?zaclad_material=`
+const drainNozzleDropdown = document.getElementById('drain_nozzle-dropdown')
+const drainNozzleLink = `/calculation/get_drain_nozzle/?zaclad_material=`
+const vacuumCleanNozzleDropdown = document.getElementById('vacuum_clean_nozzle-dropdown')
+const vacuumCleanNozzleLink = `/calculation/get_vacuum_clean_nozzle/?zaclad_material=`
 
 
 
@@ -225,7 +236,12 @@ const initializeMaterialScript = () => {
                 data.materials.forEach(material => {
                     let option = document.createElement('option');
                         option.value = material.id;
-                        option.text = material.name;
+                        const formattedPrice = material.price.toLocaleString('ru-RU', {
+                            style: 'decimal',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })
+                        option.text = `${material.name} | цена: ${formattedPrice} ₽/м2.`;
                         materialsDropdown.appendChild(option);
                     });
                 })
@@ -278,17 +294,108 @@ const initializeEntranceScript = () => {
     
 }
 
+const initializePoolZacladScript = (radios, updateLink, dropdown, optionKey) => { 
+    if (!radios.length || !dropdown) {
+        console.warn('Элементы не найдены');
+        return;
+    }
+
+    const updateElementDropdown = (elementType) => {
+        
+        fetch(`${updateLink}${elementType}`)
+        .then(response => {
+            
+            return response.json();
+        })
+        .then(data => {
+            
+
+            // Очищаем dropdown и добавляем первый option
+            dropdown.innerHTML = '<option value="">--------</option>';
+
+            // Проверяем, существует ли data[optionKey]
+            if (data[optionKey] && Array.isArray(data[optionKey])) {
 
 
+                data[optionKey].forEach(optionElement => {
+                    let option = document.createElement('option');
+                    option.value = optionElement.id;
+                    const formattedPrice = optionElement.price.toLocaleString('ru-RU', {
+                        style: 'decimal',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })
+                    option.text = `${optionElement.name} | цена: ${formattedPrice} ₽/шт.`;
+                    dropdown.appendChild(option);
+                    console.log('Добавлен элемент в dropdown:', optionElement);
+                });
+            } else {
+                console.warn(`Ключ '${optionKey}' не найден или не является массивом`, data);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при получении данных', error);
+        });
+    };
+    
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            const selectedValue = document.querySelector('input[name="zaclad_material"]:checked').value;
+
+            updateElementDropdown(selectedValue);
+        });
+    });
+
+    const initialSelectedValue = document.querySelector('input[name="zaclad_material"]:checked')?.value;
+
+    if (initialSelectedValue) {
+        updateElementDropdown(initialSelectedValue);
+    }
+};
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM полностью загружен');
-    initializeModalAndForm()
-    helpTextVisible()
-    initializeHeatingScript()
-    initializeMaterialScript()
-    lightingScript()
-    initialzeDesinfectionScript()
-    initializeEntranceScript()
-    // initializePumpsScript()
-})
+    initializeModalAndForm();
+    helpTextVisible();
+    initializeHeatingScript();
+    initializeMaterialScript();
+    lightingScript();
+    initialzeDesinfectionScript();
+    initializeEntranceScript();
+    initializePoolZacladScript(
+        materailZaclad,
+        skimmersLink,
+        skimmersDropdown,
+        'skimmer'
+    );
+    initializePoolZacladScript(
+        materailZaclad,
+        nozzlesLink,
+        nozzlesDropdown,
+        'nozzle'
+    );
+    initializePoolZacladScript(
+        materailZaclad,
+        bottomDrainLink,
+        bottomDrainDropdown,
+        'bottom_drain'
+    );
+    initializePoolZacladScript(
+        materailZaclad,
+        addingWaterLink,
+        addingWaterDropdown,
+        'adding_water'
+    );
+    initializePoolZacladScript(
+        materailZaclad,
+        drainNozzleLink,
+        drainNozzleDropdown,
+        'drain_nozzle'
+    );
+    initializePoolZacladScript(
+        materailZaclad,
+        vacuumCleanNozzleLink,
+        vacuumCleanNozzleDropdown,
+        'vacuum_clean_nozzle'
+    );
+});
