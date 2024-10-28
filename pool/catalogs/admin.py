@@ -1,6 +1,49 @@
 from django.contrib import admin
-from .models import UltravioletModel, ValveGroupModel, WorkMaterialModel, FilterElementModel, AdditionalMaterial, ConcreteModel, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, LightingModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
+from .models import LightingAutomationModel, LightingFlaskModel, LightingLampModel, LightingSetModel, LightingTransformerModel, LightingAdittionalMaterialModel, UltravioletModel, AdditionalEquipmentHeatingModel, ValveGroupModel, WorkMaterialModel, FilterElementModel, AdditionalMaterial, ConcreteModel, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
 
+
+@admin.register(LightingSetModel)
+class LightingSetModelAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    list_filter = ('name',  )
+    search_fields = ('name', )
+
+@admin.register(LightingAutomationModel)
+class LightingAutomationModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')
+
+@admin.register(LightingFlaskModel)
+class LightingFlaskModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')
+
+@admin.register(LightingLampModel)
+class LightingLampModelAdmin(admin.ModelAdmin):
+    list_display = ('name',  'price', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')
+
+@admin.register(LightingTransformerModel)
+class LightingTransformerModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')
+
+@admin.register(LightingAdittionalMaterialModel)
+class LightingAdittionalMaterialModelAdmin(admin.ModelAdmin):
+    list_display = ('name',  'price', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')
+
+
+@admin.register(AdditionalEquipmentHeatingModel)
+class AdditionalEquipmentHeating(admin.ModelAdmin):
+    list_display = ('name', 'type_category', 'price', 'date', 'supplier')
+    list_filter = ('name', 'price', 'date', 'supplier')
+    search_fields = ('name', 'price', 'date', 'supplier')
 
 @admin.register(FilterModel)
 class FilterModelAdmin(admin.ModelAdmin):
@@ -29,12 +72,6 @@ class FinishingMaterialsModelAdmin(admin.ModelAdmin):
 
 @admin.register(ZacladModel)
 class ZacladModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'date', 'supplier')
-    list_filter = ('name', 'price', 'date', 'supplier')
-    search_fields = ('name', 'price', 'date', 'supplier')
-
-@admin.register(LightingModel)
-class LightingModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'date', 'supplier')
     list_filter = ('name', 'price', 'date', 'supplier')
     search_fields = ('name', 'price', 'date', 'supplier')

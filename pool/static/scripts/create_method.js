@@ -132,8 +132,13 @@ const initializeHeatingScript = () => {
                     heatingDropdown.innerHTML = '<option value="">Выберите Оборудование</option>';
                     data.heatings.forEach((heating) => {
                         let option = document.createElement('option');
+                        const formattedPrice = heating.price.toLocaleString('ru-RU', {
+                            style: 'decimal',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })
                         option.value = heating.id;
-                        option.text = heating.name;
+                        option.text = `${heating.name} | цена: ${formattedPrice} ₽`;
                         heatingDropdown.appendChild(option);
                     });
                 })
@@ -275,7 +280,12 @@ const initializeEntranceScript = () => {
                 data.entrances.forEach(entrance => {
                     let option = document.createElement('option');
                         option.value = entrance.id;
-                        option.text = entrance.name;
+                        const formattedPrice = entrance.price.toLocaleString('ru-RU', {
+                            style: 'decimal',
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })
+                        option.text = `${entrance.name} | цена: ${formattedPrice} ₽.`;
                         entranceDropdown.appendChild(option);
                     });
                 })

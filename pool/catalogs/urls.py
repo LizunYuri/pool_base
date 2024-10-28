@@ -8,7 +8,6 @@ urlpatterns = [
     path('export-pumps/', views.export_pumps, name='export_pumps'),
     path('export-finished/', views.export_finished, name='export-finished'),
     path('export-zaclad/', views.export_zaklad, name='export-zaklad'),
-    path('export-light/', views.export_light, name='export-light'),
     path('export-heating/', views.export_heating, name='export-heating'),
 
     path('update_filters/', views.update_filters, name='update_filters'),

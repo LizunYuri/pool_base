@@ -19,9 +19,12 @@ urlpatterns = [
     path('get_vacuum_clean_nozzle/', views.get_vacuum_clean_nozzle, name='get_vacuum_clean_nozzle'),
     path('get_drain_nozzle/', views.get_drain_nozzle, name='drain_nozzle'),
     path('get_filter_valve/', views.get_filter_valve, name='get_filter_valve'),
+    path('get_lighting/', views.get_lighting, name='get_lighting'),
+    
 
     path('accept_size/', views.accept_size, name='accept_size'),
     path('accept_filter/', views.get_accept_filters, name='accept_filter'),
+    path('get_accept_lighting/', views.get_accept_lighting, name='get_accept_lighting'),
 
     path('rectangle/<int:pk>/', views.rectangle_detail, name='rectangle_detail'),
-] 
+]  

@@ -343,7 +343,7 @@
                         <h2 class="title-h2">Подводное освещение</h2>
                         <div class="form-content-top">
                             <div class="add-client-form-body-note">
-                                <label class="client-name-placeholder custom-radio">
+                                <label class="client-name-placeholder custom-radio lighting-ajax">
                                     <input type="radio" name="ligthing" value="white" checked>
                                     <span class="radio-mark width250">Белый свет</span>
                                     <div class="question">?</div>
@@ -353,7 +353,7 @@
                                         </p>
                                     </div>
                                 </label>
-                                <label class="client-name-placeholder custom-radio">
+                                <label class="client-name-placeholder custom-radio lighting-ajax">
                                     <input type="radio" name="ligthing" value="rgb">
                                     <span class="radio-mark width250">RGB свет</span>
                                     <div class="question">?</div>
@@ -363,7 +363,7 @@
                                         </p>
                                     </div>
                                 </label>
-                                <label class="client-name-placeholder custom-radio">
+                                <label class="client-name-placeholder custom-radio lighting-ajax">
                                     <input type="radio" name="ligthing" value="none">
                                     <span class="radio-mark width250">Без освещения</span>
                                     <div class="question">?</div>
@@ -376,7 +376,7 @@
                             </div>
                             <div class="add-client-form-body-note">
                                 <div class="client-name-choice-content">
-                                    <label class="client-name-placeholder"  for='ligth_quantity'>
+                                    <label class="client-name-placeholder lighting-ajax"  for='ligth_quantity'>
                                         Колличество светильников
                                         <div class="question">?</div>
                                         <div class="help-text">
@@ -387,6 +387,12 @@
                                     </label>
                                     <input class="client-name-note" type="number" name="ligth_quantity" id="ligth_quantity">
                                 </div>
+                                <div class="client-name-choice-content margin40">
+                                    <select class="custom-select" id="lighting-dropdown" name="lighting_dropdown">
+                                        <option value="">Выберите оборудование</option>
+                                    </select>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -435,16 +441,6 @@
                         </div>
                     </div>
                     <div class="form-content">
-                        <div class="form-content-top">
-                            <div class="form-content-top-radio">
-                                <button class="blue-btn" type="button" onclick="prevStep(4)">Назад</button>
-                                <button class="blue-btn" type="button" onclick="nextStep(6)">Далее</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="step" id="step-6" style="display:none;">
-                    <div class="form-content">
                         <h2 class="title-h2">Строительство</h2>
                         <div class="form-content-top">
                             <div class="add-client-form-body-note">
@@ -492,12 +488,23 @@
                     <div class="form-content">
                         <div class="form-content-top">
                             <div class="form-content-top-radio">
-                                <button class="blue-btn" type="button" onclick="prevStep(5)">Назад</button>
+                                <button class="blue-btn" type="button" onclick="prevStep(4)">Назад</button>
                                 <button class="blue-btn" type="submit">Сохранить</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- <div class="step" id="step-6" style="display:none;">
+                    
+                    <div class="form-content">
+                        <div class="form-content-top">
+                            <div class="form-content-top-radio">
+                                <button class="blue-btn" type="button" onclick="prevStep(5)">Назад</button>
+                                <button class="blue-btn" type="submit">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
             </form>
         </div>
     </section>
@@ -602,6 +609,7 @@
         const pumpsDropdown = document.getElementById('pumps-dropdown')
         const filtersDropdown = document.getElementById('filters-dropdown')
         const valveGroup = document.getElementById('valve-group')
+        const lightingsDropdown = document.getElementById('lighting-dropdown')
 
         const initializePumpsScript = () => {
 
@@ -671,6 +679,40 @@
             updateFiltersDropdown(); 
         }
 
+        const LightsScript = () => {
+
+            if (!lightingsDropdown) {
+                lightingsDropdown.innerHTML = '<option value="">Нет оборудования, соответствующего заданным параметрам</option>';
+                console.warn('Элементы для инициализации выпадающего списка не найдены');
+                return;
+            }
+
+            function updateLightsDropdown() {
+                fetch(`/calculation/get_lighting/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Очистка выпадающего списка перед добавлением новых опций
+                        lightingsDropdown.innerHTML = '<option value="">Выберите оборудование</option>';
+                        data.lightings.forEach(lighting => {  
+                            let option = document.createElement('option');
+                            const formattedPrice = lighting.price.toLocaleString('ru-RU', {
+                                style: 'decimal',
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                            option.value = lighting.id;  
+                            option.text = `${lighting.name} | цена: ${formattedPrice} ₽/шт.`;
+                            lightingsDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при получении списка фильтров', error);
+                    });
+            }
+
+            updateLightsDropdown();
+            }
+
 
         const initializeValveFilterScript = () => {
 
@@ -704,7 +746,7 @@
 
             updateValveDropdown(); 
         }
-                    
+           
 
         $(document).ready(function() {
             $('.ajax-response input, .ajax-response select').on('input change', function() {
@@ -755,8 +797,44 @@
                     }
                 });
             });
+
+            let lighting_materials = 'white'
+
+            $('.lighting-ajax input[type=radio]').on('change', function() {
                 
+                console.log($(this).val());
+                lighting_materials = $(this).val()
+                sendLightingData()
+                LightsScript()
+            })
+
+            let lighting_quantity = 0 
+
+            
+
+            const sendLightingData = () => {
+                console.log('Данные отправлены');
+                let formLightingData = {
+                    lighting_materials: lighting_materials,
+                };
+                document.getElementById('ligth_quantity').value = lighting_quantity;
+                console.log(formLightingData);
+                $.ajax({
+                    url: "{% url 'get_accept_lighting' %}",
+                    type: "POST",
+                    data: formLightingData,
+                    success: function(response) {
+                        console.log("Данные отправлены успешно:", response);
+                        LightsScript();
+                    },
+                    error: function(response) {
+                        console.log("Ошибка при отправке данных:", response);
+                    }
+                });
+            }
+
         });
+
     </script>
     
 

@@ -3,7 +3,7 @@ from queue import Full
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from catalogs.models import FilterElementModel, ValveGroupModel, ZacladModel, FinishingMaterialsModel, FilterModel, PumpsModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel, EntranceModel
+from catalogs.models import FilterElementModel, LightingSetModel, ValveGroupModel, ZacladModel, FinishingMaterialsModel, FilterModel, PumpsModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel, EntranceModel
 from clients.models import ClientModel
 from .forms import CalulateRectangleForm, ClientModelForm
 from .models import CalulateRectangleModel
@@ -106,6 +106,35 @@ def get_accept_filters(request):
     return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
 
 
+@csrf_exempt
+def get_accept_lighting(request):
+    request.session['test_key'] = 'test_value'
+    if request.method == 'POST':
+        def safe_float(value):
+            try:
+                return float(value) if value else 0.0
+            except ValueError:
+                return 0.0
+            
+        lighting_materials = request.POST.get('lighting_materials')
+
+
+        request.session['lighting_elements'] = {
+                'lighting_materials': lighting_materials,
+            }
+        request.session.modified = True
+        request.session.save()
+
+        print('Сессия после сохранения:', request.session.items())  # Проверяем, что данные сохранены
+        response_data = {
+            'lighting_materials': lighting_materials
+        }
+
+        return JsonResponse(response_data)
+
+    return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
+
+
 
 def get_materials(request):
     material_type = request.GET.get('type')
@@ -126,6 +155,10 @@ def get_zaclad_elements(request, zaclad_type):
     zaclad_material = request.GET.get('zaclad_material')
     elements = ZacladModel.objects.filter(type_zaclad=zaclad_type, type_materials=zaclad_material)
     
+    request.session['zaclad-material'] = {
+                'zaclad_material' : zaclad_material
+            }
+    
     elements_list = [
         {
             'id': element.id,
@@ -134,6 +167,58 @@ def get_zaclad_elements(request, zaclad_type):
         } for element in elements
     ]
     return JsonResponse({zaclad_type: elements_list})
+
+
+def get_lighting(request):
+    lighting_session_data = request.session.get('lighting_elements', {})
+    lighting_materials = lighting_session_data.get('lighting_materials', '')
+    zaclad_material = 'abs'
+
+    # Логирование значений для отладки
+    print("Значение lighting_materials из сессии:", lighting_materials)
+    print("Фильтрация по:", "type_lighting =", lighting_materials, "и type_materials =", zaclad_material)
+
+    if lighting_materials == 'none':
+        lighting_elements_list = []
+        total_sum = 0
+    else:
+        lighting_elements = LightingSetModel.objects.filter(
+            type_lighting=lighting_materials,
+            type_materials=zaclad_material
+        )
+
+        lighting_elements_list = []
+        total_sum = 0
+        for lighting_element in lighting_elements:
+            base_price = lighting_element.lamp.price + lighting_element.flask.price
+            lighting_data = {
+                'id': lighting_element.id,
+                'name': lighting_element.name,
+                'price': base_price
+            }
+            total_sum += base_price
+
+            additional_materials_data = []
+            additional_materials_sum = 0
+            for material in lighting_element.additional_materials.all():
+                material_data = {
+                    'name': material.name,
+                    'price': material.price
+                }
+                additional_materials_data.append(material_data)
+                additional_materials_sum += material.price
+
+            total_sum += additional_materials_sum
+            lighting_data['additional_materials'] = additional_materials_data
+            lighting_elements_list.append(lighting_data)
+
+    return JsonResponse({
+        'lightings': lighting_elements_list,
+        'lighting_sum': total_sum,
+        'zaclad_material': zaclad_material
+    })
+
+
 
 def get_skimmers(request):
     return get_zaclad_elements(request, 'skimmer')
@@ -152,7 +237,6 @@ def get_vacuum_clean_nozzle(request):
 
 def get_drain_nozzle(request):
     return get_zaclad_elements(request, 'drain_nozzle')
-
 
 def get_filtred_pumps(request):
     pump_power = request.session.get('pump-data', {}).get('pump_power', 0.0)
@@ -225,8 +309,6 @@ def get_filter_valve(request):
 
     return JsonResponse({'valves': valves_list})
 
-
-
 def get_heating(request):
     heating_type = request.GET.get('heating_type')
     heatings = HeatingModel.objects.filter(type_category=heating_type)
@@ -234,7 +316,8 @@ def get_heating(request):
     heating_list = [
         {
             'id' : heating.id,
-            'name' : heating.name
+            'name' : heating.name,
+            'price' : heating.price,
             } for heating in heatings
         ]
     return JsonResponse({'heatings' : heating_list})
@@ -291,11 +374,12 @@ def get_entrance(request):
 
     entrances_list = [{
             'id' : entrance.id,
-            'name' : entrance.name
+            'name' : entrance.name,
+            'price' : entrance.price
+
         } for entrance in entrances
         ]
     return JsonResponse({'entrances' : entrances_list})
-
 
 def create_client(request):
     if request.method == 'POST':
@@ -588,18 +672,85 @@ def create_rectangle(request):
 
 
 
-            ligthing = request.POST.get('ligthing')
+            ligthing_data = request.POST.get('lighting_dropdown')
+            ligthing_id = int(ligthing_data)
+            ligthing = request.POST.get('lighting')
             ligth_quantity = request.POST.get('ligth_quantity', 0)
+
+            if ligthing == 'none':
+                ligth_quantity = 0
+                ligthing_id = 0
+                lighting_json_data = {}
+            else:
+                if ligthing_id > 0:
+                    ligthing_summ = 0
+                    ligthing_element = LightingSetModel.objects.get(id=ligthing_id)
+
+                    # Уберите запятую после выражения
+                    ligthing_summ = ligthing_element.lamp.price + ligthing_element.flask.price
+
+                    lighting_json_data = {
+                        'name': ligthing_element.name,
+                        'set': {
+                            'lamp_name': ligthing_element.lamp.name,
+                            'lamp_price': ligthing_element.lamp.price,
+                            'flask_name': ligthing_element.flask.name,
+                            'flask_price': ligthing_element.flask.price,
+                        }
+                    }
+                    
+                    additional_materials_data = []
+                    additional_materials_sum = 0
+
+                    for material in ligthing_element.additional_materials.all():
+                        material_data = {
+                            'name': material.name,
+                            'price': material.price
+                        }
+                        additional_materials_data.append(material_data)
+                        additional_materials_sum += material.price
+
+                    # Суммируйте стоимость дополнительных материалов
+                    ligthing_summ += additional_materials_sum
+
+                    lighting_json_data['adittional_elements'] = additional_materials_data
+                    # Здесь нужно убрать append, так как lighting_json_data - это словарь
+                    lighting_json_data['ligthing_summ'] = ligthing_summ
+
 
             heating_id = request.POST.get('heating')
 
             if heating_id:  # Проверяем, есть ли значение в heating_id
                 try:
                     heating = HeatingModel.objects.get(id=heating_id)
-                except HeatingModel.DoesNotExist:
+                    print(heating.additional_equipment.all())
+                    heating_json_data = {
+                            'name' : heating.name,
+                            'price' : heating.price,
+                        }
+                    adittionals_heating_data = []
+                    adittioonals_heating_summ = 0
 
+                    for material in heating.additional_equipment.all():
+                        adittional_heating_data = {
+                                'name' : material.name,
+                                'price' : material.price
+                            }
+                        adittionals_heating_data.append(adittional_heating_data)
+                        adittioonals_heating_summ += material.price
+
+                    heating_summ = heating.price + adittioonals_heating_summ
+
+                    heating_json_data.update({
+                            'adittionals_heating' : adittionals_heating_data,
+                            'heating_summ' : heating_summ
+                        })
+
+                except HeatingModel.DoesNotExist:
+                    heating_json_data = {}
                     heating = None
             else:
+                heating_json_data = {}
                 heating = None
 
             desinfection_data = request.POST.get('desinfection')
@@ -664,10 +815,14 @@ def create_rectangle(request):
                 else:
                     # Обрабатываем случай, если значение одно (например, когда ничего не выбрано)
                     desinfection_id = desinfection_parts[0] if desinfection_parts[0] else None
-                    desinfection_instance_name = '' 
+                    desinfection_instance_name = ''
+                    desinfection_data_json = {} 
+                    desinfection_json = {}
             else:
                 # Обрабатываем случай, если ничего не выбрано
                 desinfection_instance_name = ''
+                desinfection_data_json = {}
+                desinfection_json = {}
 
             ultraviolet =  form.cleaned_data['ultraviolet']
 
@@ -792,10 +947,9 @@ def create_rectangle(request):
                     vacuum_clean_nozzle_amount = vacuum_clean_nozzle_amount,
                     vacuum_clean_nozzle_summ = vacuum_clean_nozzle_summ,
                     desinfection = desinfection_json,
-                    ligthing = ligthing,
+                    ligthing = lighting_json_data,
                     ligth_quantity = ligth_quantity,
-                    heating = heating,
-                    
+                    heating = heating_json_data,
                     ultraviolet = ultraviolet,
                     pit = pit,
                     cover = cover,

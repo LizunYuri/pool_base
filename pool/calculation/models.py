@@ -525,7 +525,7 @@ class CalulateRectangleModel(models.Model):
                                         blank=True, 
                                         editable=False
                                         )
-    ligthing = models.CharField(max_length=200,
+    ligthing = models.JSONField(max_length=2000,
                                 verbose_name='Освещение',
                                 help_text='Подводное освещение',
                                 blank=True, 
@@ -537,14 +537,14 @@ class CalulateRectangleModel(models.Model):
                                         null=True,
                                         editable=False
                                         )        
-    heating = models.CharField(max_length=200,
+    heating = models.JSONField(max_length=2000,
                                 verbose_name='Подогрев',
                                 help_text='Подогрев воды в бассейне',
                                 blank=True,
                                 null=True, 
                                 editable=False
                                 )
-    desinfection = models.JSONField(max_length=200,
+    desinfection = models.JSONField(max_length=2000,
                                     verbose_name='Дезинфекция',
                                     help_text='Дозирующее оборудование',
                                     blank=True, 

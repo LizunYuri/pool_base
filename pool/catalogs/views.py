@@ -4,7 +4,7 @@ import json
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from supplier.models import SupplierModel
-from .models import FilterModel, FinishingMaterialsModel, PumpsModel, ZacladModel, LightingModel,  HeatingModel
+from .models import FilterModel, FinishingMaterialsModel, PumpsModel, ZacladModel,  HeatingModel
 
 log_messages = []
 
@@ -75,9 +75,6 @@ def export_finished(request):
 
 def export_zaklad(request):
     return export_data(request, ZacladModel)
-
-def export_light(request):
-    return export_data(request, LightingModel)
 
 def export_heating(request):
     return export_data(request, HeatingModel)

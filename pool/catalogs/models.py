@@ -541,25 +541,15 @@ class ZacladModel(models.Model):
         verbose_name_plural = 'Закладные'
 
 
-class LightingModel(models.Model):
-    CHOICES = [
-            ('abs', 'ABS пластик'),
-            ('aisi', 'AISI-316 нержавеющий металл')
-        ]
-    CHOICES_TYPE = [
-            ('lamp', 'Лампа'),
-            ('flask', 'Прожектор без лампы'),
-            ('overlay', 'Лицевая панель'),
-            ('automation', 'Автоматика управления'),
-        ]
+class LightingLampModel(models.Model):
     CHOICES_LIGHT = [
             ('white', 'Белый свет'),
             ('rgb', 'RGB'),
-            ('none', 'НЕТ (Для закладной и автоматики)'),
         ]
     supplier = models.ForeignKey(SupplierModel,
                                  verbose_name='Поставщик',
                                  help_text='Выбрать из поставщиков',
+                                 blank=True,
                                  on_delete=models.CASCADE)
     name = models.CharField(max_length=500,
                             verbose_name='Номенклатура',
@@ -570,13 +560,6 @@ class LightingModel(models.Model):
                             help_text='В точности как в каталоге поставщика',
                             blank=True,
                             )
-    type_category = models.CharField(
-                            max_length=20,
-                            choices=CHOICES_TYPE,
-                            verbose_name='Категория',
-                            help_text='Выбрать подходящее',
-                            blank=True,
-                            null=True)
     type_lighting = models.CharField(
                             max_length=20,
                             choices=CHOICES_LIGHT,
@@ -584,14 +567,11 @@ class LightingModel(models.Model):
                             help_text='Выбрать подходящее',
                             blank=True,
                             null=True)
-    type_materials = models.CharField(
-                            max_length=20,
-                            choices=CHOICES,
-                            default='abs',
-                            verbose_name='Материал изготовления',
-                            help_text='Пластик или нерж',
-                            blank=True,
-                            null=True)
+    power = models.IntegerField(
+                              verbose_name='Мощность',
+                              default=0,
+                              null=True,
+                              blank=True,)
     price = models.FloatField(default=0,
                               null=True,
                               blank=True,
@@ -602,9 +582,6 @@ class LightingModel(models.Model):
                             null=True,
                             blank=True,
                             editable=False)
-    image = models.ImageField(upload_to='catalog/light/',
-                              verbose_name='Фото товара',
-                              help_text='Красивое фото используется для коммерческого предложения')
     status = models.CharField(max_length=50,
                               default='no_found',
                               editable=False)
@@ -622,20 +599,307 @@ class LightingModel(models.Model):
     def __str__(self): 
         return self.name
     
-    def delete(self, *args, **kwargs):
-        # Удаление файла изображения
-        if self.image and os.path.isfile(self.image.path):
-            os.remove(self.image.path)
-        super().delete(*args, **kwargs)
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Лампа подводного освещения'
 
-    def get_image_url(self):
-        if self.image:
-            return self.image.url
-        return None
+class LightingTransformerModel(models.Model):
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 blank=True,
+                                 on_delete=models.CASCADE)
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    article = models.CharField(max_length=100,
+                            verbose_name='Артикул',
+                            help_text='В точности как в каталоге поставщика',
+                            blank=True,
+                            )
+    power = models.IntegerField(
+                              verbose_name='Мощность',
+                              default=0,
+                              null=True,
+                              blank=True,)
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за ед.')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
     
     class Meta:
-        verbose_name = 'Подводное освещение'
-        verbose_name_plural = 'Подводное освещение'
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Понижающий трансформатор'
+
+class LightingFlaskModel(models.Model):
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 blank=True,
+                                 on_delete=models.CASCADE)
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    article = models.CharField(max_length=100,
+                            verbose_name='Артикул',
+                            help_text='В точности как в каталоге поставщика',
+                            blank=True,
+                            )
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за ед.')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Подводный светильник без лампы'    
+
+class LightingAutomationModel(models.Model):
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 blank=True,
+                                 on_delete=models.CASCADE)
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    article = models.CharField(max_length=100,
+                            verbose_name='Артикул',
+                            help_text='В точности как в каталоге поставщика',
+                            blank=True,
+                            )
+    power = models.IntegerField(
+                              verbose_name='Мощность',
+                              default=0,
+                              null=True,
+                              blank=True,)
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за ед.')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Автоматика управления освещением'
+
+class LightingAdittionalMaterialModel(models.Model):
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 on_delete=models.CASCADE,
+                                 null=True,
+                                 blank=True,
+                                 )
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за ед.')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Комплектующие для подводного освещения'
+
+class LightingSetModel(models.Model):
+    CHOICES = [
+        ('abs', 'Пластик'),
+        ('aisi', 'Нержавейка'),
+        ]
+    CHOICES_LIGHT = [
+            ('white', 'Белый свет'),
+            ('rgb', 'RGB'),
+        ]
+    type_materials = models.CharField(
+                            max_length=20,
+                            choices=CHOICES,
+                            default='abs',
+                            verbose_name='Материал изготовления',
+                            help_text='Пластик или нерж',
+                            blank=True,
+                            null=True)
+    type_lighting = models.CharField(
+                            max_length=20,
+                            choices=CHOICES_LIGHT,
+                            verbose_name='Цвет свечения',
+                            help_text='Выбрать подходящее',
+                            blank=True,
+                            null=True)
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    lamp = models.ForeignKey(LightingLampModel,
+                             verbose_name='Лампа',
+                             help_text='Лампа для подводного освещения',
+                             on_delete=models.CASCADE,
+                             )
+    flask = models.ForeignKey(LightingFlaskModel,
+                             verbose_name='Закладная',
+                             help_text='Подводный светильник',
+                             on_delete=models.CASCADE,
+                             )
+    additional_materials = models.ManyToManyField(LightingAdittionalMaterialModel,
+                                                  verbose_name='Дополнительные материалы',
+                                                  help_text='Дополнительные материалы для подводного освещения',
+                                                  blank=True)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Комплект подводного освещения'    
+
+class AdditionalEquipmentHeatingModel(models.Model):
+
+    CHOICES_TYPE = [
+            ('electro', 'Электронагреватель'),
+            ('warm', 'Теплообменник'),
+            ('pump', 'Тепловой насос'),
+        ]
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 on_delete=models.CASCADE,
+                                 null=True,
+                                 blank=True,
+                                 )
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='В точности как в каталоге поставщика',
+                            )
+    type_category = models.CharField(
+                            max_length=20,
+                            choices=CHOICES_TYPE,
+                            verbose_name='Категория',
+                            help_text='Выбрать подходящее',
+                            blank=True,
+                            null=True)
+    price = models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+                              verbose_name='Розничная стоимость за ед.')
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    status = models.CharField(max_length=50,
+                              default='no_found',
+                              editable=False)
+    product_url = models.URLField(verbose_name='Ссылка на товар у поставщика',
+                                  help_text='Для актуализации цен в каталоге поставщика. ',
+                                  null=True,
+                                  blank=True)
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return f"{self.get_type_category_display()} / {self.name} / {self.price}"
+    
+    class Meta:
+        verbose_name = 'Номенклатуру'
+        verbose_name_plural = 'Комплектующие для подогрева воды'
+    
 
 
 class HeatingModel(models.Model):
@@ -665,6 +929,12 @@ class HeatingModel(models.Model):
                             help_text='Выбрать подходящее',
                             blank=True,
                             null=True)
+    additional_equipment = models.ManyToManyField(AdditionalEquipmentHeatingModel,
+                                                  verbose_name='Комплектующие для подключения',
+                                                  help_text='Выбрать необходимое оборудование',
+                                                  blank=True,
+                                                  default=''
+                                                  )
     price = models.FloatField(default=0,
                               null=True,
                               blank=True,
