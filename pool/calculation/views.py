@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from catalogs.models import FilterElementModel, LightingSetModel, ValveGroupModel, ZacladModel, FinishingMaterialsModel, FilterModel, PumpsModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel, EntranceModel
 from clients.models import ClientModel
+from construction.models import ExcavationRequirementsModel
 from .forms import CalulateRectangleForm, ClientModelForm
 from .models import CalulateRectangleModel
 import math
@@ -72,6 +73,10 @@ def accept_size(request):
                 'material_area_final' : material_area_final,
                 'volume': volume,
                 'number_of_nozzles' : number_of_nozzles,
+                'length' : length,
+                'width' : width,
+                'depth_from': depth_from,
+                'depth_to' : depth_to,
             }
         
         return JsonResponse(response_data)
@@ -134,8 +139,6 @@ def get_accept_lighting(request):
 
     return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
 
-
-
 def get_materials(request):
     material_type = request.GET.get('type')
     materials = FinishingMaterialsModel.objects.filter(type_materials=material_type)
@@ -147,6 +150,10 @@ def get_materials(request):
             'price' : material.price
             } for material in materials
          ]
+    
+    request.session['material-data'] = {
+                'material_type' : material_type,
+            }
     
     return JsonResponse({'materials': materials_list})
 
@@ -172,11 +179,8 @@ def get_zaclad_elements(request, zaclad_type):
 def get_lighting(request):
     lighting_session_data = request.session.get('lighting_elements', {})
     lighting_materials = lighting_session_data.get('lighting_materials', '')
-    zaclad_material = 'abs'
-
-    # Логирование значений для отладки
-    print("Значение lighting_materials из сессии:", lighting_materials)
-    print("Фильтрация по:", "type_lighting =", lighting_materials, "и type_materials =", zaclad_material)
+    zaclad_material_session = request.session.get('zaclad-material', {'zaclad_material': 'abs'})
+    zaclad_material = zaclad_material_session.get('zaclad_material', 'abs')
 
     if lighting_materials == 'none':
         lighting_elements_list = []
@@ -217,8 +221,6 @@ def get_lighting(request):
         'lighting_sum': total_sum,
         'zaclad_material': zaclad_material
     })
-
-
 
 def get_skimmers(request):
     return get_zaclad_elements(request, 'skimmer')
@@ -673,7 +675,13 @@ def create_rectangle(request):
 
 
             ligthing_data = request.POST.get('lighting_dropdown')
-            ligthing_id = int(ligthing_data)
+            if ligthing_data:
+                ligthing_id = int(ligthing_data)
+            else:
+                ligthing_id = 0
+                lighting_json_data = {}
+
+
             ligthing = request.POST.get('lighting')
             ligth_quantity = request.POST.get('ligth_quantity', 0)
 
@@ -686,7 +694,7 @@ def create_rectangle(request):
                     ligthing_summ = 0
                     ligthing_element = LightingSetModel.objects.get(id=ligthing_id)
 
-                    # Уберите запятую после выражения
+                    
                     ligthing_summ = ligthing_element.lamp.price + ligthing_element.flask.price
 
                     lighting_json_data = {
@@ -710,11 +718,11 @@ def create_rectangle(request):
                         additional_materials_data.append(material_data)
                         additional_materials_sum += material.price
 
-                    # Суммируйте стоимость дополнительных материалов
+                    
                     ligthing_summ += additional_materials_sum
 
                     lighting_json_data['adittional_elements'] = additional_materials_data
-                    # Здесь нужно убрать append, так как lighting_json_data - это словарь
+                    
                     lighting_json_data['ligthing_summ'] = ligthing_summ
 
 
@@ -813,7 +821,7 @@ def create_rectangle(request):
                         desinfection_json = json.dumps({}) 
 
                 else:
-                    # Обрабатываем случай, если значение одно (например, когда ничего не выбрано)
+                    
                     desinfection_id = desinfection_parts[0] if desinfection_parts[0] else None
                     desinfection_instance_name = ''
                     desinfection_data_json = {} 
@@ -838,16 +846,10 @@ def create_rectangle(request):
             cleaner_value = request.POST.get('cleaner', 'false')
             cleaner = cleaner_value  == 'true'
 
-            concrete = request.POST.get('concrete')
-
-            digging = form.cleaned_data.get('digging')
-            
-            export = form.cleaned_data.get('export')
             
             entrance_materials_id = request.POST.get('entrance_materials')
             entrance_materials = EntranceModel.objects.get(id=entrance_materials_id)
 
-            
             
             water_surface_area = request.session.get('pump-data', {}).get('water_surface_area', 0.0)
             
@@ -856,6 +858,52 @@ def create_rectangle(request):
             volume = request.session.get('pump-data', {}).get('volume', 0.0)
 
 
+            concrete = request.POST.get('concrete')
+
+            digging = form.cleaned_data.get('digging')
+            
+            export = form.cleaned_data.get('export')
+
+
+            size_session_data = request.session.get('pub-data', {})
+            material_session_data = request.session.get('material-data', {})
+            material_data_type = material_session_data.get('material_type' , '')
+
+            excavation_data = ExcavationRequirementsModel.objects.filter(construction=material_data_type, filtration='skimmer').order_by('-date').first()
+
+            wall_thickness = excavation_data.wall_thickness / 1000
+
+            slab_thickness = excavation_data.slab_thickness / 1000
+
+            if excavation_data.bedding_thickness != 0:
+                bedding_thickness = excavation_data.bedding_thickness / 1000
+            else: 
+                bedding_thickness = 0
+            
+            if excavation_data.footing_materials != 0:
+                footing_materials = excavation_data.footing_materials / 1000
+            else: 
+                footing_materials = 0
+
+            # length = float(size_session_data.get('length', 0))
+            # width = float(size_session_data.get('width', 0))
+            # depth_from = float(size_session_data.get('depth_from', 0))
+            # depth_to = float(size_session_data.get('depth_to', 0))
+            length = float(3)
+            width = float(6)
+            depth_from = float(1.5)
+            depth_to = float(1.5)
+
+            total_lenght_excavation = (wall_thickness * 2) + length
+            total_width_excavation = (wall_thickness * 2) + width
+
+            total_plate = (total_lenght_excavation + wall_thickness) + (total_width_excavation + wall_thickness)
+
+
+
+
+
+            print('площадь плиты', total_plate, "ширина", width, "длинна", length, "толщина стен", wall_thickness, "общая динна стен", total_lenght_excavation, "общая ширина стен", total_width_excavation)
 
 
             

@@ -15,18 +15,7 @@
                 <div class=" margin40">
                     <form id='rectangle-form' class="create-form" method="POST">
                         {% csrf_token %}
-                        <div class="client-name-choice-content">
-                            <label class="client-name-placeholder"  for='{{ form.client.id_for_label }}'>
-                                {{ form.client.label }}
-                                <div class="question">?</div>
-                                <div class="help-text">
-                                    <p>
-                                        {{ form.client.help_text }}
-                                    </p>
-                                </div>
-                            </label>
-                            {{ form.client }}
-                        </div>
+                        
                     </div>
                     <button id="openAddClientModal" class="accent-btn" type="button" data-toggle="modal" data-target="#clientModal">Добавить Заказчика</button>
             </div>
@@ -35,6 +24,25 @@
         </div>
         <div class="calculate-body">
                 <div class="step" id="step-1">
+                    <div class="form-content" style="width: 300px;">
+                        <h2 class="title-h2">Заказчик</h2>
+                        <div class="client-name-choice-content margin40">
+                            <div class="form-content-top" style="justify-content: flex-start; margin-left: 45px;">
+                                <div class="add-client-form-body-note">
+                                    <label class="client-name-placeholder"  for='{{ form.client.id_for_label }}'>
+                                        {{ form.client.label }}
+                                        <div class="question">?</div>
+                                        <div class="help-text">
+                                            <p>
+                                                {{ form.client.help_text }}
+                                            </p>
+                                        </div>
+                                    </label>
+                                    {{ form.client }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-content">
                         <h2 class="title-h2">Размер</h2>
                         <div class="form-content-top">
@@ -105,7 +113,7 @@
                                 </div>
                                 <div class="add-client-form-body-note">
                                     <div class="form-content-top">
-                                        <select class="custom-select" id="materials-dropdown" name="finished_materials">
+                                        <select class="custom-select" id="materials-dropdown" name="finished_materials" required>
                                             <option value="">Выберите материал</option>
                                         </select>
                                     </div>
@@ -140,13 +148,13 @@
                                 <label class="client-name-placeholder margin40"  for='skimmers-value'>
                                     Скиммер
                                 </label>
-                                <select class="custom-select" id="skimmers-dropdown" name="skimmers-value">
+                                <select class="custom-select" id="skimmers-dropdown" name="skimmers-value" required>
                                     <option value="">--------</option>
                                 </select>
                                 <label class="client-name-placeholder margin40"  for='nozzles-value'>
                                     Форсунка
                                 </label>
-                                <select class="custom-select" id="nozzles-dropdown" name="nozzles-value">
+                                <select class="custom-select" id="nozzles-dropdown" name="nozzles-value"  required>
                                     <option value="">--------</option>
                                 </select>
                                 <label class="client-name-placeholder margin40"  for='bottom_drain-value'>
@@ -193,7 +201,7 @@
                             </div>
                             <div class="add-client-form-body-note">
                                 <div class="form-content-top">
-                                    <select class="custom-select" id="entrance-dropdown" name="entrance_materials">
+                                    <select class="custom-select" id="entrance-dropdown" name="entrance_materials" required>
                                         <option value="">Выберите тип</option>
                                     </select>
                                 </div>
@@ -236,15 +244,15 @@
                                 {{ form.filtration_speed }}
                             </div>
                             <div class="add-client-form-body-note">
-                                <select class="custom-select margin40" id="pumps-dropdown" name="pumps_materials">
+                                <select class="custom-select margin40" id="pumps-dropdown" name="pumps_materials" required>
                                     <option value="">Выберите Насос</option>
                                 </select>
                                 <div class="ajax-filters">
-                                    <select class="custom-select margin40" id="filters-dropdown" name="filters_materials">
+                                    <select class="custom-select margin40" id="filters-dropdown" name="filters_materials" required>
                                         <option value="">Выберите Фильтр</option>
                                     </select>
                                 </div>
-                                <select class="custom-select margin40" id="valve-group" name="valve_group">
+                                <select class="custom-select margin40" id="valve-group" name="valve_group" required>
                                     <option value="">Выберите вентильную группу</option>
                                 </select>
                             </div>
@@ -273,7 +281,7 @@
                         <div class="form-content-top">
                             <div class="add-client-form-body-note">
                                 <label class="client-name-placeholder custom-radio">
-                                    <input type="radio" name="desinfection" value="rx" checked>
+                                    <input type="radio" name="desinfection" value="rx">
                                     <span class="radio-mark width250">Станция дозирования Rx/PH</span>
                                 </label>
                                 <label class="client-name-placeholder custom-radio">
@@ -285,7 +293,7 @@
                                     <span class="radio-mark width250">Гидролизная установка</span>
                                 </label>
                                 <label class="client-name-placeholder custom-radio">
-                                    <input type="radio" name="desinfection" value="">
+                                    <input type="radio" name="desinfection" value="" checked>
                                     <span class="radio-mark width250">Ручная дезинфекция</span>
                                 </label>
                             </div>
@@ -364,7 +372,7 @@
                                     </div>
                                 </label>
                                 <label class="client-name-placeholder custom-radio lighting-ajax">
-                                    <input type="radio" name="ligthing" value="none">
+                                    <input type="radio" name="ligthing" value="none" checked>
                                     <span class="radio-mark width250">Без освещения</span>
                                     <div class="question">?</div>
                                     <div class="help-text">
@@ -388,7 +396,7 @@
                                     <input class="client-name-note" type="number" name="ligth_quantity" id="ligth_quantity">
                                 </div>
                                 <div class="client-name-choice-content margin40">
-                                    <select class="custom-select" id="lighting-dropdown" name="lighting_dropdown">
+                                    <select class="custom-select" id="lighting_dropdown" name="lighting_dropdown">
                                         <option value="">Выберите оборудование</option>
                                     </select>
                                 </div>
@@ -609,7 +617,7 @@
         const pumpsDropdown = document.getElementById('pumps-dropdown')
         const filtersDropdown = document.getElementById('filters-dropdown')
         const valveGroup = document.getElementById('valve-group')
-        const lightingsDropdown = document.getElementById('lighting-dropdown')
+        const lightingsDropdown = document.getElementById('lighting_dropdown')
 
         const initializePumpsScript = () => {
 
@@ -679,7 +687,7 @@
             updateFiltersDropdown(); 
         }
 
-        const LightsScript = () => {
+        const lightsScript = () => {
 
             if (!lightingsDropdown) {
                 lightingsDropdown.innerHTML = '<option value="">Нет оборудования, соответствующего заданным параметрам</option>';
@@ -798,14 +806,14 @@
                 });
             });
 
-            let lighting_materials = 'white'
+            let lighting_materials = ''
 
             $('.lighting-ajax input[type=radio]').on('change', function() {
                 
                 console.log($(this).val());
                 lighting_materials = $(this).val()
                 sendLightingData()
-                LightsScript()
+                
             })
 
             let lighting_quantity = 0 
@@ -814,24 +822,21 @@
 
             const sendLightingData = () => {
                 console.log('Данные отправлены');
-                let formLightingData = {
-                    lighting_materials: lighting_materials,
-                };
-                document.getElementById('ligth_quantity').value = lighting_quantity;
-                console.log(formLightingData);
+                let formLightingData = { lighting_materials: lighting_materials };
+                // document.getElementById('ligth_quantity').value = lighting_quantity;
                 $.ajax({
                     url: "{% url 'get_accept_lighting' %}",
                     type: "POST",
                     data: formLightingData,
                     success: function(response) {
                         console.log("Данные отправлены успешно:", response);
-                        LightsScript();
+                        setTimeout(lightsScript, 100);
                     },
                     error: function(response) {
                         console.log("Ошибка при отправке данных:", response);
                     }
                 });
-            }
+            };
 
         });
 
@@ -858,10 +863,18 @@
         //         // Добавляем обработчик события input и change для сброса фона
         //         input.addEventListener('input', () => {
         //             input.style.background = ''; // Убираем фон при вводе данных
+        //             closeModalError.addEventListener('click', () => {
+        //                 console.log('Закрытие модального окна');
+        //                 errorModal.style.display = 'none';
+        //             });
         //         });
 
         //         input.addEventListener('change', () => {
-        //             input.style.background = ''; // Убираем фон при выборе опции
+        //             input.style.background = '';
+        //             closeModalError.addEventListener('click', () => {
+        //                 console.log('Закрытие модального окна');
+        //                 errorModal.style.display = 'none';
+        //             });
         //         });
 
         //         // Проверка на заполненность
@@ -888,17 +901,17 @@
 
 
         const nextStep = (step) => {
-        //     if (!validateStep(step - 1)){
-        //         errorModal.style.display = 'flex';
-        //          return
-        //      }
-        //      else {
-        //          steps.forEach((e) => {
-        //          e.style.display = 'none'
-        //      })
-        //      document.getElementById('step-' + step).style.display = 'flex'
+            // if (!validateStep(step - 1)){
+            //     errorModal.style.display = 'flex';
+            //      return
+            //  }
+            //  else {
+            //      steps.forEach((e) => {
+            //      e.style.display = 'none'
+            //  })
+            //  document.getElementById('step-' + step).style.display = 'flex'
 
-        //      }
+            //  }
             steps.forEach((e) => {
                 e.style.display = 'none'
             })

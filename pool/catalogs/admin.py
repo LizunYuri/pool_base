@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import LightingAutomationModel, LightingFlaskModel, LightingLampModel, LightingSetModel, LightingTransformerModel, LightingAdittionalMaterialModel, UltravioletModel, AdditionalEquipmentHeatingModel, ValveGroupModel, WorkMaterialModel, FilterElementModel, AdditionalMaterial, ConcreteModel, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
+from .models import LightingAutomationModel, LightingFlaskModel, LightingLampModel, LightingSetModel, LightingTransformerModel, LightingAdittionalMaterialModel, UltravioletModel, AdditionalEquipmentHeatingModel, ValveGroupModel, WorkMaterialModel, FilterElementModel, AdditionalMaterial, EntranceModel, ExportModel, JobsConcretteModel, DiggingModel, FilterModel, PumpsModel, FinishingMaterialsModel, ZacladModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel
 
 
 @admin.register(LightingSetModel)
@@ -102,12 +102,6 @@ class HydrolysisModelAdmin(admin.ModelAdmin):
 
 @admin.register(DiggingModel)
 class DiggingModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price')
-    list_filter = ('name', 'price')
-    search_fields = ('name', 'price')
-
-@admin.register(ConcreteModel)
-class ConcreteModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'price')
     list_filter = ('name', 'price')
     search_fields = ('name', 'price')

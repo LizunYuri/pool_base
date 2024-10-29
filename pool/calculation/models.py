@@ -44,13 +44,13 @@ class CalulateRectangleModel(models.Model):
                                )
     water_exchange_time = models.FloatField(max_length=20,
                                             choices=CHOICES_WATER_TIME,
-                                            default=4,
+                                            default=6,
                                             verbose_name='Время полного водообмена',
                                             help_text='Для частного бассейна необходимо 6 часов, для бассейнов в небольших гостиницах 4 часа',
                                         )
     filtration_speed= models.FloatField(max_length=20,
                                         choices=CHOICES_WATER_FILTRATION_SPEED,
-                                        default=20,
+                                        default=30,
                                         verbose_name='Скорость фильтрации',
                                         help_text='Чем ниже скорость тем качественнее очистка воды',
                                         )
@@ -152,8 +152,6 @@ class CalulateRectangleModel(models.Model):
                                verbose_name='Фильтрующий элемент',
                                help_text='Выбрать из имеющегося',
                                on_delete=models.CASCADE,
-                               null=True, 
-                               blank=True,
                                )
     filter_element_price = models.FloatField(verbose_name='Цена за единицу фильтрующего эелмента',
                                     help_text='Заполняется из базы',

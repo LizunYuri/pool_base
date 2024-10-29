@@ -540,7 +540,6 @@ class ZacladModel(models.Model):
         verbose_name = 'Закладную'
         verbose_name_plural = 'Закладные'
 
-
 class LightingLampModel(models.Model):
     CHOICES_LIGHT = [
             ('white', 'Белый свет'),
@@ -900,7 +899,6 @@ class AdditionalEquipmentHeatingModel(models.Model):
         verbose_name = 'Номенклатуру'
         verbose_name_plural = 'Комплектующие для подогрева воды'
     
-
 
 class HeatingModel(models.Model):
 
@@ -1407,31 +1405,6 @@ class ExportModel(models.Model):
     class Meta:
         verbose_name = 'Вывоз грунта'
         verbose_name_plural = 'Вывоз грунта'
-
-
-class ConcreteModel(models.Model):
-    name = models.CharField(max_length=200,
-                            verbose_name='Название',
-                            help_text='Будет указано в коммерческом предложении')
-    calculation = models.BooleanField(verbose_name='Участвует в расчете',
-                                      help_text='По умолчанию в расчете участвует. Ели подразумевается отсутствие работ то должно быть неактивным',
-                                      default=True)
-    price =  models.FloatField(default=0,
-                              null=True,
-                              blank=True,
-                              verbose_name='Розничная стоимость за .м3')
-    def save(self, *args, **kwargs):
-
-        self.price = round(self.price, 2)
-
-        super().save(*args, **kwargs)
-
-    def __str__(self): 
-        return self.name
-    
-    class Meta:
-        verbose_name = 'Бетон'
-        verbose_name_plural = 'Бетон от завода'
 
 
 class FittingsModel(models.Model):
