@@ -1,8 +1,14 @@
 from django.contrib import admin
-from .models import ConcreteModel, InertMaterialsModel, ExcavationRequirementsModel, FootingModel
+from .models import ReinforcementModel, ConcreteModel, InertMaterialsModel, ExcavationRequirementsModel, FootingModel
 
 @admin.register(ExcavationRequirementsModel)
 class ExcavationRequirementsModelAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    list_filter = ('name',  )
+    search_fields = ('name', )
+
+@admin.register(ReinforcementModel)
+class ReinforcementModelAdmin(admin.ModelAdmin):
     list_display = ('name', )
     list_filter = ('name',  )
     search_fields = ('name', )

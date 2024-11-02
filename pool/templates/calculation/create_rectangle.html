@@ -849,73 +849,73 @@
         const errorModal = document.querySelector('.error-modal')
         const closeModalError = document.querySelector('.close-btn-error')
 
-        // const validateStep = (step) => {
-        //     let isValid = true;
+        const validateStep = (step) => {
+            let isValid = true;
 
-        //     const currentStep = document.getElementById('step-' + step);
+            const currentStep = document.getElementById('step-' + step);
 
-        //     if (!currentStep) {
-        //         console.error("Шаг не найден: step-" + step);
-        //         return false;
-        //     }
+            if (!currentStep) {
+                console.error("Шаг не найден: step-" + step);
+                return false;
+            }
 
-        //     currentStep.querySelectorAll('input, select').forEach(input => {
-        //         // Добавляем обработчик события input и change для сброса фона
-        //         input.addEventListener('input', () => {
-        //             input.style.background = ''; // Убираем фон при вводе данных
-        //             closeModalError.addEventListener('click', () => {
-        //                 console.log('Закрытие модального окна');
-        //                 errorModal.style.display = 'none';
-        //             });
-        //         });
+            currentStep.querySelectorAll('input, select').forEach(input => {
+                // Добавляем обработчик события input и change для сброса фона
+                input.addEventListener('input', () => {
+                    input.style.background = ''; // Убираем фон при вводе данных
+                    closeModalError.addEventListener('click', () => {
+                        console.log('Закрытие модального окна');
+                        errorModal.style.display = 'none';
+                    });
+                });
 
-        //         input.addEventListener('change', () => {
-        //             input.style.background = '';
-        //             closeModalError.addEventListener('click', () => {
-        //                 console.log('Закрытие модального окна');
-        //                 errorModal.style.display = 'none';
-        //             });
-        //         });
+                input.addEventListener('change', () => {
+                    input.style.background = '';
+                    closeModalError.addEventListener('click', () => {
+                        console.log('Закрытие модального окна');
+                        errorModal.style.display = 'none';
+                    });
+                });
 
-        //         // Проверка на заполненность
-        //         if (input.required) {
-        //             if (input.tagName === 'SELECT') {
-        //                 // Проверяем, является ли выбранное значение пустым
-        //                 if (!input.value || input.value === '') {
-        //                     input.style.background = 'rgba(240, 128, 128, .4)'; // Подсветка некорректных полей
-        //                     isValid = false;
-        //                 }
-        //             } else {
-        //                 // Проверяем для input
-        //                 if (!input.value) {
-        //                     input.style.background = 'rgba(240, 128, 128, .4)'; // Подсветка некорректных полей
-        //                     isValid = false;
-        //                 }
-        //             }
-        //         }
-        //     });
+                // Проверка на заполненность
+                if (input.required) {
+                    if (input.tagName === 'SELECT') {
+                        // Проверяем, является ли выбранное значение пустым
+                        if (!input.value || input.value === '') {
+                            input.style.background = 'rgba(240, 128, 128, .4)'; // Подсветка некорректных полей
+                            isValid = false;
+                        }
+                    } else {
+                        // Проверяем для input
+                        if (!input.value) {
+                            input.style.background = 'rgba(240, 128, 128, .4)'; // Подсветка некорректных полей
+                            isValid = false;
+                        }
+                    }
+                }
+            });
 
-        //     return isValid;
-        // }
+            return isValid;
+        }
 
 
 
         const nextStep = (step) => {
-            // if (!validateStep(step - 1)){
-            //     errorModal.style.display = 'flex';
-            //      return
-            //  }
-            //  else {
-            //      steps.forEach((e) => {
-            //      e.style.display = 'none'
-            //  })
-            //  document.getElementById('step-' + step).style.display = 'flex'
+            if (!validateStep(step - 1)){
+                errorModal.style.display = 'flex';
+                 return
+             }
+             else {
+                 steps.forEach((e) => {
+                 e.style.display = 'none'
+             })
+             document.getElementById('step-' + step).style.display = 'flex'
 
-            //  }
-            steps.forEach((e) => {
-                e.style.display = 'none'
-            })
-            document.getElementById('step-' + step).style.display = 'flex'
+             }
+            // steps.forEach((e) => {
+            //     e.style.display = 'none'
+            // })
+            // document.getElementById('step-' + step).style.display = 'flex'
             
         }
 

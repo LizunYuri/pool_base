@@ -587,11 +587,10 @@ class CalulateRectangleModel(models.Model):
                                 blank=True, 
                                 editable=False
                                 )
-    concrete = models.IntegerField(verbose_name='Бетонные работы',
+    concrete = models.JSONField(verbose_name='Бетонные работы',
                                    editable=False,
                                    blank=True,
                                    null=True,
-                                   default=0
                                    )
     digging = models.ForeignKey(DiggingModel,
                                 verbose_name='Разработка котлована',

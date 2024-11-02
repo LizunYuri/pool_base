@@ -62,10 +62,16 @@
 <script type="application/json" id="desinfection-data">
     {{ rectangle.desinfection |safe }}
 </script>
+<script type="application/json" id="concrete-data">
+    {{ rectangle.concrete |safe }}
+</script>
 
 <script>
     // Получаем данные из тега <script>
+    const cincreteData = JSON.parse(document.getElementById('concrete-data').textContent);
+    
     const desinfectionData = JSON.parse(document.getElementById('desinfection-data').textContent);
     document.getElementById('desinfection').innerHTML = `<div>${desinfectionData.name}</div>`
     console.log(desinfectionData);  // Теперь вы можете работать с данными
+    console.log(cincreteData);
 </script>

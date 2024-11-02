@@ -59,6 +59,7 @@ class ConcreteModel(models.Model):
         verbose_name = 'Бетон'
         verbose_name_plural = 'Бетон от завода'
 
+
 class FootingModel(models.Model):
     name = models.CharField(max_length=200,
                             verbose_name='Название',
@@ -80,8 +81,39 @@ class FootingModel(models.Model):
         return self.name
     
     class Meta:
-        verbose_name = 'Бетон'
-        verbose_name_plural = 'Бетон от завода'
+        verbose_name = 'Материал'
+        verbose_name_plural = 'Материал для подбетонки'
+
+
+class ReinforcementModel(models.Model):
+    name = models.CharField(max_length=200,
+                            verbose_name='Название',
+                            help_text='Будет указано в коммерческом предложении')
+    calculation = models.BooleanField(verbose_name='Участвует в расчете',
+                                      help_text='По умолчанию в расчете участвует. Ели подразумевается отсутствие работ то должно быть неактивным',
+                                      default=True)
+    reinforcement_diameter = models.FloatField(verbose_name='Диаметр арматуры',
+                                        help_text='в миллиметрах.',
+                                       blank=True,
+                                       default=0.0)
+    price =  models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+
+                              verbose_name='Розничная стоимость за .м')
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Арматура'
+        verbose_name_plural = 'Арматура'    
+
 
 class ExcavationRequirementsModel(models.Model):
     CHOICE_POOL_CONSTRUCTION = [
@@ -142,10 +174,12 @@ class ExcavationRequirementsModel(models.Model):
                                           blank=True,
                                           null=True,
                                           )
-    reinforcement_diameter = models.FloatField(verbose_name='Диаметр арматуры',
-                                        help_text='в миллиметрах.',
+    reinforcement = models.ForeignKey(ReinforcementModel,
+                                        verbose_name='Арматура',
+                                        help_text='.',
                                        blank=True,
-                                       default=0.0)
+                                       default=0.0,
+                                       on_delete=models.CASCADE)
     cell_size = models.FloatField(verbose_name='Размер ячейки',
                                         help_text='в миллиметрах для расчета необходимого количества материалов.',
                                        blank=True,
@@ -167,7 +201,6 @@ class ExcavationRequirementsModel(models.Model):
         self.bedding_thickness = round(self.bedding_thickness, 2)
         self.slab_thickness = round(self.slab_thickness, 2)
         self.slab_thickness = round(self.slab_thickness, 2)
-        self.reinforcement_diameter = round(self.reinforcement_diameter, 2)
         self.cell_size = round(self.cell_size, 2)
 
         super().save(*args, **kwargs)
