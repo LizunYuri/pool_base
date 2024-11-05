@@ -3,9 +3,9 @@ from queue import Full
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from catalogs.models import FilterElementModel, LightingSetModel, ValveGroupModel, ZacladModel, FinishingMaterialsModel, FilterModel, PumpsModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel, EntranceModel
+from catalogs.models import FilterElementModel, DiggingModel, LightingSetModel, ValveGroupModel, ZacladModel, FinishingMaterialsModel, FilterModel, PumpsModel, HeatingModel, SetDesinfectionModelCL, SetDesinfectionModelRX, HydrolysisModel, EntranceModel
 from clients.models import ClientModel
-from construction.models import ExcavationRequirementsModel
+from construction.models import ExcavationRequirementsModel, ExcavationJobsModel
 from .forms import CalulateRectangleForm, ClientModelForm
 from .models import CalulateRectangleModel
 import math
@@ -78,11 +78,11 @@ def accept_size(request):
                 'depth_from': depth_from,
                 'depth_to' : depth_to,
             }
+        print(request.session['pump-data'])
         
         return JsonResponse(response_data)
 
     return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
-
 
 @csrf_exempt
 def get_accept_filters(request):
@@ -109,7 +109,6 @@ def get_accept_filters(request):
         return JsonResponse(response_data)
 
     return JsonResponse({'error': 'Неправильный метод запроса'}, status=400)
-
 
 @csrf_exempt
 def get_accept_lighting(request):
@@ -157,7 +156,6 @@ def get_materials(request):
     
     return JsonResponse({'materials': materials_list})
 
-# Функция для полученя закладных элементов
 def get_zaclad_elements(request, zaclad_type):
     zaclad_material = request.GET.get('zaclad_material')
     elements = ZacladModel.objects.filter(type_zaclad=zaclad_type, type_materials=zaclad_material)
@@ -174,7 +172,6 @@ def get_zaclad_elements(request, zaclad_type):
         } for element in elements
     ]
     return JsonResponse({zaclad_type: elements_list})
-
 
 def get_lighting(request):
     lighting_session_data = request.session.get('lighting_elements', {})
@@ -854,21 +851,11 @@ def create_rectangle(request):
             water_surface_area = request.session.get('pump-data', {}).get('water_surface_area', 0.0)
             
             
-            
             volume = request.session.get('pump-data', {}).get('volume', 0.0)
 
-
-            
-
-            digging = form.cleaned_data.get('digging')
-            
             export = form.cleaned_data.get('export')
 
-
             concrete = request.POST.get('concrete')
-
-            size_session_data = request.session.get('pub-data', {})
-
 
             material_session_data = request.session.get('material-data', {})
 
@@ -879,6 +866,15 @@ def create_rectangle(request):
             material_session_depth = (material_session_depth_from + material_session_depth_to) / 2
 
             concrete_data_json = {}
+            diggind_data_json = {}
+
+            digging_id = form.cleaned_data.get('digging')
+
+            digging_data = DiggingModel.objects.get(id=digging_id)
+
+            digging_data_price = digging_data.price
+            digging_data_name = digging_data.name
+
 
             if concrete == '1':
                 material_data_type = material_session_data.get('material_type' , '')
@@ -886,6 +882,10 @@ def create_rectangle(request):
                     excavation_data = ExcavationRequirementsModel.objects.filter(
                         construction=material_data_type
                     ).order_by('-date').first()
+                    excavation_jobs = ExcavationJobsModel.objects.filter(
+                        construction=material_data_type
+                    ).order_by('-date').first()
+
 
                     wall_thinckeness = excavation_data.wall_thickness / 1000
                     slab_thinckeness = excavation_data.slab_thickness / 1000
@@ -894,6 +894,8 @@ def create_rectangle(request):
                     number_of_rows = excavation_data.number_of_rows
                     reinforcement = excavation_data.reinforcement
                     reinforcement_price = excavation_data.reinforcement.price
+                    jobs_name = excavation_jobs.name
+                    jobs_price = excavation_jobs.price
 
                     bedding_thickness = excavation_data.bedding_thickness / 1000
 
@@ -904,6 +906,9 @@ def create_rectangle(request):
                     final_width = material_session_width  + (wall_thinckeness * 2 )
                     final_volume = (final_lenght * final_width)
 
+                    digging_volume =  final_volume * ( ( (depth_from + depth_to) / 2)  + bedding_thickness + footing_thickness)
+            
+
                     # расчет бетона 
 
                     volume_concrete = final_volume * slab_thinckeness
@@ -913,6 +918,8 @@ def create_rectangle(request):
 
                     volume_concrete_summ = volume_concrete * concrete_materials_price
                     total_wall_concrete_summ = total_wall_concrete * concrete_materials_price
+                    total_concrete = total_wall_concrete + volume_concrete
+                    total_jobs_summ = total_concrete * jobs_price
 
                     # расчет арматуры
 
@@ -952,33 +959,218 @@ def create_rectangle(request):
 
 
                     concrete_data_json = {
-                            'concrete_materials' : concrete_materials.name,
-                            'concrete_materials_price' : concrete_materials_price,
-                            'volume_concrete' : volume_concrete,
-                            'volume_concrete_summ' : volume_concrete_summ,
-                            'total_wall_concrete' : total_wall_concrete,
-                            'total_wall_concrete_summ' : total_wall_concrete_summ,
+                            'concrete_materials' : concrete_materials.name, # бетон
+                            'concrete_materials_price' : concrete_materials_price, # бетон цена
+                            'volume_concrete' : volume_concrete, # объем плиты
+                            'volume_concrete_summ' : volume_concrete_summ, # сумма за плиту
+                            'total_wall_concrete' : total_wall_concrete, # объем бетона на стены
+                            'total_wall_concrete_summ' : total_wall_concrete_summ, # сумма за бетон на стены
+                            'total_wall_reinforcement' : total_wall_reinforcement, #  арматура на стены
+                            'total_wall_reinforcement_summ' : total_wall_reinforcement * reinforcement_price, # сумма за арматуру стен
                             
-                            'reinforcement' : reinforcement.name,
-                            'reinforcement_price' : reinforcement_price,
-                            'total_cell_plate' : total_cell_plate,
-                            'cell_reinforcement_summ' : total_cell_plate * reinforcement_price,
-                            'total_wall_reinforcement' : total_wall_reinforcement,
-                            'wall_reinforcement_summ' : total_wall_reinforcement * reinforcement_price,
+                            'reinforcement' : reinforcement.name, # Арматура
+                            'reinforcement_price' : reinforcement_price, #  цена арматуры
+                            'total_cell_plate' : total_cell_plate, # арматура на плиту
+                            'cell_reinforcement_summ' : total_cell_plate * reinforcement_price, #сумма за арматуру на плиту
                             
-                            'bedding_thickness_volume' : bedding_thickness_volume,
-                            'bedding_thickness_materials' : bedding_thickness_materials,
-                            'bedding_thickness_summ' : bedding_thickness_summ,
+                            'bedding_thickness_volume' : bedding_thickness_volume, #подсыпка объем
+                            'bedding_thickness_materials' : bedding_thickness_materials, # материал
+                            'bedding_thickness_summ' : bedding_thickness_summ, #сумма за подсыпку
 
-                            'footing_thickness_volume' : footing_thickness_volume,
-                            'footing_thickness_materials' : footing_thickness_materials,
-                            'footing_thickness_summ' : footing_thickness_summ,
+                            'footing_thickness_volume' : footing_thickness_volume, #подбетонка объем
+                            'footing_thickness_materials' : footing_thickness_materials, # материал подбетонки
+                            'footing_thickness_summ' : footing_thickness_summ, # сумма за подбетонку
 
-                            'total_summ' : float((volume_concrete_summ + total_wall_concrete_summ + (total_cell_plate * reinforcement_price) + (total_wall_reinforcement * reinforcement_price) + bedding_thickness_summ + footing_thickness_summ), 0)
+                            'jobs_name' : jobs_name,
+                            'total_jobs_summ' : total_jobs_summ,
                         }
                     print(material_session_length, material_session_width, final_lenght, final_width, final_volume, concrete_data_json)
+
+                elif  material_data_type == 'poly':
+                    excavation_data = ExcavationRequirementsModel.objects.filter(
+                        construction=material_data_type
+                    ).order_by('-date').first()
+                    excavation_jobs = ExcavationJobsModel.objects.filter(
+                        construction=material_data_type
+                    ).order_by('-date').first()
+
+
+                    wall_thinckeness = excavation_data.wall_thickness / 1000
+                    slab_thinckeness = excavation_data.slab_thickness / 1000
+                    concrete_materials = excavation_data.concrete_materials
+                    concrete_materials_price = excavation_data.concrete_materials.price
+                    number_of_rows = excavation_data.number_of_rows
+                    reinforcement = excavation_data.reinforcement
+                    reinforcement_price = excavation_data.reinforcement.price
+                    jobs_name = excavation_jobs.name
+                    total_concrete = excavation_jobs.price
+
+                    bedding_thickness = excavation_data.bedding_thickness / 1000
+
+                    footing_thickness = excavation_data.footing_thickness / 1000
+
+                    # получение финального размера стен и площади основания
+                    final_lenght = material_session_length + (wall_thinckeness * 2 )
+                    final_width = material_session_width  + (wall_thinckeness * 2 )
+                    final_volume = (final_lenght * final_width)
+
+                    # расчет бетона 
+
+                    volume_concrete = final_volume * slab_thinckeness
+                    long_wall_concrete = round((final_lenght * material_session_depth * slab_thinckeness) * 2, 2)
+                    short_wall_concrete = round((final_width * material_session_depth * slab_thinckeness) * 2, 2)
+                    total_wall_concrete = long_wall_concrete + short_wall_concrete
+
+                    volume_concrete_summ = volume_concrete * concrete_materials_price
+                    total_wall_concrete_summ = total_wall_concrete * concrete_materials_price
+                    total_concrete = total_wall_concrete + volume_concrete
+                    total_jobs_summ = total_concrete * jobs_price
+
+                    # расчет арматуры
+
+                    length_reinforcement = round((2 + (final_lenght / slab_thinckeness) * number_of_rows), 0)
+                    width_reinforcement = round((2 + (final_width / slab_thinckeness) * number_of_rows), 0)
+                    total_cell_plate = (length_reinforcement * final_lenght) + (width_reinforcement * final_width)
+
+
+                    if bedding_thickness !=0:
+                        bedding_thickness_volume = round(final_volume * bedding_thickness, 0)
+                        bedding_thickness_materials = excavation_data.bedding_materials.name
+                        bedding_thickness_summ = excavation_data.bedding_materials.price * bedding_thickness_volume
+                    else:
+                        bedding_thickness_volume = 0
+                        bedding_thickness_materials = ''
+                        bedding_thickness_summ = 0
+
+
+                    if footing_thickness !=0:
+                        footing_thickness_volume = round(final_volume * footing_thickness, 0)
+                        footing_thickness_materials = excavation_data.footing_materials.name
+                        footing_thickness_summ = excavation_data.footing_materials.price * footing_thickness_volume
+                    else:
+                        footing_thickness_volume = 0
+                        footing_thickness_materials = ''
+                        footing_thickness_summ = 0
+
+                    concrete_data_json = {
+                            'concrete_materials' : concrete_materials.name, # бетон
+                            'concrete_materials_price' : concrete_materials_price, # бетон цена
+                            'volume_concrete' : volume_concrete, # объем плиты
+                            'volume_concrete_summ' : volume_concrete_summ, # сумма за плиту
+                            'total_wall_concrete' : total_wall_concrete, # объем бетона на стены
+                            'total_wall_concrete_summ' : total_wall_concrete_summ, # сумма за бетон на стены
+                            
+                            'reinforcement' : reinforcement.name, # Арматура
+                            'reinforcement_price' : reinforcement_price, #  цена арматуры
+                            'total_cell_plate' : total_cell_plate, # арматура на плиту
+                            'cell_reinforcement_summ' : total_cell_plate * reinforcement_price, #сумма за арматуру на плиту
+                            
+                            'bedding_thickness_volume' : bedding_thickness_volume, #подсыпка объем
+                            'bedding_thickness_materials' : bedding_thickness_materials, # материал
+                            'bedding_thickness_summ' : bedding_thickness_summ, #сумма за подсыпку
+
+                            'footing_thickness_volume' : footing_thickness_volume, #подбетонка объем
+                            'footing_thickness_materials' : footing_thickness_materials, # материал подбетонки
+                            'footing_thickness_summ' : footing_thickness_summ, # сумма за подбетонку
+
+                            'jobs_name' : jobs_name,
+                            'total_jobs_summ' : total_jobs_summ,
+                        }
+                    print(material_session_length, material_session_width, final_lenght, final_width, final_volume, concrete_data_json)
+                
                 else:
                     concrete_data_json = {}
+            elif concrete == '2':
+                material_data_type = material_session_data.get('material_type' , '')
+                if material_data_type == 'pvh':
+                    excavation_data = ExcavationRequirementsModel.objects.filter(
+                        construction=material_data_type
+                    ).order_by('-date').first()
+                    excavation_jobs = ExcavationJobsModel.objects.filter(
+                        construction=material_data_type
+                    ).order_by('-date').first()
+
+                    wall_thinckeness = excavation_data.wall_thickness / 1000
+                    slab_thinckeness = excavation_data.slab_thickness / 1000
+                    jobs_name = excavation_jobs.name
+                    jobs_price = excavation_jobs.price
+
+                    bedding_thickness = excavation_data.bedding_thickness / 1000
+
+                    footing_thickness = excavation_data.footing_thickness / 1000
+
+                    # получение финального размера стен и площади основания
+                    final_lenght = material_session_length + (wall_thinckeness * 2 )
+                    final_width = material_session_width  + (wall_thinckeness * 2 )
+                    final_volume = (final_lenght * final_width)
+
+                    # расчет бетона 
+
+                    volume_concrete = final_volume * slab_thinckeness
+                    long_wall_concrete = round((final_lenght * material_session_depth * slab_thinckeness) * 2, 2)
+                    short_wall_concrete = round((final_width * material_session_depth * slab_thinckeness) * 2, 2)
+                    total_wall_concrete = long_wall_concrete + short_wall_concrete
+
+                    total_concrete = total_wall_concrete + volume_concrete
+                    total_jobs_summ = total_concrete * jobs_price
+
+                    concrete_data_json = {
+                            'volume_concrete' : volume_concrete, # объем плиты
+                            'total_wall_concrete' : total_wall_concrete, # объем бетона на стены
+
+                            'jobs_name' : jobs_name,
+                            'total_jobs_summ' : total_jobs_summ,
+                        }
+                    print(material_session_length, material_session_width, final_lenght, final_width, final_volume, concrete_data_json)
+
+                elif  material_data_type == 'poly':
+                    excavation_data = ExcavationRequirementsModel.objects.filter(
+                        construction=material_data_type
+                    ).order_by('-date').first()
+                    excavation_jobs = ExcavationJobsModel.objects.filter(
+                        construction=material_data_type
+                    ).order_by('-date').first()
+
+
+                    wall_thinckeness = excavation_data.wall_thickness / 1000
+                    slab_thinckeness = excavation_data.slab_thickness / 1000
+
+                    jobs_name = excavation_jobs.name
+                    total_concrete = excavation_jobs.price
+
+                    bedding_thickness = excavation_data.bedding_thickness / 1000
+
+                    footing_thickness = excavation_data.footing_thickness / 1000
+
+                    # получение финального размера стен и площади основания
+                    final_lenght = material_session_length + (wall_thinckeness * 2 )
+                    final_width = material_session_width  + (wall_thinckeness * 2 )
+                    final_volume = (final_lenght * final_width)
+
+                    # расчет бетона 
+
+                    volume_concrete = final_volume * slab_thinckeness
+                    long_wall_concrete = round((final_lenght * material_session_depth * slab_thinckeness) * 2, 2)
+                    short_wall_concrete = round((final_width * material_session_depth * slab_thinckeness) * 2, 2)
+                    total_wall_concrete = long_wall_concrete + short_wall_concrete
+
+                    total_concrete = total_wall_concrete + volume_concrete
+                    total_jobs_summ = total_concrete * jobs_price
+
+
+                    concrete_data_json = {
+                            'volume_concrete' : volume_concrete, # объем плиты
+                            'total_wall_concrete' : total_wall_concrete, # объем бетона на стены
+
+                            'jobs_name' : jobs_name,
+                            'total_jobs_summ' : total_jobs_summ,
+                        }
+                    print(material_session_length, material_session_width, final_lenght, final_width, final_volume, concrete_data_json)
+                
+                else:
+                    concrete_data_json = {}
+            else:
+                concrete_data_json = {}
 
 
             

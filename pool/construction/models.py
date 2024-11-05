@@ -211,3 +211,56 @@ class ExcavationRequirementsModel(models.Model):
     class Meta:
         verbose_name = 'Характеристики'
         verbose_name_plural = 'Технические характеристики для бетнирования чаши'
+
+
+class ExcavationJobsModel(models.Model):
+    CHOICE_POOL_CONSTRUCTION = [
+            ('poly', 'Полипропиленовый бассейн'),
+            ('mosaic', 'Бетонный бассейн с покрытием мозаикой'),
+            ('pvh', 'Бетонный бассейн с покрытием пленкой ПВХ'),
+            ('composite', 'Композитный бассейн'),
+            ('steel', 'Бессейн из нержавеющей стали'),
+        ]
+    CHOICE_POOL_FILTRATION = [
+            ('skimmer', 'Скиммерный бассейн'),
+            ('overflow', 'Переливной бассейн'),
+        ]
+    name = models.CharField(max_length=500,
+                            verbose_name='Номенклатура',
+                            help_text='Для отображения в коммерческом предложении',
+                            )
+    construction = models.CharField(max_length=30,
+                                    verbose_name='тип бассейна',
+                                    choices=CHOICE_POOL_CONSTRUCTION,
+                                    default='pvh',
+                                    )
+    filtration = models.CharField(max_length=30,
+                                    verbose_name='Тип фильтрации',
+                                    choices=CHOICE_POOL_FILTRATION,
+                                    default='skimmer',
+                                    )
+    
+    date = models.DateField(default=timezone.now,
+                            verbose_name='Дата',
+                            help_text='Дата актуальности цены',
+                            null=True,
+                            blank=True,
+                            editable=False)
+    price =  models.FloatField(default=0,
+                              null=True,
+                              blank=True,
+
+                              verbose_name='Розничная стоимость за .м')
+    
+    def save(self, *args, **kwargs):
+
+        self.price = round(self.price, 2)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self): 
+        return f'{self.construction} | {self.filtration} | {self.name}'
+        
+    class Meta:
+        verbose_name = 'Работы'
+        verbose_name_plural = 'Работы по бетонированию'

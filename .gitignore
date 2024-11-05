@@ -6,6 +6,8 @@ env/
 .venv/
 .env/
 myenv/
+pool/
+.pool/
 
 # Системные файлы
 .DS_Store
