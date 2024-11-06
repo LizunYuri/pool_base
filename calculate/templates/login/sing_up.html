@@ -14,6 +14,7 @@
       <div class="main-container-left"></div>
       <div class="main-container-right">
         <h2 class="login-title">Вход</h2>
+        
         <form id="login-form" action="{% url 'sing_up' %}" class="login-container" method="post">
           {% csrf_token %}
           <div class="login-container-group">
@@ -28,6 +29,9 @@
           </div>
           <button class="login-btn" type="submit">Войти</button>
         </form>
+        <div class="login-image">
+          <img src="{% static '/img/logo/001.png' %}" alt="logo">
+        </div>
       </div>
       <div class="error-message" id="error-message"></div>
     </div>
@@ -36,13 +40,14 @@
 </body>
 
 <script>
-    document.getElementById("login-form").addEventListener("submit", function(event) {
-    event.preventDefault();  // отменяем стандартную отправку формы
-    
-    const form = event.target;
+  const loginForm = document.getElementById("login-form")
+  const errorWindow = document.getElementById("error-message")
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const form = e.target;
     const formData = new FormData(form);
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  // получаем CSRF-токен из формы
-
     fetch(form.action, {
       method: "POST",
       headers: {
@@ -57,8 +62,13 @@
         // Перенаправление при успешной авторизации
         window.location.href = data.redirect_url;
       } else {
-        // Показ ошибок при неуспешной авторизации
-        document.getElementById("error-message").innerText = data.error;
+        
+        errorWindow.classList.add('error-message-visible')
+        errorWindow.innerHTML = `<p>${data.error}</p>`
+        setTimeout(() =>{
+          errorWindow.classList.remove('error-message-visible')
+        }, 2000)
+        // document.getElementById("error-message").innerText = ;
       }
     })
     .catch(error => console.error("Error:", error));

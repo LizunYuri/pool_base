@@ -1,0 +1,74 @@
+{% extends "sample/panel_sample.html" %}
+
+{% block aside %}
+    <ul class="aside-link">
+        <li class="panel-link" id='addClientsList'>Clients</li>
+        <li class="panel-link" >catalogs</li>
+    </ul>
+{% endblock %}
+{% block nav %}
+    <div class="nav-title"></div>
+{% endblock %}
+
+{% block content %}
+    <section id="client-list" class="content-list">
+    </section>
+{% endblock %}
+
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const clientList = document.getElementById('client-list')
+        const navTitle = document.querySelector('.nav-title')
+        $(document).ready(() =>{
+            $(addClientsList).click(() => {
+                $.ajax({
+                    url: '/clients/get-clients',
+                    method : 'GET',
+                    success : (response) => {
+                        let clientsData = response.clients
+                        navTitle.innerHTML = `
+                            <div class="nav-link-body">
+                                <p>Клиенты</p>
+                            </div>
+                            `
+                        let tableHtml = `
+                            <table class="content-list" style="flex-direction: column;">
+                                <thead class="content-list-table">
+                                    <tr class="content-list-table">
+                                        <th class="content-container-card table-title">Имя</th>
+                                        <th class="content-container-card table-title">Город</th>
+                                        <th class="content-container-card table-title">Телефон</th>
+                                        <th class="content-container-card table-title">Электронная почта</th>
+                                        <th class="content-container-card table-title">Комментарий</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                            `;
+                        $.each(response.clients, (index, client) => {
+                            tableHtml += `
+                                    <tr class="content-list-table" onclick="window.location.href='#'">
+                                        <th class="content-container-card">${client.name}</th>
+                                        <th class="content-container-card">${client.city}</th>
+                                        <th class="content-container-card">${client.phone}</th>
+                                        <th class="content-container-card">${client.email}</th>
+                                        <th class="content-container-card">${client.note}</th>
+                                    </tr>
+                            `
+                        })
+                        console.log(clientsData)
+                        tableHtml += `
+                                </tbody>
+                            </table>
+                            `;
+                        clientList.innerHTML = tableHtml
+                    },
+                    error: (xhf, status, error) => {
+                        console.error('error load data: ', error)
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

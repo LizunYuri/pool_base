@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/panel-style.css' %}">
+    <title>{% block title %}Панель Управления{% endblock %}</title>
+</head>
+<body>
+    <main>
+        <header class="panel-header">
+            {% block header %}
+            {% endblock %}
+        </header>
+        <div class="panel-container">
+            <div class="panel-nav">
+                {% block nav %}
+                {% endblock %}
+            </div>
+            <div class="panel-body">
+               <aside class="panel-aside">
+                    <div class="panel-aside-image">
+                        <img src="{% static '/img/logo/001.png' %}" alt="logo">
+                    </div>
+                    {% block aside %}
+                    {% endblock %}
+                </aside> 
+                <div class="panel-body-content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+{% block script %}
+
+{% endblock %}
+</html>
