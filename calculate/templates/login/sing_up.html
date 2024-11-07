@@ -10,35 +10,46 @@
 </head>
 <body>
   <main class="main">
+    <video id='background-video' autoplay loop muted playsinline>
+      <source src="{% static 'video/002.mp4' %}">
+      <img src="{% static 'img/bg/001.jpg' %}" alt="">
+    </video>
     <div class="main-container">
-      <div class="main-container-left"></div>
-      <div class="main-container-right">
-        <h2 class="login-title">Вход</h2>
-        
-        <form id="login-form" action="{% url 'sing_up' %}" class="login-container" method="post">
-          {% csrf_token %}
-          <div class="login-container-group">
-            <label class="login-label" for="{{ form.username.id_for_label}}">{{ form.username.label }}</label>
-            {{ form.username }}
-            {{ form.username.errors }}
+        <div class="main-container-right">
+          <div class="main-container-logo">
+            <div class="login-image">
+              <img src="{% static '/img/logo/001.png' %}" alt="logo">
+            </div>
           </div>
-          <div class="login-container-group">
-            <label class="login-label" for="{{ form.password.id_for_label}}">{{ form.password.label }}</label>
-            {{ form.password }}
-            {{ form.password.errors }}
+          <div class="main-container-form">
+            <h2 class="login-title">Вход</h2>
+            <form id="login-form" action="{% url 'sing_up' %}" class="login-container" method="post">
+              {% csrf_token %}
+              <div class="login-container-group">
+                <label class="login-label" for="{{ form.username.id_for_label}}">{{ form.username.label }}</label>
+                {{ form.username }}
+                {{ form.username.errors }}
+              </div>
+              <div class="login-container-group">
+                <label class="login-label" for="{{ form.password.id_for_label}}">{{ form.password.label }}</label>
+                {{ form.password }}
+                {{ form.password.errors }}
+              </div>
+              <button class="login-btn" type="submit">Войти</button>
+            </form>
           </div>
-          <button class="login-btn" type="submit">Войти</button>
-        </form>
-        <div class="login-image">
-          <img src="{% static '/img/logo/001.png' %}" alt="logo">
         </div>
-      </div>
-      <div class="error-message" id="error-message"></div>
     </div>
-    
+      <div class="error-message" id="error-message"></div>    
   </main>
 </body>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const video = document.getElementById("background-video");
+    video.playbackRate = 0.5; 
+  });
+</script>
 <script>
   const loginForm = document.getElementById("login-form")
   const errorWindow = document.getElementById("error-message")
@@ -51,8 +62,8 @@
     fetch(form.action, {
       method: "POST",
       headers: {
-        "X-Requested-With": "XMLHttpRequest",  // указываем, что запрос через AJAX
-        "X-CSRFToken": csrfToken               // передаем CSRF-токен в заголовке
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": csrfToken               
       },
       body: formData,
     })

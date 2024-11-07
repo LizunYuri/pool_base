@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/741d6d6a0a.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/panel-style.css' %}">
+    <title>{% block title %}Панель Управления{% endblock %}</title>
+</head>
+<body>
+    <main>
+        <div class="dashbord">
+            <div class="search">
+                <h2>Клиенты</h2>
+            </div>
+        </div>
+        <section class="content-list-body">
+            <div id="dashbord-body" class="dashbord-body"></div>
+            <div id="client-detail" class="client-detail"></div> <!-- Контейнер для детальной информации -->
+        </section>
+    </main>
+</body>
+
+<script>
+    $(document).ready(function () {
+        const clientList = $('#dashbord-body');
+
+        // Функция загрузки списка клиентов
+        function loadClients() {
+            $.ajax({
+                url: '/clients/get-clients',
+                method: 'GET',
+                success: function(response) {
+                    let clientsData = response.clients;
+
+                    // Создаем таблицу с данными клиентов
+                    let tableHtml = `
+                        <div class="dashbord-body-table">
+                            <div class="dashbord-body-table-cell title"><p>Имя</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Город</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Телефон</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Электронная почта</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Ответственный</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Заметка</p></div>
+                        </div>`;
+
+                    // Добавляем клиентов в таблицу
+                    $.each(clientsData, function(index, client) {
+                        tableHtml += `
+                            <div class="dashbord-body-table client-row" data-client-id="${client.id}">
+                                <div class="dashbord-body-table-cell"><p>${client.name}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.city}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.phone}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.email}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.manager}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.note}</p></div>
+                            </div>`;
+                    });
+
+                    clientList.html(tableHtml);
+
+                    // Добавляем обработчик для клика на клиента
+                    $('.client-row').click(function() {
+                        const clientId = $(this).data('client-id');
+                        loadClientDetails(clientId);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Ошибка при загрузке списка клиентов:', error);
+                    clientList.html('<p>Не удалось загрузить данные клиентов.</p>');
+                }
+            });
+        }
+
+        // Функция загрузки данных о клиенте
+        function loadClientDetails(clientId) {
+            $.ajax({
+                url: `/clients/client/${clientId}`,  // URL для получения детальной информации
+                method: 'GET',
+                success: function(response) {
+                    $('#client-detail').html(response);  // Отображаем данные клиента
+                },
+                error: function(xhr, status, error) {
+                    console.error('Ошибка при загрузке данных клиента:', error);
+                    $('#client-detail').html('<p>Не удалось загрузить данные о клиенте.</p>');
+                }
+            });
+        }
+
+        // Изначально загружаем список клиентов
+        loadClients();
+    });
+</script>
+
+</html>

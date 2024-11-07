@@ -4,25 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/741d6d6a0a.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/panel-style.css' %}">
     <title>{% block title %}Панель Управления{% endblock %}</title>
 </head>
 <body>
     <main>
         <header class="panel-header">
+            <div class="panel-aside-image">
+                <img src="{% static '/img/logo/001.png' %}" alt="logo">
+            </div>
             {% block header %}
             {% endblock %}
         </header>
         <div class="panel-container">
-            <div class="panel-nav">
-                {% block nav %}
-                {% endblock %}
-            </div>
             <div class="panel-body">
                <aside class="panel-aside">
-                    <div class="panel-aside-image">
-                        <img src="{% static '/img/logo/001.png' %}" alt="logo">
-                    </div>
+                    
                     {% block aside %}
                     {% endblock %}
                 </aside> 
@@ -37,4 +36,5 @@
 {% block script %}
 
 {% endblock %}
+<script src="{% static 'js/panel-script-animation.js' %}"></script>
 </html>

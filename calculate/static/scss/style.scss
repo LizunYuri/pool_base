@@ -23,25 +23,59 @@
     position: relative;
     width: 100%;
     height: 100vh;
-    background-color: $color-bg;
+    overflow: hidden;
+    & > video{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+    }
     &-container{
-        position: relative;
-        overflow: hidden;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
         display: flex;
-        width: 100%;
-        height: 100%;
-        &-left{
-            width: 70%;
-            height: 100%;
-        }
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: auto;
+        background-color: rgba(173, 216, 230, .25);
+        transform: translate(-50%, -50%);
+        z-index: 1;
         &-right{
-            width: 30%;
+            width: 680px;
+            height: 450px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 3px;
+            backdrop-filter: blur(10px);
+            background: rgba(40,43,48,.75);
+            box-shadow: 0px 20px 40px 0px rgba(42, 68, 75, 0.2);
+        }
+        &-logo{
+            width: 200px;
+            height: 100%;
+            background: $color-bg;
+            display: flex;
+            align-items: center;
+            border-bottom-left-radius: 3px;
+            border-top-left-radius: 3px;
+            justify-content: center;
+        }
+        &-form{
+            width: 480px;
             height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: $color-card;
         }
     }
 }
@@ -59,23 +93,24 @@
         }
     }
     &-label{
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
         font-family: 'Manrope';
-        color: $color-line;
+        color: #fff;
+        line-height: 26px;
+        letter-spacing: 2px;
     }
     &-input{
-        border: 1px solid $color-text;
-        margin-top: 13px;
-        margin-bottom: 13px;
+        border-bottom: 2px solid #fff;
+        margin-bottom: 24px;
         height: 33px;
         font-size: 16px;
         font-weight: 500;
         font-family: 'Manrope';
-        color: $color-text;
+        color: #fff;
+        line-height: 26px;
+        letter-spacing: 2px;
         padding-left: 12px;
-        background: $color-bg;
-        border-radius: 3px;
         transition: all .3s ease;
         &:focus{
             transform: scale(1.02);
@@ -85,13 +120,14 @@
     &-title{
         padding-top: 23px;
         padding-bottom: 23px;
-        font-family: 'Play fair';
-        font-size: 35px;
+        font-family: 'Manrope';
         font-weight: 700;
+		font-size: 20px;
+		color: #fff;
         line-height: 66px;
-        letter-spacing: -0.01em;
+        letter-spacing: 3px;
         text-align: center;
-        color: $color-text;
+        text-transform: uppercase;
         cursor: default;
     }
     &-btn{
@@ -101,9 +137,9 @@
         font-family: 'Manrope';
         width: 100%;
         height: 44px;
-        background: $color-active-btn;
-        border: 1px solid $color-line;
-        color: $color-title;
+        background: #fff;
+        border: 1px solid #fff;
+        color: $color-card;
         cursor: pointer;
         transition: all .5s ease;
         border-radius: 3px;
@@ -115,13 +151,12 @@
         }
     }
     &-image{
-        width: 250px;
-        height: 250px;
+        width: 180px;
+        height: 180px;
         img{
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter:  contrast(300%);
         }
     }
 }
@@ -136,17 +171,16 @@
     right: 50px;
     width: 300px;
     min-height: 125px;
-    border: 2px solid $color-line;
     background: $color-negative;
     box-shadow: 0px 20px 40px 0px rgba(42, 68, 75, 0.2);
     transition: all .5s ease;
     text-align: center;
     p{
-        font-size: 18px;
+        font-size: 14px;
         padding: 13px;
         font-weight: 500;
         font-family: 'Manrope';
-        color: $color-text;
+        color: $color-bg;
         text-align: center;
     }
 }

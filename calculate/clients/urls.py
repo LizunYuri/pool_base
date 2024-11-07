@@ -6,5 +6,7 @@ from . import views
 
 
 urlpatterns = [
-    path('get-clients', views.get_clients, name='get-clients')
+    path('get-clients/', views.get_clients, name='get-clients'),
+    path('clients_list/', views.clients_list, name='clients_list'),
+    path('client/<int:client_id>/', views.client_detail, name='client_detail'),
     ]

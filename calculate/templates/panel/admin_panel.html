@@ -1,9 +1,19 @@
 {% extends "sample/panel_sample.html" %}
 
+
+{% block header %}
+    <div class="panel-header-account">
+        <p class="panel-header-account-link"><i class="fas fa-user-shield"></i>{{ user.first_name }}<i id="user-chevron" class="fas fa-chevron-down"></i><br><span>{{ user.groups.first }}</span></p>
+        <div class="panel-header-logout">
+            <a class="panel-header-logout-btn" href="{% url 'logout' %}">Выйти</a>
+        </div>
+    </div>
+{% endblock %}
+
 {% block aside %}
     <ul class="aside-link">
-        <li class="panel-link" id='addClientsList'>Clients</li>
-        <li class="panel-link" >catalogs</li>
+        <li data-url="{% url 'clients_list' %}" class="load-content panel-link" id='addClientsList'><i class="fas fa-users"></i><span>Клиенты</span></li>
+        <li class=" load-content panel-link" >catalogs</li>
     </ul>
 {% endblock %}
 {% block nav %}
@@ -17,8 +27,35 @@
 
 
 {% block script %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        $(document).ready(function() {
+            let isContentLoaded = false;  // Флаг для проверки, загружен ли контент
+            
+            $('.load-content').click(function() {
+                const url = $(this).data('url');
+
+                // Проверка: если контент уже загружен, не отправлять повторный запрос
+                if (isContentLoaded) {
+                    return;
+                }
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(response) {
+                        console.log('Загрузка данных по URL:', url);
+                        $('#client-list').html(response);  // Отображение загруженного контента
+                        isContentLoaded = true;  // Обновляем флаг, чтобы предотвратить повторные запросы
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Ошибка при загрузке данных:', error);
+                        $('#client-list').html('<p>Не удалось загрузить данные.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+   <!-- <script>
         const clientList = document.getElementById('client-list')
         const navTitle = document.querySelector('.nav-title')
         $(document).ready(() =>{
@@ -70,5 +107,5 @@
                 })
             })
         })
-    </script>
+    </script> -->
 {% endblock %}

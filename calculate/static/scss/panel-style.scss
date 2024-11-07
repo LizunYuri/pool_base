@@ -31,61 +31,139 @@
         padding-left: 230px;
     }
     &-link{
-        color: $color-text;
-        margin-top: 13px;
-        padding-bottom: 13px;
+        color: $color-white;
+        border-bottom: 1px solid $color-card;
+        padding-bottom: 20px;
+        padding-top: 20px;
         padding-left: 36px;
-        border-bottom: 1px solid #333333;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
         font-family: 'Manrope';
-        color: #1E3A5F;
         text-align: left;
         cursor: pointer;
-        transition: all .5s ease;
+        transition: all .3s ease;
         width: 100%;
+        display: flex;
+        align-items: center;
+        & > i{
+            font-size: 22px;
+            margin-right: 12px;
+        }
        &:hover{
-            filter: invert(60%);
-            transform: scale(1.02);
-            box-shadow: 0px 20px 40px 0px rgba(42, 68, 75, 0.2);
+            background: $color-hover-btn;
         }
     }
     &-aside{
         width: 280px;
-        min-height: calc(100vh - 95px);
-        background: $color-card;
+        min-height: calc(100vh - 70px);
+        background: $color-line;
         z-index: 99;
         display: flex;
         flex-direction: column;
         align-items: center;
         &-image{
-            width: 200px;
-            height: 200px;
+            width: 65px;
+            height: 65px;
             img{
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
             }
         }
-        
     }
     &-header{
         width: 100%;
-        height: 50px;
-        background: $color-card;
+        height: 70px;
+        background: $color-white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 36px;
+        padding-right: 36px;
+        &-account{
+            position: relative;
+            min-width: 250px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            color: $color-line;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 2px;
+            font-family: 'Manrope';
+            justify-content: space-between;
+            & i{
+                margin-left: 8px;
+                margin-right: 8px;
+                color: $color-line;
+                transition: all .2s ease;
+            }
+            & >p {
+                cursor: pointer;
+                text-align: center;
+                &> span{
+                    font-weight: 400;
+                    font-size: 10px;
+                    padding-top: 12px;
+                    color: $color-text;
+                }
+            }
+        }
+        &-logout{
+            position: absolute;
+            display: flex;
+            overflow: hidden;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            width: 250px;
+            height: 0;
+            top: 70px;
+            right: 0;
+            z-index: 99;
+            background: $color-white;
+            transition: all .5s ease;
+            &-btn{
+                display: none;
+                transform: translateX(20px);
+                justify-content: center;
+                align-items: center;
+                opacity: 0;
+                width: 100%;
+                height: 60px;
+                background: transparent;
+                font-size: 16px;
+                font-weight: 700;
+                color: $color-text;
+                letter-spacing: 2px;
+                font-family: 'Manrope';
+                cursor: pointer;
+                transition: all .1s ease;
+                border-top: 1px solid rgba(149, 150, 154, 0.7);
+                &:hover{
+                    background: $color-hover-btn;
+                    color: $color-card;
+                }
+            }
+        }
     }
     &-body{
         display: flex;
         width: 100%;
         &-content{
             width: calc(100% - 280px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     }
 }
+
 .aside-link{
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin-top: 76px;
 }
 
 .nav-title{
@@ -103,22 +181,20 @@
     font-size: 16px;
     font-weight: 500;
     font-family: 'Manrope';
-    color: $color-title;
+    // color: $color-title;
     animation: animation-nav .2s linear;
 }
-
 .content{
     &-list{
         display: flex;
-        width: 100%;
-        background: #F0F7FF;
-        &-table{
+        flex-direction: column;
+        width: 98%;
+        align-items: center;
+        box-shadow: 4px 6px 17px -10px #333645;
+        margin-top: 36px;
+        &-body{
             width: 100%;
-            display: flex;
-            flex: 1 1;
-            cursor: pointer;
-           
-        }
+        
     }
     &-container{
         display: flex;
@@ -132,6 +208,7 @@
             font-weight: 500;
             font-family: 'Manrope';
             color: #1E3A5F;
+}
         }
     }
     &-title{
@@ -144,6 +221,71 @@
     background: #EAF3FA;
 }
 
+.search{
+    width: 100%;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    padding-left: 36px;
+    background: $color-bg-title;
+    display: flex;
+    justify-content: space-between;
+    & > h2{
+        font-size: 18px;
+        color: $color-white;
+        text-transform: uppercase;
+        font-family: 'Play fair';
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+}
+
+.dashbord{
+    width: 100%;
+    &-body{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        
+        &-table{
+            display: flex;
+            width: 100%;
+            &-cell{
+                flex: 1 1;
+                height: 45px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+            }
+        }
+    }
+}
+
+.dashbord-body-table-title{
+    font-family: 'Play fair';
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: $color-text;
+    
+}
+.dashbord-body-table-text{
+    font-family: 'Manrope';
+    font-size: 13px;
+    letter-spacing: 1px;
+    font-weight: 400;
+    color: $color-card;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    
+}
+.href{
+    transition: all .2s ease;
+    &:hover{
+        background: $color-hover-btn;
+    }
+}
 @keyframes animation-nav {
     0%{
         opacity: 0;

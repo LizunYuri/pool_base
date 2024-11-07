@@ -47,7 +47,10 @@ def is_admin(user):
 
 @user_passes_test(is_admin, login_url='access_denied')
 def panel_admin(request):
-    return render(request, "panel/admin_panel.html")
+    context= {
+            'username' : request.user.username,
+        }
+    return render(request, "panel/admin_panel.html", context)
 
 
 def access_denied(request):
