@@ -3,6 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/741d6d6a0a.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -37,4 +38,5 @@
 
 {% endblock %}
 <script src="{% static 'js/panel-script-animation.js' %}"></script>
+<script src="{% static 'js/client-script.js' %}"></script>
 </html>

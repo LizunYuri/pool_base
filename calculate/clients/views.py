@@ -32,3 +32,10 @@ def clients_list(request):
 def client_detail(request, client_id):
     client = get_object_or_404(ClientModel, id=client_id)
     return render(request, 'components/includes/client_detail.html', {'client' : client})
+
+def delete_client(request, client_id):
+    if request.method == 'POST':
+        client = get_object_or_404(ClientModel, id=client_id)
+        client.delete()
+        return JsonResponse({'status': 'success', 'message' : 'record delete'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
