@@ -1,0 +1,46 @@
+
+            <form class="edit-modal-window-body-form" id="edit-client-form" method="POST" action="{% url 'client_edit' client.id %}">
+                {% csrf_token %}
+                <div class="edit-modal-window-body-block">
+                    <label for="name">Имя:</label>
+                    <input type="text" id="name" name="name" value="{{ client.name }}" required>
+                </div>
+
+                <div class="edit-modal-window-body-block">
+                    <label for="city">Город:</label>
+                    <input type="text" id="city" name="city" value="{{ client.city }}" required>
+                </div>
+
+                <div class="edit-modal-window-body-block">
+                    <label for="phone">Телефон:</label>
+                    <input type="text" id="phone" name="phone" value="{{ client.phone }}" required>
+                </div>
+                
+                <div class="edit-modal-window-body-block">
+                    <label for="email">Электронная почта:</label>
+                    <input type="email" id="email" name="email" value="{{ client.email }}">
+                </div>
+                
+                <div class="edit-modal-window-body-block">
+                   <label for="manager">Ответственный:</label>
+                    <input type="text" id="manager" name="manager" value="{{ client.responsible }}">
+                </div>
+
+                <div class="edit-modal-window-body-block">
+                    <label for="note">Заметка:</label>
+                    <textarea id="note" name="note">{{ client.note }}</textarea>
+                </div>
+                <div class="delete-modal-btn">
+                    <button id="cancel-edit-form">Отмена</button>
+                    <button id="done-edit-form">Сохранить</button>
+                </div>
+            </form>
+
+            <div class="message-modal-done">
+                <div class="message-modal-done-message">
+                    <h4 class="message-modal-done-message-text"></h4>
+                </div>
+                <div class="message-modal-done-btn">
+                    <button id="message-client-done-ok">ok</button>
+                </div>
+            </div>

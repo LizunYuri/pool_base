@@ -46,7 +46,6 @@ p, a, li {
 .panel-container {
   width: calc(100% - 280px);
   margin-left: 280px;
-  background: #f3f4f8;
 }
 .panel-nav {
   width: 100%;
@@ -114,6 +113,7 @@ p, a, li {
   width: 100%;
   height: 70px;
   background: #fff;
+  border: 1px solid #4E5D6C;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -292,6 +292,9 @@ p, a, li {
   -webkit-box-shadow: 4px 6px 17px -10px #333645;
           box-shadow: 4px 6px 17px -10px #333645;
   margin-top: 36px;
+  background: #f3f4f8;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }
 .content-list-body {
   width: 100%;
@@ -344,6 +347,14 @@ p, a, li {
   font-family: "Play fair";
   font-weight: 700;
   letter-spacing: 1.5px;
+}
+.search-input {
+  width: 40%;
+  height: 35px;
+  background: #fff;
+  padding-left: 12px;
+  font-size: 16px;
+  border-radius: 3px;
 }
 
 .dashbord {
@@ -450,9 +461,7 @@ p, a, li {
   transition: all 0.4s ease;
 }
 .close-modal-detail > i:hover {
-  -webkit-transform: rotateZ(90deg);
-      -ms-transform: rotate(90deg);
-          transform: rotateZ(90deg);
+  color: #57bfb8;
 }
 
 .card-container {
@@ -506,7 +515,6 @@ p, a, li {
 .card-text {
   padding-bottom: 6px;
   padding-top: 10px;
-  border-bottom: 1px solid rgba(78, 93, 108, 0.6);
   width: 100%;
 }
 .card-text > p {
@@ -727,6 +735,187 @@ p, a, li {
 }
 .delete-modal-done-btn > button:first-child:hover {
   background: #57bfb8;
+}
+
+.message-modal-done {
+  width: 390px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 130;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+      -ms-transform: translateX(-50%) translateY(-50%);
+          transform: translateX(-50%) translateY(-50%);
+  background: #fff;
+  -webkit-box-shadow: 4px 6px 17px -10px #333645;
+          box-shadow: 4px 6px 17px -10px #333645;
+  display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.message-modal-done-message {
+  width: 100%;
+  padding-top: 35px;
+  padding-bottom: 12px;
+  padding-left: 23px;
+}
+.message-modal-done-message > h4 {
+  font-size: 15px;
+  font-family: "Manrope";
+  letter-spacing: 1px;
+  color: #95969a;
+  font-weight: 600;
+  padding-left: 0;
+}
+.message-modal-done-message > h4 span {
+  color: #333645;
+  font-size: 13px;
+  padding-left: 15px;
+  font-weight: 500;
+  padding-top: 12px;
+}
+.message-modal-done-btn {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.message-modal-done-btn > button {
+  width: 45%;
+  height: 50px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: "Manrope";
+  letter-spacing: 1px;
+  color: #333645;
+  border: 1px solid #4E5D6C;
+}
+.message-modal-done-btn > button:first-child:hover {
+  background: #57bfb8;
+}
+
+.close-client-list {
+  color: #fff;
+  font-size: 28px;
+  margin-right: 22px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.close-client-list:hover {
+  color: #57bfb8;
+}
+
+.edit-modal-window {
+  position: absolute;
+  display: none;
+  width: 380px;
+  height: 560px;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+      -ms-transform: translateX(-50%) translateY(-50%);
+          transform: translateX(-50%) translateY(-50%);
+  z-index: 150;
+  background: #f3f4f8;
+  -webkit-box-shadow: 4px 6px 17px -10px #333645;
+          box-shadow: 4px 6px 17px -10px #333645;
+  border-radius: 3px;
+}
+.edit-modal-window-chevron {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 28px;
+  color: #333645;
+  z-index: 170;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.edit-modal-window-chevron:hover {
+  color: #57bfb8;
+}
+.edit-modal-window-body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 36px;
+  width: 98%;
+  height: 100%;
+}
+.edit-modal-window-body-form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 36px;
+  width: 98%;
+  height: 100%;
+}
+.edit-modal-window-body-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 98%;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding-left: 12px;
+}
+.edit-modal-window-body-block:nth-child(7) {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.edit-modal-window-body-block > label {
+  font-size: 12px;
+  color: #95969a;
+}
+.edit-modal-window-body-block > textarea {
+  width: 80%;
+  height: 120px;
+}
+.edit-modal-window-body-block > input {
+  margin-left: 23px;
+  height: 36px;
+  font-size: 16px;
+  border-bottom: 1px solid #4E5D6C;
 }
 
 @-webkit-keyframes animation-nav {

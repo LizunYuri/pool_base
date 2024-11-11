@@ -1,0 +1,66 @@
+
+
+<div class="record-detail-card" id="client-detail">
+    <div class="card-container">
+        <div class="card-container-left">
+            <div class="card-info">
+                <h3>Заказчик:</h3>
+                <div class="card-text">
+                    <p>Имя:</p>
+                    <p><span>{{ client.name }}</span></p>
+                </div>
+                <div class="card-text">
+                    <p>Город:</p>
+                    <p><span>{{ client.city }}</span></p>
+                </div>
+                <div class="card-text">
+                    <p>Телефон:</p>
+                    <p><span><a href="tel:{{ client.phone }}">{{ client.phone }}</a></span></p>
+                </div>
+                <div class="card-text">
+                    <p>Email:</p>
+                    <p><span><a href="mailto:{{ client.email }}">{{ client.email }}</a></span></p>
+                </div>
+                <div class="card-text">
+                    <p>Комментарий</p>
+                    <p><span>{{ client.note }}</span></p>
+                </div>
+                <div class="card-btn">
+                    <button clas="card-btn-click"  data-client-id="{{ client.id }}" id='edit-client-btn'>Изменить</button>
+                    <button clas="card-btn-click" id="delete-client-btn">Удалить</button>
+                </div>
+            </div>
+            <div class="card-info">
+                <h3>Отвественный:</h3>
+                <div class="card-text">
+                    <p>Имя:</p>
+                    <p><span>{{ client.responsible.last_name }} {{ client.responsible.first_name }}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="delete-modal">
+            <i class="fas fa-times delete-modal-chevron"></i>
+            <div class="delete-modal-message">
+                <h4>Подтвердите удаление</h4>
+                <h4><span>Действие необратимо! подтверждаете?</span></h4>
+            </div>
+            <div class="delete-modal-btn">
+                <button id="delete-client-done" data-client-id="{{ client.id }}">Удалить</button>
+                <button id="delete-client-cancel">Отмена</button>
+            </div>
+        </div>
+        <div class="delete-modal-done">
+            <div class="delete-modal-done-message">
+                <h4 class="delete-modal-done-message-text"></h4>
+            </div>
+            <div class="delete-modal-done-btn">
+                <button id="delete-client-done-ok">ok</button>
+            </div>
+        </div>
+        <div class="edit-modal-window">
+            <i class="fas fa-times edit-modal-window-chevron"></i>
+            <div class="edit-modal-window-body" id="edit-modal-window"></div>
+        </div>
+    </div>
+</div>
+
