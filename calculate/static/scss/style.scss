@@ -190,6 +190,78 @@
     opacity: 1;
 }
 
+.panel{
+    &-navigation{
+        color: $color-white;
+        border-bottom: 1px solid $color-card;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        padding-left: 36px;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: 'Manrope';
+        text-align: left;
+        cursor: pointer;
+        transition: all .3s ease;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        & > i{
+            font-size: 22px;
+            margin-right: 12px;
+            &:last-child{
+                font-size: 12px;
+                margin-left: 12px;
+            }
+        }
+        &:hover{
+            background: $color-hover-btn;
+        }
+    }
+    &-list{
+        padding-bottom: 22px;
+        background: $color-card;
+        transition: all 1s ease;
+        flex-direction: column;
+    }
+    &-subnavigation{
+        color: $color-white;
+        border-bottom: 1px solid $color-neutral;
+        font-style: italic;
+        padding-bottom: 12px;
+        padding-top: 12px;
+        padding-right: 36px;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: 'Manrope';
+        text-align: right;
+        cursor: pointer;
+        transition: all .3s ease;
+        width: 100%;
+        display: none;
+        opacity: 0;
+        transform: translateX(-20px);
+        align-items: center;
+        justify-content: flex-end;
+        & > i{
+            font-size: 22px;
+            margin-right: 12px;
+        }
+        &:hover{
+            background: $color-hover-btn;
+        }
+    }
+
+}
+#visibleEquipmentChevron{
+    transition: all .3s ease;
+}
+
+#visibleEquipmentSubnavigation{
+    display: none;
+    opacity: 0;
+}
+
 @keyframes error-visible-animation {
     0%{
         opacity: 0;

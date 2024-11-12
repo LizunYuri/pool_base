@@ -1,0 +1,37 @@
+        <h3>Создать карточку клиента</h3>
+        {% csrf_token %}
+        <div class="create-modal-window-body-block">
+            <label for="name">{{ form.name.label}}</label>
+            <input type="text" id="name" name="name" placeholder="{{ form.name.help_text }}" required>
+        </div>
+        <div class="create-modal-window-body-block">
+            <label for="city">{{ form.city.label }}</label>
+            <input type="text" id="city" name="city" placeholder="{{form.city.help_text}}" required>
+        </div>
+        <div class="create-modal-window-body-block">
+            <label for="phone">{{ form.phone.label }}</label>
+            <input type="text" id="phone" name="phone"  placeholder="{{form.phone.help_text}}" required>
+        </div>
+        <div class="create-modal-window-body-block">
+            <label for="email">{{ form.email.label }}</label>
+            <input type="email" id="email" name="email"  placeholder="{{form.email.help_text}}">
+        </div>
+        <div class="create-modal-window-body-block">
+            <label for="note">{{ form.note.label }}</label>
+            <textarea id="note" name="note"  placeholder="{{ form.note.help_text }}"></textarea>
+        </div>
+        <div class="delete-modal-btn">
+            <button id="cancel-create-form">Отмена</button>
+            <button id="done-create-form">Сохранить</button>
+        </div>
+
+
+
+
+
+
+
+
+
+
+

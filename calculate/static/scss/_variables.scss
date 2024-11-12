@@ -16,3 +16,21 @@ $color-hover-btn : #57bfb8;
 $color-white: #fff;
 
 $color-bg-title: #ac92c2;
+
+
+@font-face {
+    font-family: 'Manrope';
+    src: url(../fonts/Manrope.ttf);
+}
+
+@font-face {
+    font-family: 'Play fair';
+    src: url(../fonts/PlayfairDisplay-Regular.ttf);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Play fair';
+    src: url(../fonts/PlayfairDisplay-Bold.ttf);
+    font-weight: bold;
+}

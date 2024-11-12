@@ -1,0 +1,41 @@
+
+<div class="dashbord">
+    <div class="search">
+        <div class="search-add-client">
+            <button id='add-client'>Создать</button>
+        </div>
+        <div class="search-container">
+            <input class='search-input' type="text" id="client-search" placeholder="Поиск клиента...">
+            <div class="search-input-reset">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+         <h2>Клиенты</h2>
+        <div class="close-client-list">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+</div>
+<section class="content-list-body">
+    <div id="dashbord-body" class="dashbord-body"></div>
+    <div class="client-detail record-detail">
+        <div class="close-modal-detail">
+            <i class="fas fa-times"></i>
+        </div>  
+        <div class="record-detail-card" id="client-detail">
+        </div>   
+    </div>
+</section>
+<div class="create-modal-window">
+    <i class="fas fa-times create-modal-window-chevron"></i>
+    <form method="POST" class="create-modal-window-body" id="create-client-form"></form>
+    
+    <div class="create-message-modal-done">
+        <div class="create-message-modal-done-message">
+            <h4 class="create-message-modal-done-message-text"></h4>
+        </div>
+        <div class="create-message-modal-done-btn">
+            <button id="create-message-client-done-ok">ok</button>
+        </div>
+    </div> 
+</div>

@@ -33,66 +33,74 @@ $(document).ready(function() {
         doneEditForm,
         messageModalDone,
         messageModalDoneMessageText,
-        clientSearch
+        clientSearch,
+        searchInputReset,
+        addClient,
+        createModalWindowChevron,
+        createModalWindow,
+        cancelCreateForm,
+        doneCreateForm,
+        createMessageModalDone,
+        createMessageModalDoneMessageText,
+        createMessageClientDoneOk
 
-        console.log(clientSearch, loadSearchFlag)
+
 
     // Обработчик события при нажатии на кнопку для загрузки контента
+
     $('.load-content').click(function() {
-        const url = $(this).data('url');  // URL для запроса данных
+        $('#client-list').html('');
+        
+            const url = $(this).data('url');  // URL для запроса данных
 
-        // AJAX-запрос для загрузки содержимого
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(response) {
-                // Добавление загруженного контента в HTML и установка флага загрузки
-                $('#client-list').html(response);
-                isContentLoaded = true;
+            // AJAX-запрос для загрузки содержимого
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    // Добавление загруженного контента в HTML и установка флага загрузки
+                    $('#client-list').html(response);
+                    isContentLoaded = true;
 
-                // Загрузка необходимых констант для работы с модальными окнами
-                loadConstants();
-                if (constansflag) {
-                    // Загрузка списка клиентов, если константы загружены
-                    loadClients();
-                    closeClientList = document.querySelector('.close-client-list')
-                    
+                    // Загрузка необходимых констант для работы с модальными окнами
+                    loadConstants();
+                    if (constansflag) {
+                        // Загрузка списка клиентов, если константы загружены
+                        loadClients();
+                        closeClientList = document.querySelector('.close-client-list');
 
-                    // Добавление события для закрытия модального окна при клике
-                    closeModalDetail.addEventListener('click', () => {
-                        recordModalVisible();
-                    });
+                        // Добавление события для закрытия модального окна при клике
+                        closeModalDetail.addEventListener('click', () => {
+                            recordModalVisible();
+                        });
 
-                    closeClientList.addEventListener('click', () => {
-                        closeClientsListFunction()
-                        document.getElementById('client-list').innerHTML = ''
-                        console.log('функция клика сработала')
-                    })
+                        closeClientList.addEventListener('click', () => {
+                            closeClientsListFunction();
+                            document.getElementById('client-list').innerHTML = '';
+                            console.log('Функция клика сработала');
+                        });
 
-                    
-                    loadSearchFlag = true
+                        loadSearchFlag = true;
 
-                    if (loadSearchFlag){
+                        if (loadSearchFlag) {
+                            loadSearchConstant();
 
-                        loadSearchConstant()
-
-                        if(loadSearchConstant){
-
-                            searchClientAffter()
-                            console.log(clientSearch, loadSearchFlag)
+                            if (loadSearchConstant) {
+                                searchClientAffter();
+                                addClientAffter()
+                                console.log(clientSearch, loadSearchFlag, addClient);
+                            }
                         }
                     }
-                    
+                },
+                error: function(xhr, status, error) {
+                    console.error('Ошибка при загрузке данных:', error);
+                    $('#client-list').html('<p>Не удалось загрузить данные.</p>');
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Ошибка при загрузке данных:', error);
-                $('#client-list').html('<p>Не удалось загрузить данные.</p>');
-            }
-        });        
+            });
+        
     });
 
-    
     // Функция для инициализации элементов модальных окон
     const loadConstants = () => {
         closeModalDetail = document.querySelector('.close-modal-detail');
@@ -100,15 +108,23 @@ $(document).ready(function() {
         recordDataDetail = document.getElementById('client-detail');
         clientList = document.getElementById('dashbord-body');
         closeClientList = document.querySelector('.close-client-list')
+        addClient = document.getElementById('add-client')
+        createModalWindow = document.querySelector('.create-modal-window')
+        createModalWindowChevron = document.querySelector('.create-modal-window-chevron')
+        cancelCreateForm = document.getElementById('cancel-create-form')
+        createMessageModalDone = document.querySelector('.create-message-modal-done')
+        createMessageModalDoneMessageText = document.querySelector('.create-message-modal-done-message-text')
+        createMessageClientDoneOk = document.getElementById('create-message-client-done-ok')
 
         // Установка флага при успешной инициализации всех необходимых элементов
-        if (closeModalDetail && modalRecordDetail && recordDataDetail && clientList) {
+        if (addClient && closeModalDetail && modalRecordDetail && recordDataDetail && clientList) {
             constansflag = true;
         }
     };
 
     const loadSearchConstant = () =>{
         clientSearch = document.getElementById('client-search')
+        searchInputReset = document.querySelector('.search-input-reset')
     }
 
     // Функция для загрузки списка клиентов
@@ -135,12 +151,12 @@ $(document).ready(function() {
                     $.each(clientsData, function(index, client) {
                         tableHtml += `
                             <div class="dashbord-body-table client-row" data-client-id="${client.id}">
-                                <div class="dashbord-body-table-cell"><p>${client.name}</p></div>
-                                <div class="dashbord-body-table-cell"><p>${client.city}</p></div>
-                                <div class="dashbord-body-table-cell"><p>${client.phone}</p></div>
-                                <div class="dashbord-body-table-cell"><p>${client.email}</p></div>
-                                <div class="dashbord-body-table-cell"><p>${client.manager}</p></div>
-                                <div class="dashbord-body-table-cell"><p>${client.note}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.name || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.city || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.phone || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.email || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.manager || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.note || ''}</p></div>
                             </div>`;
                     });
 
@@ -163,16 +179,22 @@ $(document).ready(function() {
 
     function searchClientAffter() {
 
+        searchInputReset.addEventListener('click', () =>{
+            clientSearch.value = ''
+            loadClients()
+        })
 
         $(clientSearch).on('input', function() {
+            clientList.innerHTML = '';
             const query = $(this).val();
-            console.log(query);
-        
-            fetch(`/clients/search/`, {
+            
+            
+    
+            fetch('/clients/search/', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    // "X-CSRFToken": getCSRFToken, 
+                    'X-CSRFToken': getCSRFToken()
                 },
                 body: JSON.stringify({
                     "input_data": query,
@@ -180,8 +202,37 @@ $(document).ready(function() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.message) {
+                if (data.clients) {
+                    clientList.innerHTML = '';
+    
+                    let tableHtml = `
+                        <div class="dashbord-body-table">
+                            <div class="dashbord-body-table-cell title"><p>Имя</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Город</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Телефон</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Электронная почта</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Ответственный</p></div>
+                            <div class="dashbord-body-table-cell title"><p>Заметка</p></div>
+                        </div>`;
+    
+                    $.each(data.clients, function(index, client) {  // изменяем clients на data.clients
+                        tableHtml += `
+                            <div class="dashbord-body-table client-row" data-client-id="${client.id}">
+                                <div class="dashbord-body-table-cell"><p>${client.name || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.city || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.phone || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.email || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.manager || ''}</p></div>
+                                <div class="dashbord-body-table-cell"><p>${client.note || ''}</p></div>
+                            </div>`;
+                    });
+    
+                    clientList.innerHTML = tableHtml;
                     
+                    $('.client-row').click(function() {
+                        const clientId = $(this).data('client-id');
+                        loadClientDetails(clientId);
+                    });
                 } else {
                     alert("Ошибка при отправке данных");
                 }
@@ -190,65 +241,98 @@ $(document).ready(function() {
                 console.error("Ошибка запроса:", error);
             });
         });
-
-
-            // Отправляем запрос только если длина больше 0
-        //     if (query.length > 0) {
-                
-        //         $.ajax({
-        //             url: '/clients/client/search/', // URL для поиска клиентов
-        //             method: 'GET',
-        //             data: { q: query }, // Передаем поисковый запрос
-        //             success: function(response) {
-        //                 let clientsData = response.clients;
-        //                 crossOriginIsolated.log(data)
-        //                 clientList.innerHTML = '';
-        //                 // Формирование HTML для отображения данных клиентов
-        //                 let tableHtml = `
-        //                     <div class="dashbord-body-table">
-        //                         <div class="dashbord-body-table-cell title"><p>Имя</p></div>
-        //                         <div class="dashbord-body-table-cell title"><p>Город</p></div>
-        //                         <div class="dashbord-body-table-cell title"><p>Телефон</p></div>
-        //                         <div class="dashbord-body-table-cell title"><p>Электронная почта</p></div>
-        //                         <div class="dashbord-body-table-cell title"><p>Ответственный</p></div>
-        //                         <div class="dashbord-body-table-cell title"><p>Заметка</p></div>
-        //                     </div>`;
-    
-        //                 // Добавление информации о каждом клиенте в таблицу
-        //                 $.each(clientsData, function(index, client) {
-        //                     tableHtml += `
-        //                         <div class="dashbord-body-table client-row" data-client-id="${client.id}">
-        //                             <div class="dashbord-body-table-cell"><p>${client.name}</p></div>
-        //                             <div class="dashbord-body-table-cell"><p>${client.city}</p></div>
-        //                             <div class="dashbord-body-table-cell"><p>${client.phone}</p></div>
-        //                             <div class="dashbord-body-table-cell"><p>${client.email}</p></div>
-        //                             <div class="dashbord-body-table-cell"><p>${client.manager}</p></div>
-        //                             <div class="dashbord-body-table-cell"><p>${client.note}</p></div>
-        //                         </div>`;
-        //                 });
-    
-        //                 clientList.innerHTML = tableHtml;
-    
-    
-        //                 // Добавление обработчика клика для загрузки деталей клиента
-        //                 $('.client-row').click(function() {
-        //                     const clientId = $(this).data('client-id');
-        //                     loadClientDetails(clientId);
-        //                 });
-        //             },
-        //             error: function(xhr, status, error) {
-        //                 console.error('Ошибка при загрузке списка клиентов:', error);
-        //                 clientList.innerHTML = '<p>Не удалось загрузить данные клиентов.</p>';
-        //             }
-        //         });
-        //     } else {
-        //         // Если поле пустое, очистить список клиентов
-        //         // $('#client-list').html('');
-        //     }
-        // });
     }
 
-    
+    function addClientAffter() {
+
+        createMessageClientDoneOk.addEventListener('click', () => {
+            createModalWindow.style.display = 'none'
+            setTimeout(() =>{
+                createMessageModalDone.style.display = 'none'
+                loadClients()
+            }, 100)
+        })
+
+        createModalWindowChevron.addEventListener('click', () =>{
+            createModalWindow.style.display = 'none'
+            $('#create-client-form')[0].reset();
+        })
+
+        $(addClient).click(function(e) {
+            e.preventDefault();
+        
+            $.ajax({
+                url: '/clients/create/',
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                success: function(response) {
+                    createModalWindow.style.display = 'flex';  // Открытие модального окна
+                    $('#create-client-form').html(response); 
+
+                    const cancelCreateForm = document.getElementById('cancel-create-form');
+                    const doneCreateForm = document.getElementById('done-create-form');
+
+        
+                    // Привязка событий
+                    $(doneCreateForm).click(function(e) {
+                        e.preventDefault();  // Останавливаем стандартное поведение формы
+                        var form = $('#create-client-form')[0];
+                            if (form.checkValidity()) {  // Проверяем форму на валидность
+                                console.log("Форма прошла валидацию");
+
+                                // Сериализация данных формы
+                                var formData = $('#create-client-form').serialize();
+                                console.log("Сериализованные данные формы:", formData);
+
+                                $.ajax({
+                                    url: '/clients/create/',
+                                    method: 'POST',
+                                    data: formData,  // Отправляем данные формы
+                                    headers: {
+                                        'X-CSRFToken': getCSRFToken(),
+                                    },
+                                    success: function(response) {
+                                        if (response.success) {
+                                            createMessageModalDone.style.display = 'block'
+                                            createMessageModalDoneMessageText.textContent = 'Запись успешно сохранена'
+                                            $('#create-client-form')[0].reset();
+                                            loadClients()
+                                        } else {
+                                            
+                                            console.error("Ошибка при сохранении данных:", response.errors);
+                                            alert('Ошибка при сохранении данных');
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error("Ошибка запроса при сохранении данных:", error);
+                                    }
+                                });
+                            } else {
+                                // Если форма невалидна
+                                console.log("Форма не прошла валидацию");
+                                alert('Заполните все обязательные поля');
+                            }
+                    });
+        
+                    // Если кнопка отмены существует, назначаем обработчик
+                    if (cancelCreateForm) {
+                        $(cancelCreateForm).click(function(e) {
+                            e.preventDefault();  // Останавливаем стандартное поведение
+                            console.log("Форма отменена");
+                            $('#create-client-form')[0].reset();
+                            createModalWindow.style.display = 'none';  // Закрытие модального окна
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Ошибка запроса при открытии формы:", error);
+                }
+            });
+        });
+        
+    }
 
     const closeClientsListFunction = () => {
         clientList.innerHTML = '';

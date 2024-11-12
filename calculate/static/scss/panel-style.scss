@@ -1,21 +1,4 @@
 
-@font-face {
-    font-family: 'Manrope';
-    src: url(../fonts/Manrope.ttf);
-}
-
-@font-face {
-    font-family: 'Play fair';
-    src: url(../fonts/PlayfairDisplay-Regular.ttf);
-    font-weight: normal;
-}
-
-@font-face {
-    font-family: 'Play fair';
-    src: url(../fonts/PlayfairDisplay-Bold.ttf);
-    font-weight: bold;
-}
-
 @import 'reset';
 @import 'variables';
 
@@ -125,7 +108,7 @@
             top: 70px;
             right: 0;
             z-index: 99;
-            background: $color-white;
+            background: $color-bg;
             transition: all .5s ease;
             &-btn{
                 display: none;
@@ -239,7 +222,30 @@
     padding-left: 36px;
     background: $color-bg-title;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    &-add-client{
+        width: 140px;
+        height: 45px;
+        & > button{
+            width: 100%;
+            height: 100%;
+            background: $color-hover-btn;
+            transition: all .5s ease;
+            box-shadow: 4px 6px 17px -10px #333645;
+            border-radius: 3px;
+            border: 1px solid $color-neutral;
+            cursor: pointer;
+            font-size: 13px;
+            color: $color-white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            &:hover{
+                box-shadow: inset 4px 6px 17px -10px #333645;
+            }
+        }
+    }
     & > h2{
         font-size: 18px;
         color: $color-white;
@@ -247,14 +253,28 @@
         font-family: 'Play fair';
         font-weight: 700;
         letter-spacing: 1.5px;
+        padding-right: 12px;
     }
-    &-input{
+    &-container{
+        display: flex;
+        align-items: center;
         width: 40%;
         height: 35px;
         background: $color-white;
+        border-radius: 3px;
+    }
+    &-input{
         padding-left: 12px;
         font-size: 16px;
-        border-radius: 3px;
+        width: calc(100% - 30px);
+        &-reset{
+            font-size: 20px;
+            cursor: pointer;
+            color: $color-line;
+            font-weight: 700;
+            width: 30px;
+        }
+
     }
 }
 
@@ -621,6 +641,7 @@
 
 
 .close-client-list{
+    display: none;
     color: $color-white;
     font-size: 28px;
     margin-right: 22px;
@@ -696,6 +717,146 @@
         }   
     }
 }
+
+
+.create-modal-window{
+    position: fixed;
+    display: none;
+    width: 380px;
+    height: 660px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 150;
+    background: $color-bg;
+    box-shadow: 4px 6px 17px -10px #333645;
+    border-radius: 3px;
+    &-chevron{
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 28px;
+        color: $color-card;
+        z-index: 170;
+        cursor: pointer;
+        transition: all .3s ease;
+        &:hover{
+            color: $color-hover-btn;
+        }
+    }
+    &-body{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 36px; 
+        width: 98%;
+        height: 100%; 
+        & > h3{
+            text-align: center;
+            color: $color-line;
+        }
+        &-form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 36px; 
+            width: 98%;
+            height: 100%; 
+        }
+        &-block{
+            display: flex;
+            width: 98%;
+            flex-direction: column;
+            padding-left: 12px;
+            margin-top: 20px;
+            &:nth-child(7){
+                align-items: center;
+            }
+            & > label{
+                font-size: 12px;
+                color: $color-text;
+            }
+            & > textarea{
+                width: 80%;
+                height: 120px;
+                &::placeholder{
+                    font-size: 11px;
+                }
+            }
+            &> input{
+                margin-left: 23px;
+                height: 36px;
+                font-size: 16px;
+                border-bottom: 1px solid $color-line;
+                &::placeholder{
+                    font-size: 11px;
+                }
+            }
+        }   
+    }
+}
+
+.create-message-modal-done{
+    width: 390px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 130;
+    transform: translateX(-50%) translateY(-50%);
+    background: $color-white;
+    box-shadow: 4px 6px 17px -10px #333645;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s ease;
+    &-message{
+       width: 100%;
+       padding-top: 35px;
+       padding-bottom: 12px;
+       padding-left: 23px;
+       & > h4{
+            font-size: 15px;
+            font-family: 'Manrope';
+            letter-spacing: 1px;
+            color: $color-text;
+            font-weight: 600; 
+            padding-left: 0;
+            & span{
+                color: $color-card;
+                font-size: 13px;
+                padding-left: 15px;
+                font-weight: 500;
+                padding-top: 12px;
+            }
+        }
+    }
+    &-btn{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        &> button{
+            width: 45%;
+            height: 50px;
+            transition: all .3s ease;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Manrope';
+            letter-spacing: 1px;
+            color: $color-card;
+            border: 1px solid $color-line;
+            &:first-child{
+                &:hover{
+                    background: $color-hover-btn;
+                }
+            }
+        }
+    }
+}
+
 
 @keyframes animation-nav {
     0%{

@@ -43,6 +43,20 @@ p, a, li {
   padding: 0;
 }
 
+@font-face {
+  font-family: "Manrope";
+  src: url(../fonts/Manrope.ttf);
+}
+@font-face {
+  font-family: "Play fair";
+  src: url(../fonts/PlayfairDisplay-Regular.ttf);
+  font-weight: normal;
+}
+@font-face {
+  font-family: "Play fair";
+  src: url(../fonts/PlayfairDisplay-Bold.ttf);
+  font-weight: bold;
+}
 .main {
   position: relative;
   width: 100%;
@@ -273,6 +287,93 @@ p, a, li {
   -webkit-animation: error-visible-animation 0.5s linear;
           animation: error-visible-animation 0.5s linear;
   opacity: 1;
+}
+
+.panel-navigation {
+  color: #fff;
+  border-bottom: 1px solid #333645;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  padding-left: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Manrope";
+  text-align: left;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.panel-navigation > i {
+  font-size: 22px;
+  margin-right: 12px;
+}
+.panel-navigation > i:last-child {
+  font-size: 12px;
+  margin-left: 12px;
+}
+.panel-navigation:hover {
+  background: #57bfb8;
+}
+.panel-list {
+  padding-bottom: 22px;
+  background: #333645;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.panel-subnavigation {
+  color: #fff;
+  border-bottom: 1px solid #FFF9C4;
+  font-style: italic;
+  padding-bottom: 12px;
+  padding-top: 12px;
+  padding-right: 36px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "Manrope";
+  text-align: right;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  width: 100%;
+  display: none;
+  opacity: 0;
+  -webkit-transform: translateX(-20px);
+      -ms-transform: translateX(-20px);
+          transform: translateX(-20px);
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.panel-subnavigation > i {
+  font-size: 22px;
+  margin-right: 12px;
+}
+.panel-subnavigation:hover {
+  background: #57bfb8;
+}
+
+#visibleEquipmentChevron {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+#visibleEquipmentSubnavigation {
+  display: none;
+  opacity: 0;
 }
 
 @-webkit-keyframes error-visible-animation {

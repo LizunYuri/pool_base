@@ -13,7 +13,14 @@
 {% block aside %}
     <ul class="aside-link">
         <li data-url="{% url 'clients_list' %}" class="load-content panel-link" id='addClientsList'><i class="fas fa-users"></i><span>Клиенты</span></li>
-        <li class=" load-content panel-link" >catalogs</li>
+        <li class="panel-navigation" id='visibleEquipment'><i class="fas fa-cogs"></i><span>Оборудование</span><i id="visibleEquipmentChevron" class="fas fa-chevron-down"></i></li>
+        <ul class="panel-list" id="visibleEquipmentSubnavigation">
+            <li data-url="{% url 'pumps_list' %}" id="load-pumps-list" class="panel-subnavigation equipment-list">Насосное Оборудование</li>
+            <li class="panel-subnavigation equipment-list">2</li>
+            <li class="panel-subnavigation equipment-list">3</li>
+            <li class="panel-subnavigation equipment-list">4</li>
+        </ul>
+        <li class=" panel-link"><i class="fas fa-paint-roller"></i><span>materials</span></li>
     </ul>
 {% endblock %}
 {% block nav %}
@@ -21,7 +28,7 @@
 {% endblock %}
 
 {% block content %}
-    <section id="client-list" class="content-list">
+    <section id="client-list" class="content-list clear-list">
     </section>
 {% endblock %}
 

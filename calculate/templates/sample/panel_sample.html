@@ -8,6 +8,7 @@
     <script src="https://kit.fontawesome.com/741d6d6a0a.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/panel-style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}Панель Управления{% endblock %}</title>
 </head>
 <body>
@@ -37,6 +38,7 @@
 {% block script %}
 
 {% endblock %}
-<script src="{% static 'js/panel-script-animation.js' %}"></script>
-<script src="{% static 'js/client-script.js' %}"></script>
+    <script src="{% static 'js/panel-script-animation.js' %}"></script>
+    <script src="{% static 'js/client-script.js' %}"></script>
+    <script src="{% static 'js/equipment-script.js' %}"></script>
 </html>
