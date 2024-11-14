@@ -17,7 +17,7 @@ $(document).ready(function() {
 
                     console.log(pumpsData)
                     let tableHtml = `
-                        <div class="dashbord-body-table">
+                        <div class="dashbord-body-table border-bottom-table">
                             <div class="dashbord-body-table-cell title"><p>Артикул</p></div>
                             <div class="dashbord-body-table-cell title"><p>Наименование</p></div>
                             <div class="dashbord-body-table-cell title"><p>Мощность</p></div>

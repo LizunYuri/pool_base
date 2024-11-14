@@ -138,7 +138,7 @@ $(document).ready(function() {
 
                     // Формирование HTML для отображения данных клиентов
                     let tableHtml = `
-                        <div class="dashbord-body-table">
+                        <div class="dashbord-body-table border-bottom-table">
                             <div class="dashbord-body-table-cell title"><p>Имя</p></div>
                             <div class="dashbord-body-table-cell title"><p>Город</p></div>
                             <div class="dashbord-body-table-cell title"><p>Телефон</p></div>
@@ -206,7 +206,7 @@ $(document).ready(function() {
                     clientList.innerHTML = '';
     
                     let tableHtml = `
-                        <div class="dashbord-body-table">
+                        <div class="dashbord-body-table border-bottom-table">
                             <div class="dashbord-body-table-cell title"><p>Имя</p></div>
                             <div class="dashbord-body-table-cell title"><p>Город</p></div>
                             <div class="dashbord-body-table-cell title"><p>Телефон</p></div>

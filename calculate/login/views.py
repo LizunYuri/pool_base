@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from .forms import CustomLoginForm
 
 def custom_login_view(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         form = CustomLoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()

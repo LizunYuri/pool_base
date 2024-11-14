@@ -430,12 +430,14 @@ p, a, li {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  font-size: 13px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  font-family: "Manrope";
 }
 
 .dashbord-body-table-title {
@@ -456,13 +458,21 @@ p, a, li {
   padding-bottom: 13px;
 }
 
-.client-row {
+.client-row,
+.supplier-row {
   cursor: pointer;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
 }
-.client-row:hover {
+.client-row:hover,
+.supplier-row:hover {
   background: #57bfb8;
+}
+
+.border-bottom-table {
+  border-bottom: 1px solid #4E5D6C;
+  color: #95969a;
+  font-size: 12px;
 }
 
 .record-detail {
@@ -606,6 +616,32 @@ p, a, li {
 .card-btn > button:hover {
   background: #57bfb8;
   color: #95969a;
+}
+.card-catalogs {
+  padding: 12px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.card-catalogs-link {
+  padding-top: 4px;
+  padding-left: 8px;
+  padding-bottom: 4px;
+  padding-right: 8px;
+  font-size: 13px;
+  border: 1px solid #95969a;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  color: #333645;
+  font-family: "Manrope";
+}
+.card-catalogs-link:hover {
+  color: #95969a;
+  -webkit-transform: scale(1.01);
+      -ms-transform: scale(1.01);
+          transform: scale(1.01);
 }
 
 .delete-modal {

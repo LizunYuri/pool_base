@@ -1,6 +1,7 @@
 import os
 from django.utils import timezone
 from django.db import models
+from suppliers.models import SupplierModel
 
 
 
@@ -9,10 +10,10 @@ class PumpsModel(models.Model):
             ('220v', '220v'),
             ('380v', '380v')
         ]
-    # supplier = models.ForeignKey(SupplierModel,
-    #                              verbose_name='Поставщик',
-    #                              help_text='Выбрать из поставщиков',
-    #                              on_delete=models.CASCADE)
+    supplier = models.ForeignKey(SupplierModel,
+                                 verbose_name='Поставщик',
+                                 help_text='Выбрать из поставщиков',
+                                 on_delete=models.CASCADE)
     name = models.CharField(max_length=500,
                             verbose_name='Номенклатура',
                             help_text='В точности как в каталоге поставщика',

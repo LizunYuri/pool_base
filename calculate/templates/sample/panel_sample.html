@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,6 +13,7 @@
     <title>{% block title %}Панель Управления{% endblock %}</title>
 </head>
 <body>
+    
     <main>
         <header class="panel-header">
             <div class="panel-aside-image">
@@ -34,6 +36,7 @@
             </div>
         </div>
     </main>
+
 </body>
 {% block script %}
 
@@ -41,4 +44,5 @@
     <script src="{% static 'js/panel-script-animation.js' %}"></script>
     <script src="{% static 'js/client-script.js' %}"></script>
     <script src="{% static 'js/equipment-script.js' %}"></script>
+    <script src="{% static 'js/supplier-script.js' %}"></script>
 </html>
