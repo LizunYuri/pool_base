@@ -1,29 +1,5 @@
-{% comment %} 
-{% load static %}
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="csrf-token" content="{{ csrf_token }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://kit.fontawesome.com/741d6d6a0a.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/panel-style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>{% block title %}Панель Управления{% endblock %}</title>
-</head>
-<body>
-    
-    <main> {% endcomment %}
-
-
-
-
-
-
-
-    <div id='supplier-detail' class="card-container">
+    <div class="card-container">
             <div class="card-container-left">
                 <div class="card-info">
                     <h3>{{ supplier.name }}</h3>
@@ -40,62 +16,44 @@
                         <p><span>{{ supplier.manager }}</span></p>
                     </div>
                     <div class="card-btn">
-                        <button clas="card-btn-click"  data-client-id="{{ client.id }}" id='edit-client-btn'>Изменить</button>
-                        <button clas="card-btn-click" id="delete-client-btn">Удалить</button>
+                        <button class="card-btn-click" data-supplier-id="{{ supplier.id}}" id='edit-supplier-btn'>Изменить</button>
+                        <button class="card-btn-click" id="delete-supplier-btn">Удалить</button>
                     </div>
                 </div>
                 <div class="card-info">
                     <h3>Категории товаров:</h3>
                     <div class="card-catalogs">
-                        {% if category.pumps %}
-                            <a class="card-catalogs-link" href='#'>{{ category.pumps }}</a>
+                        {% if category.pumps.items %}
+                            <a class="card-catalogs-link" href='#'>{{ category.pumps.verbose_name }}</a>
                         {% else %}
                             <div></div>
                         {% endif %}
                     </div>
+                    
                 </div>
             </div>
-            {% comment %} <div class="delete-modal">
-                <i class="fas fa-times delete-modal-chevron"></i>
+            <div class="delete-modal" id="supplier-delete-modal">
+                <i id="delete-modal-supplier-chevron" class="fas fa-times delete-modal-chevron"></i>
                 <div class="delete-modal-message">
                     <h4>Подтвердите удаление</h4>
                     <h4><span>Действие необратимо! подтверждаете?</span></h4>
-                </div>
-                <div class="delete-modal-btn">
-                    <button id="delete-client-done" data-client-id="{{ client.id }}">Удалить</button>
-                    <button id="delete-client-cancel">Отмена</button>
+                    <div class="delete-modal-btn">
+                        <button id="delete-supplier-done" data-supplier-id="{{ supplier.id}}">Удалить</button>
+                        <button id="delete-supplier-cancel">Отмена</button>
+                    </div>
                 </div>
             </div>
-            <div class="delete-modal-done">
+            <div id="suplier-delete-modal-message" class="delete-modal-done">
                 <div class="delete-modal-done-message">
-                    <h4 class="delete-modal-done-message-text"></h4>
+                    <h4 id="suplier-delete-modal-message-text" class="delete-modal-done-message-text"></h4>
                 </div>
                 <div class="delete-modal-done-btn">
-                    <button id="delete-client-done-ok">ok</button>
+                    <button id="supplier-delete-modal-message-completed">ok</button>
                 </div>
             </div>
-            <div class="edit-modal-window">
-                <i class="fas fa-times edit-modal-window-chevron"></i>
-                <div class="edit-modal-window-body" id="edit-modal-window"></div>
-            </div> {% endcomment %}
-        </div>
-    </div>
+            <div id="update-supplier-record-modal" class="edit-modal-window center-block-form">
+                <i id="update-supplier-record-modal-chevron" class="fas fa-times delete-modal-chevron"></i>
+                <div class="edit-modal-window-body" id="update-supplier-record-modal-body"></div>
+            </div>
 
-
-{% comment %} 
-
-
-
-
-
-
-
-    </main>
-
-
-</body>
-
-</html> {% endcomment %}
-
-    
 

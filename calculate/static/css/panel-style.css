@@ -681,9 +681,7 @@ p, a, li {
   z-index: 130;
 }
 .delete-modal-chevron:hover {
-  -webkit-transform: rotateZ(90deg);
-      -ms-transform: rotate(90deg);
-          transform: rotateZ(90deg);
+  color: #57bfb8;
 }
 .delete-modal-message {
   width: 100%;
@@ -765,6 +763,7 @@ p, a, li {
           justify-content: center;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  border: 1px solid rgba(149, 150, 154, 0.7);
 }
 .delete-modal-done-message {
   width: 100%;
@@ -824,9 +823,9 @@ p, a, li {
   top: 50%;
   left: 50%;
   z-index: 130;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-      -ms-transform: translateX(-50%) translateY(-50%);
-          transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-55%) translateY(-55%);
+      -ms-transform: translateX(-55%) translateY(-55%);
+          transform: translateX(-55%) translateY(-55%);
   background: #fff;
   -webkit-box-shadow: 4px 6px 17px -10px #333645;
           box-shadow: 4px 6px 17px -10px #333645;
@@ -843,6 +842,7 @@ p, a, li {
           justify-content: center;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  border: 1px solid rgba(149, 150, 154, 0.7);
 }
 .message-modal-done-message {
   width: 100%;
@@ -1076,11 +1076,6 @@ p, a, li {
   padding-left: 12px;
   margin-top: 20px;
 }
-.create-modal-window-body-block:nth-child(7) {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
 .create-modal-window-body-block > label {
   font-size: 12px;
   color: #95969a;
@@ -1124,6 +1119,12 @@ p, a, li {
 }
 .create-modal-window-body-block > input::placeholder {
   font-size: 11px;
+}
+
+.center-block-form {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .create-message-modal-done {
@@ -1202,6 +1203,29 @@ p, a, li {
 }
 .create-message-modal-done-btn > button:first-child:hover {
   background: #57bfb8;
+}
+
+.absolute-detail-card {
+  background: #fff;
+  min-width: 600px;
+  width: 98%;
+  height: 100%;
+  min-height: 700px;
+  position: absolute;
+  display: none;
+  z-index: 200;
+  top: -50px;
+  left: 10px;
+  -webkit-box-shadow: 4px 6px 17px -10px #333645;
+          box-shadow: 4px 6px 17px -10px #333645;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.absolute-detail-card-body {
+  margin-top: 36px;
+  margin-left: 18px;
+  width: 100%;
+  height: 100%;
 }
 
 @-webkit-keyframes animation-nav {

@@ -23,10 +23,10 @@
                 
                 <div class="edit-modal-window-body-block">
                    <label for="manager">Ответственный:</label>
-                    <input type="text" id="manager" name="manager" value="{{ client.responsible }}" dis>
+                    <input type="text" id="manager" name="manager" value="{{ client.responsible }}" disabled>
                 </div>
 
-                <div class="edit-modal-window-body-block">
+                <div class="edit-modal-window-body-block center-block-form">
                     <label for="note">Заметка:</label>
                     <textarea id="note" name="note">{{ client.note }}</textarea>
                 </div>
@@ -36,7 +36,7 @@
                 </div>
             </form>
 
-            <div class="message-modal-done">
+            <div class="message-modal-done center-block-form">
                 <div class="message-modal-done-message">
                     <h4 class="message-modal-done-message-text"></h4>
                 </div>

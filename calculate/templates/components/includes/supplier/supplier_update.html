@@ -1,0 +1,41 @@
+
+<form class="edit-modal-window-body-form" method="POST" action="{% url 'supplier-edit' supplier.id %}">
+    {% csrf_token %}
+    <div class="create-modal-window-body-block">
+        <label for="name">Название *</label>
+        <input type="text" id="name" name="name" value="{{ supplier.name }}" required>
+    </div>
+    <div class="create-modal-window-body-block">
+        <label for="legal_name">Юридическое наименование</label>
+        <input type="text" id="legal_name" name="legal_name" value="{{ supplier.legal_name }}">
+    </div>
+    <div class="create-modal-window-body-block">
+        <label for="manager">Персональный менеджер</label>
+        <input type="text" id="manager" name="manager" value="{{ supplier.manager }}">
+    </div>
+    <div class="create-modal-window-body-block">
+        <label for="phone">Номер телефона</label>
+        <input type="text" id="phone" name="phone" value="{{ supplier.phone }}">
+    </div>
+    <div class="create-modal-window-body-block">
+        <label for="email">Электронная почта</label>
+        <input type="email" id="email" name="email" value="{{ supplier.email }}">
+    </div>
+    <div class="create-modal-window-body-block">
+        <label for="url">Адрес каталога</label>
+        <input type="text" id="url" name="url" value="{{ supplier.url }}">
+    </div>
+    <div class="delete-modal-btn">
+        <button id="update-supplier-modal-form-cancel">Отмена</button>
+        <button id="update-supplier-modal-form-complete">Сохранить</button>
+    </div>
+</form>
+
+<div id='update-supplier-modal-form-message' class="message-modal-done center-block-form">
+    <div class="message-modal-done-message">
+        <h4 id='update-supplier-modal-form-message-text' class="message-modal-done-message-text"></h4>
+    </div>
+    <div class="message-modal-done-btn">
+        <button id='update-supplier-modal-form-message-complete'>ok</button>
+    </div>
+</div>
