@@ -1,0 +1,361 @@
+Функция getCSRFToken
+javascript
+Копировать код
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+Описание:
+
+Функция предназначена для получения значения CSRF-токена из мета-тега HTML страницы.
+CSRF-токен используется для защиты от атак межсайтовой подделки запросов и должен быть отправлен с каждым запросом, который изменяет данные на сервере (например, POST, PUT, DELETE).
+Токен находится в мета-теге с атрибутом name="csrf-token", и функция извлекает его с помощью метода getAttribute.
+Пример использования:
+
+javascript
+Копировать код
+const csrfToken = getCSRFToken();
+Переменные для работы с модальными окнами и элементами интерфейса
+javascript
+Копировать код
+let dashbordBody,
+    supplierDetail,
+    supplierDetailCloseModal,
+    supplierDetailBody,
+    deleteSupplierBtn,
+    loadListConstantFlag,
+    supplierDeleteModal,
+    deleteModalSupplierChevron,
+    deleteSupplierDone,
+    deleteSupplierCancel,
+    supplierDeleteModalMessage,
+    supplierDeleteModalMessageCompleted,
+    supplierDeleteModalMessageText,
+    supplierCreate,
+    supplierCreateModalChevron,
+    supplierCreateModal,
+    supplierCreateMessage,
+    supplierCreateMessageText,
+    supplierCreateMessageCompleted,
+    updateSupplierModalFormComplete,
+    updateSupplierModalFormCancel,
+    editSupplierBtn,
+    updateSupplierModalFormMessage,
+    updateSupplierModalFormMessageText,
+    updateSupplierSodalFormMessageComplete,
+    loadCardEditFlag,
+    supplierSearchResetChevron,
+    supplierSearch,
+    supplierEquipmentList,
+    loadUpdateElementsFlag;
+Описание: Переменные объявляют элементы интерфейса и флаги, которые будут использованы в различных частях кода для управления модальными окнами, формами и функционалом для работы с поставщиками.
+
+dashbordBody — тело страницы или панели управления, куда могут быть загружены данные или модальные окна.
+supplierDetail — элемент, содержащий подробности о поставщике.
+supplierDetailCloseModal — кнопка или элемент для закрытия модального окна с деталями поставщика.
+supplierDetailBody — тело модального окна с деталями поставщика.
+deleteSupplierBtn — кнопка для удаления поставщика.
+loadListConstantFlag — флаг, который указывает, нужно ли загружать список поставщиков.
+supplierDeleteModal — модальное окно для подтверждения удаления поставщика.
+deleteModalSupplierChevron — стрелка для закрытия модального окна удаления.
+deleteSupplierDone — кнопка для подтверждения удаления поставщика.
+deleteSupplierCancel — кнопка для отмены удаления поставщика.
+supplierDeleteModalMessage — сообщение в модальном окне удаления поставщика.
+supplierDeleteModalMessageCompleted — сообщение о завершении удаления поставщика.
+supplierDeleteModalMessageText — текстовое содержимое сообщения в модальном окне удаления.
+supplierCreate — кнопка или элемент для создания нового поставщика.
+supplierCreateModalChevron — стрелка для закрытия модального окна создания поставщика.
+supplierCreateModal — модальное окно для создания нового поставщика.
+supplierCreateMessage — сообщение, которое будет отображено при успешном создании поставщика.
+supplierCreateMessageText — текст сообщения, которое будет отображено при успешном создании.
+supplierCreateMessageCompleted — сообщение о завершении создания нового поставщика.
+updateSupplierModalFormComplete — кнопка для подтверждения обновления данных поставщика в модальном окне.
+updateSupplierModalFormCancel — кнопка для отмены изменений в модальном окне обновления данных поставщика.
+editSupplierBtn — кнопка для редактирования данных поставщика.
+updateSupplierModalFormMessage — сообщение о статусе обновления данных поставщика.
+updateSupplierModalFormMessageText — текстовое содержимое сообщения об обновлении.
+updateSupplierSodalFormMessageComplete — сообщение о завершении обновления данных поставщика.
+loadCardEditFlag — флаг для загрузки данных для редактирования карточки поставщика.
+supplierSearchResetChevron — стрелка для сброса поиска по поставщикам.
+supplierSearch — поле для поиска поставщиков.
+supplierEquipmentList — список оборудования поставщика.
+loadUpdateElementsFlag — флаг, который указывает, нужно ли загружать элементы для обновления поставщика.
+
+Обработчик события на клик по кнопке #load-suppliers-list
+javascript
+Копировать код
+$('#load-suppliers-list').click(function() { 
+    $('#client-list').html(''); // Очищаем список клиентов
+
+    const url = $(this).data('url'); // Получаем URL для AJAX-запроса
+
+    $.ajax({
+        url : url,
+        method: 'GET',
+        success: function(response) {
+            $('#client-list').html(response); // Заполняем список клиентов ответом от сервера
+            loadListConstants(); // Загружаем константы для работы с интерфейсом
+
+            if (loadListConstantFlag) {
+                loadSuppliers();  // Загружаем поставщиков
+                addSupplierFunction(); // Добавляем функционал для работы с поставщиками
+                searchSupplierFunction(); // Добавляем функционал поиска по поставщикам
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Ошибка при загрузке списка клиентов:', error);
+            dashbordBody.innerHTML = '<p>Не удалось загрузить данные клиентов.</p>'; // Выводим ошибку на странице
+        }
+    });
+});
+Описание:
+
+Этот обработчик срабатывает при клике на элемент с id #load-suppliers-list. Он отправляет AJAX-запрос на сервер, чтобы получить список клиентов.
+После успешного получения данных (в success), список клиентов заполняется новым контентом, и активируются дополнительные функции, такие как загрузка поставщиков, добавление функционала для добавления и поиска поставщиков.
+В случае ошибки в запросе выводится сообщение об ошибке.
+Функция loadListConstants
+javascript
+Копировать код
+const loadListConstants = () => {
+    dashbordBody = document.getElementById('dashbord-body-supplier');
+    supplierCreate = document.getElementById('add-supplier');
+    supplierCreateModal = document.getElementById('supplier-create-modal');
+    supplierCreateModalChevron = document.getElementById('supplier-create-modal-chevron');
+    supplierCreateMessage = document.getElementById('supplier-create-message');
+    supplierCreateMessageText = document.getElementById('supplier-create-message-text');
+    supplierCreateMessageCompleted = document.getElementById('supplier-create-message-completed');
+    supplierSearchResetChevron = document.getElementById('supplier-search-reset-chevron');
+    supplierSearch = document.getElementById('supplier-search');
+    loadListConstantFlag = false;
+
+    if (dashbordBody) {
+        loadListConstantFlag = true; // Устанавливаем флаг, если тело страницы для поставщиков существует
+    }
+};
+Описание:
+
+Функция инициализирует необходимые элементы интерфейса для работы с поставщиками. Эти элементы могут включать кнопки, формы, сообщения и другие компоненты.
+Переменная loadListConstantFlag будет установлена в true, если элементы интерфейса, связанные с поставщиками, успешно найдены.
+Функция loadDetailConstants
+javascript
+Копировать код
+const loadDetailConstans = () => {
+    supplierDetail = document.getElementById('supplier-detail');
+    supplierDetailCloseModal = document.getElementById('supplier-detail-close-modal');
+    supplierDetailBody = document.getElementById('supplier-detail-body');
+};
+Описание:
+
+Эта функция инициализирует переменные, отвечающие за элементы, связанные с деталями поставщика. Например, она назначает модальное окно для отображения информации о поставщике, а также элементы для закрытия окна и отображения контента.
+Функция loadCardEdit
+javascript
+Копировать код
+const loadCardEdit = () => {
+    deleteSupplierBtn = document.getElementById('delete-supplier-btn');
+    editSupplierBtn = document.getElementById('edit-supplier-btn');
+    supplierDeleteModal = document.getElementById('supplier-delete-modal');
+    deleteModalSupplierChevron = document.getElementById('delete-modal-supplier-chevron');
+    deleteSupplierDone = document.getElementById('delete-supplier-done');
+    deleteSupplierCancel = document.getElementById('delete-supplier-cancel');
+    supplierDeleteModalMessage = document.getElementById('suplier-delete-modal-message');
+    supplierDeleteModalMessageCompleted = document.getElementById('supplier-delete-modal-message-completed');
+    supplierDeleteModalMessageText = document.getElementById('suplier-delete-modal-message-text');
+    updateSupplierRecordModal = document.getElementById('update-supplier-record-modal');
+    updateSupplierRecordModalChevron = document.getElementById('update-supplier-record-modal-chevron');
+    supplierEquipmentList = document.getElementById('supplier-equipment-list');
+    loadCardEditFlag = false;
+
+    if (deleteSupplierBtn) {
+        loadCardEditFlag = true; // Устанавливаем флаг, если кнопка для удаления поставщика существует
+    }
+};
+Описание:
+
+Эта функция инициализирует переменные, связанные с редактированием и удалением поставщиков. Она находит элементы для кнопок редактирования и удаления, модальные окна для подтверждения удаления, а также другие элементы для работы с поставщиками.
+Функция loadUpdateElements
+javascript
+Копировать код
+const loadUpdateElements = () => {
+    updateSupplierModalFormComplete = document.getElementById('update-supplier-modal-form-complete');
+    updateSupplierModalFormCancel = document.getElementById('update-supplier-modal-form-cancel');
+    updateSupplierModalFormMessage = document.getElementById('update-supplier-modal-form-message');
+    updateSupplierModalFormMessageText = document.getElementById('update-supplier-modal-form-message-text');
+    updateSupplierSodalFormMessageComplete = document.getElementById('update-supplier-modal-form-message-complete');
+    loadUpdateElementsFlag = false;
+
+    if (updateSupplierModalFormComplete && updateSupplierModalFormCancel) {
+        loadUpdateElementsFlag = true; // Устанавливаем флаг, если элементы для обновления формы существуют
+    }
+};
+Описание:
+
+Функция инициализирует переменные, связанные с обновлением данных поставщика. Это включает элементы для кнопок формы, сообщений об успехе/ошибке и других составляющих формы обновления.
+
+
+
+
+
+Функция loadSuppliers
+javascript
+Копировать код
+function loadSuppliers() {
+    if (loadListConstantFlag) {
+        $.ajax({
+            url: '/suppliers/get-supplier', // URL для получения списка поставщиков
+            method: 'GET',
+            success: function(response) {
+                let suppliersData = response.suppliers; // Получаем данные поставщиков
+
+                loadDetailConstans(); // Инициализируем константы для деталей
+
+                // Создаем HTML-структуру таблицы
+                let tableHtml = `
+                    <div class="dashbord-body-table border-bottom-table">
+                        <div class="dashbord-body-table-cell title"><p>Поставщик</p></div>
+                        <div class="dashbord-body-table-cell title"><p>Менеджер</p></div>
+                        <div class="dashbord-body-table-cell title"><p>Номер телефона</p></div>
+                        <div class="dashbord-body-table-cell title"><p>Юридическое наименование</p></div>
+                    </div>`;
+
+                // Заполняем таблицу данными о поставщиках
+                $.each(suppliersData, function(index, supplier) {
+                    tableHtml += `
+                        <div class="dashbord-body-table supplier-row" data-supplier-id="${supplier.id}">
+                            <div class="dashbord-body-table-cell"><p>${supplier.name || ''}</p></div>
+                            <div class="dashbord-body-table-cell"><p>${supplier.manager || ''}</p></div>
+                            <div class="dashbord-body-table-cell"><p>${supplier.phone || ''}</p></div>
+                            <div class="dashbord-body-table-cell"><p>${supplier.legal_name || ''}</p></div>
+                        </div>`;
+                });
+
+                dashbordBody.innerHTML = tableHtml; // Вставляем таблицу в тело страницы
+
+                // Обработчик клика на строку таблицы для отображения деталей поставщика
+                $('.supplier-row').click(function() {
+                    const supplierId = $(this).data('supplier-id'); // Получаем ID поставщика
+                    loadSupplierDetails(supplierId); // Загружаем детали выбранного поставщика
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Ошибка при загрузке списка поставщиков:', error);
+                clientList.innerHTML = '<p>Не удалось загрузить данные клиентов.</p>'; // Выводим ошибку на странице
+            }
+        });
+    }
+}
+Описание:
+
+Функция loadSuppliers отвечает за загрузку списка поставщиков через AJAX-запрос к серверу по URL /suppliers/get-supplier.
+Если флаг loadListConstantFlag установлен в true, выполняется запрос на сервер. В случае успешного ответа сервер передает данные о поставщиках в формате JSON.
+После получения данных, функция строит таблицу с информацией о каждом поставщике (например, имя, менеджер, телефон, юридическое наименование).
+Каждая строка таблицы представляет отдельного поставщика, и при клике на строку вызывается функция loadSupplierDetails, которая загружает детали выбранного поставщика.
+В случае ошибки при загрузке данных выводится сообщение об ошибке.
+Логика работы:
+Запрос данных с сервера:
+При вызове loadSuppliers отправляется GET-запрос по указанному URL /suppliers/get-supplier.
+На сервере должен быть реализован маршрут, который вернет список поставщиков в формате JSON.
+Построение таблицы:
+Для каждого поставщика создается строка в таблице с его данными: название, менеджер, телефон и юридическое наименование.
+Используется jQuery для итерации по полученным данным с помощью $.each().
+Обработчик клика по строке:
+Когда пользователь кликает на строку таблицы, извлекается supplier-id (идентификатор поставщика), который затем используется для вызова функции loadSupplierDetails для загрузки и отображения подробной информации о выбранном поставщике.
+Обработка ошибок:
+Если запрос не удался, выводится сообщение об ошибке, и информация о клиентах не загружается.
+Важные моменты:
+Функция зависит от переменной loadListConstantFlag, которая должна быть установлена в true, чтобы данные о поставщиках загружались корректно.
+
+Функции для работы с поставщиками в модальных окнах
+closeModalWindow
+
+Назначение: Закрывает модальное окно при клике на переданную кнопку.
+Параметры:
+button: Кнопка, при клике на которую окно будет закрыто.
+modal: Модальное окно, которое будет скрыто.
+Пример использования:
+javascript
+Копировать код
+closeModalWindow(button, modal);
+Реализация: Добавляется обработчик события click на кнопку, который скрывает модальное окно путем изменения его стиля display на 'none'.
+loadSupplierDetails
+
+Назначение: Загружает детали выбранного поставщика и отображает их в модальном окне.
+Параметры:
+supplierId: Идентификатор поставщика, чьи детали нужно загрузить.
+Пример использования:
+javascript
+Копировать код
+loadSupplierDetails(supplierId);
+Реализация:
+Если supplierId не задан, выводится ошибка.
+Модальное окно supplierDetail становится видимым.
+Содержимое supplierDetailBody очищается, после чего выполняется AJAX-запрос для загрузки данных о поставщике с сервера.
+В случае успеха, данные о поставщике вставляются в supplierDetailBody, и выполняются дополнительные функции для редактирования и получения оборудования для поставщика.
+Если загрузка данных не удалась, выводится сообщение об ошибке.
+deleteSupplierFunction
+
+Назначение: Функция для обработки удаления поставщика.
+Пример использования:
+javascript
+Копировать код
+deleteSupplierFunction();
+Реализация:
+Обработчики для закрытия модальных окон (через кнопки deleteModalSupplierChevron, deleteSupplierCancel) добавляются с помощью closeModalWindow.
+При нажатии на кнопку удаления, открывается модальное окно подтверждения.
+При подтверждении удаления (deleteSupplierDone), выполняется запрос DELETE на сервер для удаления поставщика.
+В случае успеха, показывается сообщение о завершении операции, и обновляется список поставщиков.
+В случае ошибки, выводится сообщение о проблемах с удалением.
+addSupplierFunction
+
+Назначение: Функция для добавления нового поставщика.
+Пример использования:
+javascript
+Копировать код
+addSupplierFunction();
+Реализация:
+Закрывает модальные окна с помощью closeModalWindow.
+При нажатии на кнопку добавления нового поставщика (supplierCreate), отправляется AJAX-запрос на сервер для получения формы для создания поставщика.
+При отправке формы, данные сериализуются и отправляются на сервер с помощью POST-запроса.
+В случае успешного добавления поставщика, выводится сообщение, и обновляется список поставщиков.
+editSupplierFunction
+
+Назначение: Функция для редактирования информации о поставщике.
+Пример использования:
+javascript
+Копировать код
+editSupplierFunction();
+Реализация:
+При нажатии на кнопку редактирования поставщика (editSupplierBtn), отправляется AJAX-запрос для загрузки формы редактирования данных поставщика.
+При сохранении изменений, отправляются данные формы на сервер через POST-запрос.
+Если изменения успешно сохранены, обновляются данные поставщика и список поставщиков.
+В случае ошибки, выводится сообщение о проблемах с сохранением данных.
+Логика работы
+Закрытие модальных окон: Модальные окна закрываются при клике на соответствующие кнопки, используя функцию closeModalWindow.
+Загрузка данных поставщика: При выборе поставщика из списка, функция loadSupplierDetails отображает подробную информацию о поставщике в модальном окне.
+Удаление поставщика: Функция deleteSupplierFunction управляет процессом удаления поставщика, отправляя запрос на сервер и обновляя интерфейс в случае успеха.
+Добавление нового поставщика: Функция addSupplierFunction позволяет добавлять нового поставщика через форму, которая отправляется на сервер.
+Редактирование данных поставщика: Функция editSupplierFunction обрабатывает процесс редактирования данных выбранного поставщика, включая валидацию и отправку формы на сервер.
+Важные моменты:
+Все функции взаимодействуют с сервером через AJAX-запросы, что позволяет обновлять данные без перезагрузки страницы.
+Функции для работы с модальными окнами используют closeModalWindow, что упрощает закрытие окон при разных действиях.
+Валидация форм перед отправкой и обработка ошибок сервера помогают избежать некорректных данных и информируют пользователя о состоянии операций.
+
+Закрытие модальных окон:
+
+Функция closeModalWindow скрывает модальное окно, когда нажимается определенная кнопка.
+Загрузка данных поставщика:
+
+Функция loadSupplierDetails(supplierId) загружает и отображает данные о поставщике по его ID. Используется AJAX-запрос для получения данных, после чего модальное окно обновляется с полученными данными. Модальное окно закрывается при взаимодействии с кнопкой закрытия.
+Удаление поставщика:
+
+Функция deleteSupplierFunction управляет удалением поставщика. При этом открывается модальное окно для подтверждения удаления, отправляется DELETE-запрос на сервер, и если запрос успешен, окно закрывается, а UI обновляется. Если удаление не удается, выводится сообщение об ошибке.
+Добавление нового поставщика:
+
+Функция addSupplierFunction реализует добавление нового поставщика. При нажатии на кнопку открывается модальное окно с формой, данные из формы отправляются на сервер с помощью POST-запроса. Включена валидация формы, и после успешного добавления выводится сообщение.
+Редактирование данных поставщика:
+
+Функция editSupplierFunction позволяет редактировать данные поставщика. При нажатии кнопки "Редактировать" форма заполняется текущими данными поставщика, и любые изменения отправляются на сервер с помощью POST-запроса.
+Поиск поставщиков:
+
+Функция searchSupplierFunction реализует поиск поставщиков. При вводе текста в поисковое поле отправляется AJAX POST-запрос, а результаты поиска динамически отображаются в таблице. Если поставщики не найдены, выводится соответствующее сообщение.
+Получение оборудования для поставщика:
+
+Функция getEquipmentForSupplier(supplierId) загружает и отображает оборудование, связанное с конкретным поставщиком. Запрашиваются данные о оборудовании, которые затем группируются по категориям и выводятся в виде списка.

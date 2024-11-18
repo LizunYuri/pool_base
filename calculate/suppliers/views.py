@@ -118,3 +118,35 @@ def edit_supplier(request, supplier_id):
             form = CreateSupplierModelForm(instance=supplier)
 
     return render(request, 'components/includes/supplier/supplier_update.html', {'form': form, 'supplier': supplier} )
+
+
+@user_passes_test(is_admin, login_url='access_denied')
+def search_supplier(request):
+    if request.method == 'POST':
+        try: 
+            data = json.loads(request.body)
+            input_data = data.get('input_data', '')
+            suppliers = SupplierModel.objects.filter(
+                Q(name__icontains=input_data) |
+                Q(legal_name__icontains=input_data) |
+                Q(manager__icontains=input_data) |
+                Q(phone__icontains=input_data) |
+                Q(email__icontains=input_data) 
+                )
+            supplier_data_json = [
+                {
+                    'id' : supplier.id,
+                    'name' : supplier.name,
+                    'manager' : supplier.manager,
+                    'phone' : supplier.phone,
+                    'legal_name' : supplier.legal_name
+                    
+                } for supplier in suppliers
+            ]
+            return JsonResponse({'message': f'Вы искали: {input_data}', 'suppliers' : supplier_data_json})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Ошибка в формате данных JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'Некорректный метод запроса'}, status=405)
+
+            

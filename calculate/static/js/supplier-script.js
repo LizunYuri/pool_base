@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    // Функция для получения CSRF-токена из мета-тега
+
     function getCSRFToken() {
         return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     }
@@ -30,6 +30,9 @@ $(document).ready(function() {
         updateSupplierModalFormMessageText,
         updateSupplierSodalFormMessageComplete,
         loadCardEditFlag,
+        supplierSearchResetChevron,
+        supplierSearch,
+        supplierEquipmentList,
         loadUpdateElementsFlag 
 
     $('#load-suppliers-list').click(function() {
@@ -50,6 +53,7 @@ $(document).ready(function() {
                 if(loadListConstantFlag){
                     loadSuppliers(); 
                     addSupplierFunction()
+                    searchSupplierFunction()
                 } 
             },
             error: function(xhr, status, error) {
@@ -68,6 +72,8 @@ $(document).ready(function() {
         supplierCreateMessage = document.getElementById('supplier-create-message')
         supplierCreateMessageText = document.getElementById('supplier-create-message-text')
         supplierCreateMessageCompleted = document.getElementById('supplier-create-message-completed')
+        supplierSearchResetChevron = document.getElementById('supplier-search-reset-chevron')
+        supplierSearch = document.getElementById('supplier-search')
         loadListConstantFlag = false
         if (dashbordBody){
             loadListConstantFlag = true
@@ -78,7 +84,7 @@ $(document).ready(function() {
         supplierDetail = document.getElementById('supplier-detail');
         supplierDetailCloseModal = document.getElementById('supplier-detail-close-modal')
         supplierDetailBody = document.getElementById('supplier-detail-body')
-        
+       
     }
 
     const loadCardEdit = () => {
@@ -93,7 +99,7 @@ $(document).ready(function() {
         supplierDeleteModalMessageText = document.getElementById('suplier-delete-modal-message-text')
         updateSupplierRecordModal = document.getElementById('update-supplier-record-modal')
         updateSupplierRecordModalChevron = document.getElementById('update-supplier-record-modal-chevron')
-        
+        supplierEquipmentList = document.getElementById('supplier-equipment-list')
         loadCardEditFlag = false
         if (deleteSupplierBtn) {
             loadCardEditFlag = true
@@ -188,6 +194,7 @@ $(document).ready(function() {
                 if(loadCardEditFlag) {
                     deleteSupplierFunction()
                     editSupplierFunction()
+                    getEquipmentForSupplier(supplierId)
                 }
             },
             error: function(xhr, status, error) {
@@ -348,8 +355,8 @@ $(document).ready(function() {
     }
 
     const editSupplierFunction = () => {
-        console.log("Функция editSupplierFunction вызвана");
-        console.log("CSRF Token:", getCSRFToken());
+        // console.log("Функция editSupplierFunction вызвана");
+        // console.log("CSRF Token:", getCSRFToken());
 
         closeModalWindow(
             updateSupplierRecordModalChevron,
@@ -423,5 +430,114 @@ $(document).ready(function() {
                 }
             });
         });
-    }  
+    } 
+    
+    const searchSupplierFunction = () =>{
+
+        supplierSearchResetChevron.addEventListener('click', () =>{
+            supplierSearch.value = ''
+            loadSuppliers()
+        })
+
+        $(supplierSearch).on('input', function() {
+            dashbordBody.innerHTML = ''
+            const query = $(this).val()
+
+            fetch('/suppliers/search/', {
+                method : 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({
+                    "input_data": query,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.suppliers) {
+                  dashbordBody.innerHTML = '' 
+                    let tableHtml = `
+                    <div class="dashbord-body-table border-bottom-table">
+                        <div class="dashbord-body-table-cell title"><p>Поставщик</p></div>
+                        <div class="dashbord-body-table-cell title"><p>Менеджер</p></div>
+                        <div class="dashbord-body-table-cell title"><p>Номер телефона</p></div>
+                        <div class="dashbord-body-table-cell title"><p>Юридическое наименование</p></div>
+                    </div>`;
+                    $.each(data.suppliers, function(index, supplier) {
+                    tableHtml += `
+                        <div class="dashbord-body-table supplier-row" data-supplier-id="${supplier.id}">
+                            <div class="dashbord-body-table-cell"><p>${supplier.name || ''}</p></div>
+                            <div class="dashbord-body-table-cell"><p>${supplier.manager || ''}</p></div>
+                            <div class="dashbord-body-table-cell"><p>${supplier.phone || ''}</p></div>
+                            <div class="dashbord-body-table-cell"><p>${supplier.legal_name || ''}</p></div>
+                        </div>`;
+                    });
+
+                    dashbordBody.innerHTML = tableHtml;
+
+                    $('.supplier-row').click(function() {
+                        const supplierId = $(this).data('supplier-id');
+                        
+                        loadSupplierDetails(supplierId);
+                        
+                    });
+                } else{
+                    alert('Error send data')
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка запроса :', error)
+            })
+            })
+
+        console.log(supplierSearchResetChevron, supplierSearch)
+        console.log("функция searchSupplierFunction вызвана")
+    }
+
+    const getEquipmentForSupplier = (supplierId) =>{
+
+        fetch(`/equipment/equipment-list/${supplierId}/filter/`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                const records = data.records;        
+                let htmlContent = ``
+                for (const [category, items] of Object.entries(records)) {
+
+                    htmlContent += '<div class="supplier-equipment-list-card">'
+                    htmlContent += `<h3>${category}</h3>`; // Заголовок категории
+                    htmlContent += `
+                        <div class="supplier-equipment-list-card-body">
+                            <div class="supplier-equipment-list-card-body-item card-title">Артикул</div>
+                            <div class="supplier-equipment-list-card-body-item card-title">Номенклатура</div>
+                            <div class="supplier-equipment-list-card-body-item card-title">Дата актуальности</div>
+                            <div class="supplier-equipment-list-card-body-item card-title">стоимость</div>
+                        </div>
+                    `
+                    if (items.length === 0) {
+                        htmlContent += `<p>Нет записей в этой категории.</p>`;
+                        continue;
+                    }
+                    items.forEach(item => {
+                        htmlContent += `
+                        <div data-equipment-id='${item.id}' class="supplier-equipment-list-card-body hover">
+                            <div class="supplier-equipment-list-card-body-item">${item.article}</div>
+                            <div class="supplier-equipment-list-card-body-item">${item.name}</div>                            
+                            <div class="supplier-equipment-list-card-body-item">${item.date}</div>
+                            <div class="supplier-equipment-list-card-body-item">${item.price}руб.</div>
+                        </div>
+                        `;
+                    });
+                    htmlContent += '</div>';
+                }
+        
+                supplierEquipmentList.innerHTML = htmlContent;
+            })
+            .catch(error => console.error('Ошибка при получении данных:', error));
+    }
 })

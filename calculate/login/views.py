@@ -1,8 +1,9 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login
 from django.http import JsonResponse
-from .forms import CustomLoginForm
+from .forms import CustomLoginForm, UserProfileForm
 
 def custom_login_view(request):
     if request.method == "POST" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -43,6 +44,22 @@ def redirect_user_based_on_group(request):
 
 def is_admin(user):
     return user.is_authenticated and user.groups.filter(name="Администратор").exists()
+
+
+@login_required
+def user_profile(request):
+    # user = request.user
+
+    # if request.method == 'POST':
+    #     form = UserProfileForm(request.POST, instance=user)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.sucess(request, 'Данные обновленны')
+    #         return redirect('/')
+    #     else:
+    #         form = UserProfileForm(instance=user)
+    
+    return render(request, 'login/user_profile.html')
 
 
 @user_passes_test(is_admin, login_url='access_denied')

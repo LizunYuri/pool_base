@@ -8,4 +8,5 @@ from . import views
 urlpatterns = [
     path('get-equipment/', views.get_equipment, name='get-equipment'),
     path('pumps_list/', views.pumps_list, name='pumps_list'),
+    path('equipment-list/<int:supplier_id>/filter/', views.supplier_records_view, name='suppliers-filter')
     ]

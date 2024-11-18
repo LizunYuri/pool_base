@@ -10,4 +10,5 @@ urlpatterns = [
     path('supplier/<int:supplier_id>/delete/', views.delete_supplier, name='delete-supplier'),
     path('supplier/<int:supplier_id>/edit/', views.edit_supplier, name='supplier-edit'),
     path('create/', views.create_supplier, name='supplier-create'),
+    path('search/', views.search_supplier, name='search-supplier'),
     ]

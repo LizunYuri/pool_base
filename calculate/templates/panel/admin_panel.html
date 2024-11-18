@@ -5,6 +5,7 @@
     <div class="panel-header-account">
         <p class="panel-header-account-link"><i class="fas fa-user-shield"></i>{{ user.first_name }}<i id="user-chevron" class="fas fa-chevron-down"></i><br><span>{{ user.groups.first }}</span></p>
         <div class="panel-header-logout">
+            <a class="panel-header-logout-btn" href="{% url 'profile' %}">Профиль</a>
             <a class="panel-header-logout-btn" href="{% url 'logout' %}">Выйти</a>
         </div>
     </div>

@@ -1,0 +1,24 @@
+{% extends "sample/panel_sample.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block header %}
+    <div class="panel-header-account">
+        <p class="panel-header-account-link"><i class="fas fa-user-shield"></i>{{ user.first_name }}<i id="user-chevron" class="fas fa-chevron-down"></i><br><span>{{ user.groups.first }}</span></p>
+        <div class="panel-header-logout">
+            <a class="panel-header-logout-btn" href="{% url 'profile' %}">Профиль</a>
+            <a class="panel-header-logout-btn" href="{% url 'logout' %}">Выйти</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block aside %}
+    <ul class="aside-link">
+        <li class="panel-link"><i class="far fa-bell"></i><span>Уведомления</span></li>
+        <li class="load-content panel-link"><i class="fas fa-user-tie"></i><span>Личные данные</span></li>
+        <li class="panel-navigation"><i class="far fa-building"></i><span>Компания</span></li>  
+    </ul>
+{% endblock %}
+{% block nav %}
+    <div class="nav-title"></div>
+{% endblock %}
