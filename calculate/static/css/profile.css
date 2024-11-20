@@ -1,0 +1,290 @@
+@font-face {
+  font-family: "Manrope";
+  src: url(../fonts/Manrope.ttf);
+}
+@font-face {
+  font-family: "Play fair";
+  src: url(../fonts/PlayfairDisplay-Regular.ttf);
+  font-weight: normal;
+}
+@font-face {
+  font-family: "Play fair";
+  src: url(../fonts/PlayfairDisplay-Bold.ttf);
+  font-weight: bold;
+}
+.is-active {
+  background: #57bfb8;
+}
+
+.profile-body {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: relative;
+}
+.profile-body-label {
+  width: 100%;
+  height: 40px;
+  background: #ac92c2;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.profile-body-label > h2 {
+  font-size: 18px;
+  color: #fff;
+  text-transform: uppercase;
+  font-family: "Play fair";
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding-right: 12px;
+}
+.profile-body-card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 100%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.profile-body-user {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 23px;
+  -webkit-box-shadow: 4px 6px 17px -10px #333645;
+          box-shadow: 4px 6px 17px -10px #333645;
+  border: 3px;
+  margin-right: 12px;
+}
+.profile-body-user-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  padding-bottom: 8px;
+  width: 100%;
+  max-width: 200px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1;
+          flex: 1 1;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.profile-body-user-item > p {
+  font-size: 13px;
+  font-family: "Manrope";
+  letter-spacing: 1px;
+  color: #95969a;
+  font-weight: 500;
+  padding-left: 0;
+  text-align: center;
+  padding-bottom: 12px;
+}
+.profile-body-user-item > p > span {
+  color: #333645;
+  font-size: 15px;
+  font-weight: 600;
+  padding-top: 12px;
+  text-align: right;
+}
+.profile-body-user-btn {
+  width: 100%;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: "Manrope";
+  letter-spacing: 1px;
+  color: #333645;
+  border: 1px solid #4E5D6C;
+}
+.profile-body-user-btn:hover {
+  background: #57bfb8;
+}
+.profile-body-modal {
+  width: 660px;
+  min-height: 400px;
+  -webkit-box-shadow: 4px 6px 17px -10px #333645;
+          box-shadow: 4px 6px 17px -10px #333645;
+  z-index: 200;
+  border: 1px solid rgba(149, 150, 154, 0.4);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translateX(-50%) translateY(0);
+      -ms-transform: translateX(-50%) translateY(0);
+          transform: translateX(-50%) translateY(0);
+  background: #fff;
+  display: none;
+  padding-bottom: 23px;
+}
+
+.update-modal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  margin-top: 26px;
+}
+.update-modal-card {
+  width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.update-modal-card-title {
+  font-size: 18px;
+  color: #fff;
+  text-transform: uppercase;
+  font-family: "Play fair";
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding-right: 12px;
+  color: #95969a;
+  padding-bottom: 12px;
+  text-align: center;
+}
+.update-modal-card-input {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 12px;
+}
+.update-modal-card-input-password {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 30px;
+  border: 1px solid rgba(149, 150, 154, 0.4);
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.update-modal-card-input-password > i {
+  color: #95969a;
+  font-size: 14px;
+  cursor: pointer;
+}
+.update-modal-card-label {
+  font-size: 12px;
+  font-family: "Manrope";
+  color: #333645;
+  padding-bottom: 12px;
+}
+.update-modal-card-btn {
+  width: 100%;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: "Manrope";
+  letter-spacing: 1px;
+  color: #333645;
+  border: 1px solid #4E5D6C;
+}
+.update-modal-card-btn:hover {
+  background: #57bfb8;
+}
+
+.profile-form-input {
+  height: 30px;
+  border: 1px solid rgba(149, 150, 154, 0.4);
+  font-size: 14px;
+  font-family: "Manrope";
+  padding-left: 16px;
+  margin-left: 23px;
+}
+
+.password-visible {
+  border: none;
+  margin-left: 0;
+  width: calc(100% - 16px);
+}
+
+.message-profile-card {
+  width: 380px;
+  min-height: 180px;
+  display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  border: 1px solid rgba(149, 150, 154, 0.4);
+  padding-right: 23px;
+  padding-left: 23px;
+  padding-top: 23px;
+  padding-bottom: 23px;
+  top: 60%;
+  left: 50%;
+  z-index: 250;
+  -webkit-transform: translateX(-50%) translateY(0);
+      -ms-transform: translateX(-50%) translateY(0);
+          transform: translateX(-50%) translateY(0);
+  background: #fff;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-shadow: 4px 6px 17px -10px #333645;
+          box-shadow: 4px 6px 17px -10px #333645;
+  border-radius: 3px;
+}
+.message-profile-text {
+  font-size: 16px;
+  padding-bottom: 32px;
+  font-weight: 600;
+  font-family: "Manrope";
+  color: #333645;
+}

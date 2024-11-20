@@ -34,3 +34,32 @@ $color-bg-title: #ac92c2;
     src: url(../fonts/PlayfairDisplay-Bold.ttf);
     font-weight: bold;
 }
+
+@mixin -title-body{
+    font-size: 18px;
+    color: $color-white;
+    text-transform: uppercase;
+    font-family: 'Play fair';
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding-right: 12px;
+}
+
+@mixin -base-shadow {
+    box-shadow: 4px 6px 17px -10px #333645;
+}
+@mixin -base-btn{
+    width: 100%;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Manrope';
+    letter-spacing: 1px;
+    color: $color-card;
+    border: 1px solid $color-line;
+        &:hover{
+            background: $color-hover-btn;
+        }
+    }

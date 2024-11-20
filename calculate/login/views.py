@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
 from django.http import JsonResponse
-from .forms import CustomLoginForm, UserProfileForm
+from .forms import CustomLoginForm, UserUpdateForm, UserPasswordChangeForm
+from .models import Company
 
 def custom_login_view(request):
     if request.method == "POST" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -41,25 +42,81 @@ def redirect_user_based_on_group(request):
         return redirect("default_dashboard")  # Замените на нужный URL-адрес для всех остальных
 
 
-
 def is_admin(user):
     return user.is_authenticated and user.groups.filter(name="Администратор").exists()
+
+def is_supervisor(user):
+    return user.is_authenticated and user.groups.filter(name="Руководитель").exists()
+
+def is_engineer(user):
+    return user.is_authenticated and user.groups.filter(name="Инженер").exists()
+
+def is_manager(user):
+    return user.is_authenticated and user.groups.filter(name="Менеджер").exists()
+
+def is_accountant(user):
+    return user.is_authenticated and user.groups.filter(name="Бухгалтер").exists()
 
 
 @login_required
 def user_profile(request):
-    # user = request.user
+    user = request.user
 
-    # if request.method == 'POST':
-    #     form = UserProfileForm(request.POST, instance=user)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.sucess(request, 'Данные обновленны')
-    #         return redirect('/')
-    #     else:
-    #         form = UserProfileForm(instance=user)
-    
-    return render(request, 'login/user_profile.html')
+    companies = Company.objects.filter(personal=user)
+
+    return render(request, 'login/user_profile.html', {'user' : user})
+
+
+
+
+@login_required
+def update_form(request):
+    user = request.user
+    user_form = UserUpdateForm(instance=user)
+    password_form = UserPasswordChangeForm(user)
+    return render(request, 'login/update_profile.html', {
+        'user_form': user_form,
+        'password_form': password_form,
+    })
+
+
+@login_required
+def profile_update(request):
+
+    print("POST request received:", request.POST)  # Логируем данные POST запроса
+
+    if request.method == 'POST':
+        # Обработка данных профиля
+        if 'update_profile' in request.POST:
+            print("Обрабатываем форму профиля")  # Логируем начало обработки
+            user_form = UserUpdateForm(request.POST, instance=request.user)
+
+            # Проверка валидности формы
+            if user_form.is_valid():
+                user_form.save()
+                return JsonResponse({'success': True, 'message': 'Данные профиля обновлены.'})
+            else:
+                print("Ошибки формы:", user_form.errors)  # Логируем ошибки
+                return JsonResponse({'success': False, 'errors': user_form.errors})
+
+       # Обработка смены пароля
+        elif 'change_password' in request.POST:
+            print("Обрабатываем форму смены пароля")  # Логируем начало обработки
+            password_form = UserPasswordChangeForm(request.user, request.POST)
+
+            if password_form.is_valid():
+                password_form.save()
+                update_session_auth_hash(request, request.user)  # Обновляем сессию после смены пароля
+                return JsonResponse({'success': True, 'message': 'Пароль успешно изменён.'})
+            else:
+                
+                print("Ошибки формы пароля:", password_form.errors)  # Логируем ошибки
+                return JsonResponse({'success': False, 'errors': password_form.errors})
+
+    return JsonResponse({'success': False, 'message': 'Неверный запрос.'})
+
+
+
 
 
 @user_passes_test(is_admin, login_url='access_denied')

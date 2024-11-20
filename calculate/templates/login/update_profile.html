@@ -1,0 +1,54 @@
+
+    <div id="profile-forms" class='update-modal'>
+        <form class="update-modal-card" id="update-profile-form" method="POST">
+            <h2 class="update-modal-card-title">Изменить данные</h2>
+            {% csrf_token %}
+            <div class="update-modal-card-input">
+                <label class="update-modal-card-label" for="last_name">{{ user_form.last_name.label }}</label>
+                {{ user_form.last_name }}
+            </div>
+            <div class="update-modal-card-input">
+                <label class="update-modal-card-label" for="first_name">{{ user_form.first_name.label }}</label>
+                {{ user_form.first_name }}
+            </div>
+            <div class="update-modal-card-input">
+                <button type="submit" name="update_profile" value="true" class="update-modal-card-btn">Сохранить изменения</button>
+            </div>
+        </form>
+        <form class="update-modal-card" id="change-password-form" method="POST">
+            <h2 class="update-modal-card-title">Изменить пароль</h2>
+            {% csrf_token %}
+            <div class="update-modal-card-input">
+                <label class="update-modal-card-label" for="old_password">{{ password_form.old_password.label }}</label>
+                <div class="update-modal-card-input-password">
+                    {{ password_form.old_password }}
+                    <i class="far fa-eye password-visible-chevron"></i>
+                </div>
+            </div>
+            <div class="update-modal-card-input">
+                <label class="update-modal-card-label" for="new_password1">{{ password_form.new_password1.label }}</label>
+                <div class="update-modal-card-input-password">
+                    {{ password_form.new_password1}}
+                    <i class="far fa-eye password-visible-chevron"></i>
+                </div>
+            </div>
+            <div class="update-modal-card-input">
+                <label class="update-modal-card-label" for="new_password2">{{ password_form.new_password2.label }}</label>
+                <div class="update-modal-card-input-password">
+                    {{ password_form.new_password2}}
+                    <i class="far fa-eye password-visible-chevron"></i>
+                </div>
+            </div>
+            <div class="update-modal-card-input">
+                <button type="submit" value="true" name="change_password" id="save-password-button"  class="update-modal-card-btn">Изменить пароль</button>
+            </div>   
+        </form>
+    </div>
+
+
+
+
+        
+
+        
+    

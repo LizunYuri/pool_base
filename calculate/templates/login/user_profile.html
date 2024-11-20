@@ -1,4 +1,9 @@
 {% extends "sample/panel_sample.html" %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
 
 {% block title %}Профиль{% endblock %}
 
@@ -14,11 +19,52 @@
 
 {% block aside %}
     <ul class="aside-link">
-        <li class="panel-link"><i class="far fa-bell"></i><span>Уведомления</span></li>
-        <li class="load-content panel-link"><i class="fas fa-user-tie"></i><span>Личные данные</span></li>
-        <li class="panel-navigation"><i class="far fa-building"></i><span>Компания</span></li>  
+        <li id="profile-nav-personal-data" class="nav-checked load-content panel-link is-active"><i class="fas fa-user-tie"></i><span>Личные данные</span></li>
+        <li class="nav-checked panel-navigation"><i class="far fa-building"></i><span>Компания</span></li>  
+        <li class="nav-checked panel-link"><i class="far fa-bell"></i><span>Уведомления</span></li>
     </ul>
 {% endblock %}
 {% block nav %}
     <div class="nav-title"></div>
+{% endblock %}
+{% block content %}
+    <div class="profile-body">
+        <div class="profile-body-label">
+            <h2 id="profile-subtitle">Личные данные</h2>
+        </div>
+        <div class="profile-body-card">
+            <div class=""></div>
+            <div class="profile-body-user">
+                <div class="profile-body-user-item">
+                    <p><span>{{ user.groups.first }}</span></p>
+                </div>
+                <div class="profile-body-user-item">
+                    <p>Фамилия: </p><p><span>{{ user.last_name }} </span></p>
+                </div>    
+                <div class="profile-body-user-item">
+                    <p>Имя: </p><p><span>{{ user.first_name }} </span></p>
+                </div>
+                <div class="profile-body-user-item">
+                    <p>Дата регистрации: </p><p><span>{{ user.date_joined|date:"d.m.Y" }} </span></p>
+                </div>
+                <div class="profile-body-user-item">
+                    <button id='open-modal-window-update-profile' class="profile-body-user-btn">Редактировать</button>
+                </div>
+            </div>
+        </div>
+       <div id="update-personal-data" class="profile-body-modal">
+            <i id="update-personal-data-chevron" class="fas fa-times delete-modal-chevron"></i>
+            <div id="update-personal-body"  class='update-modal'></div>
+       </div>
+       <div id="message-profile-card" class="message-profile-card">
+            <div id='message-profile-text' class="message-profile-text"></div>
+            <button id='message-profile-btn' class="profile-body-user-btn">ок</button>
+       </div>
+    </div>
+    
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'js/profile-script.js' %}"></script>
 {% endblock %}
